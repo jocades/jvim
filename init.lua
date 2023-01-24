@@ -18,7 +18,7 @@ require('packer').startup(function(use)
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
 
-      -- Useful status updates for LSP
+      -- Useful status updates for LP
       'j-hui/fidget.nvim',
 
       -- Additional lua configuration, makes nvim stuff amazing
@@ -59,6 +59,9 @@ require('packer').startup(function(use)
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
+
+  -- CUSTOM plugins
+  use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
@@ -105,7 +108,7 @@ vim.wo.number = true
 vim.o.mouse = 'a'
 
 -- NO line wrapping
-vim.cmd "set nowrap"
+-- vim.cmd "set nowrap"
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -143,14 +146,61 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Open netrw (need to figure out more about it)
+vim.keymap.set('n', '<leader>e', '<cmd> Explore <CR>')
+
+-- CUSTOM --
+local map = function(mode, keys, command, opts)
+  vim.keymap.set(mode, keys, command, opts)
+end
+
+-- Buffer setup (maybe not needed, maybe ok just with lua line)
+
+require("bufferline").setup({
+  options = {
+    --mode = "tabs",
+    separator_style = 'thin',
+    always_show_bufferline = true,
+    show_buffer_close_icons = false,
+    show_close_icon = true,
+    color_icons = true
+  },
+  highlights = {
+    separator_selected = {
+      fg = '#073642',
+    },
+    buffer_selected = {
+      fg = '#fdf6e3',
+      bold = true,
+    },
+  },
+})
+
+vim.keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>', {})
+vim.keymap.set('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>', {})
+
 -- Exit insert mode
-vim.keymap.set('i', 'jk', '<ESC>', { nowait = true })
+map('i', 'jk', '<ESC>', { nowait = true })
+
+-- Close buffer
+map('n', '<leader>x', '<cmd> bd <CR>')
+
 
 -- Navigate within insert mode
-vim.keymap.set('i', '<C-h>', '<Left>')
-vim.keymap.set('i', '<C-l>', '<Right>')
-vim.keymap.set('i', '<C-j>', '<Down>')
-vim.keymap.set('i', '<C-k>', '<Up>')
+map('i', '<C-h>', '<Left>')
+map('i', '<C-l>', '<Right>')
+map('i', '<C-j>', '<Down>')
+map('i', '<C-k>', '<Up>')
+
+-- Navigate between windows
+map('n', '<C-h>', '<C-w>h')
+map('n', '<C-l>', '<C-w>l')
+map('n', '<C-j>', '<C-w>j')
+map('n', '<C-k>', '<C-w>k')
+
+
+-- Save buffer
+map('n', '<C-s>', '<cmd> w <CR>')
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -169,8 +219,15 @@ require('lualine').setup {
   options = {
     icons_enabled = false,
     theme = 'onedark',
-    component_separators = '|',
-    section_separators = '',
+    -- component_separators = '|',
+    -- section_separators = '',
+        section_separators = { left = '', right = '' },
+    component_separators = { left = '', right = '' },
+  },
+  sections = {
+    lualine_c = { 'buffers' },
+    lualine_x = { 'filetype' },
+    lualine_y = {},
   },
 }
 
@@ -223,11 +280,11 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer]' })
 
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+map('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
+map('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+map('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+map('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+map('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -293,10 +350,10 @@ require('nvim-treesitter.configs').setup {
 }
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
+map('n', '[d', vim.diagnostic.goto_prev)
+map('n', ']d', vim.diagnostic.goto_next)
+map('n', '<leader>f', vim.diagnostic.open_float)
+map('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings.
 --  This function gets run when an LSP connects to a particular buffer.
@@ -311,7 +368,6 @@ local on_attach = function(_, bufnr)
     if desc then
       desc = 'LSP: ' .. desc
     end
-
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
@@ -327,7 +383,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -349,11 +405,8 @@ end
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
-  -- tsserver = {},
+  pyright = {},
+  tsserver = {},
 
   sumneko_lua = {
     Lua = {
