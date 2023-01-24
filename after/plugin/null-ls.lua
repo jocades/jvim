@@ -1,11 +1,20 @@
--- Null-ls formatting
 local present, null_ls = pcall(require, "null-ls")
 
 if not present then
   return
 end
 
+local lsp_formatting = function(bufnr)
+  vim.lsp.buf.format {
+    filter = function(client)
+      return client.name == "null-ls"
+    end,
+    bufnr = bufnr,
+  }
+end
+
 local b = null_ls.builtins
+
 local sources = {
   b.formatting.prettier.with { extra_args = { "--no-semi" } }, -- Typescript
   b.formatting.autopep8, -- Python
@@ -28,16 +37,13 @@ null_ls.setup {
         group = augroup,
         buffer = bufnr,
         callback = function()
-          vim.lsp.buf.format { bufnr = bufnr }
+          lsp_formatting(bufnr)
         end,
       })
     end
   end,
-
-  -- format on save
-  --   on_attach = function(client)
-  --     if client.resolved_capabilities.document_formatting then
-  --       vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
-  --     end
-  --   end,
 }
+
+vim.api.nvim_create_user_command("DisableLspFormatting", function()
+  vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
+end, { nargs = 0 })

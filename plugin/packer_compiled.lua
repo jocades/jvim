@@ -182,6 +182,13 @@ _G.packer_plugins = {
     path = "/home/j0rdi/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
   },
+  playground = {
+    load_after = {},
+    loaded = true,
+    needs_bufread = true,
+    path = "/home/j0rdi/.local/share/nvim/site/pack/packer/opt/playground",
+    url = "https://github.com/nvim-treesitter/playground"
+  },
   ["plenary.nvim"] = {
     loaded = true,
     path = "/home/j0rdi/.local/share/nvim/site/pack/packer/start/plenary.nvim",
@@ -229,6 +236,7 @@ time([[Conditional loading of telescope-fzf-native.nvim]], false)
 -- Load plugins in order defined by `after`
 time([[Sequenced loading]], true)
 vim.cmd [[ packadd nvim-treesitter ]]
+vim.cmd [[ packadd playground ]]
 vim.cmd [[ packadd nvim-treesitter-textobjects ]]
 time([[Sequenced loading]], false)
 

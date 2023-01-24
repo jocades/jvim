@@ -24,18 +24,26 @@ telescope.setup {
 pcall(require("telescope").load_extension, "fzf")
 
 -- See `:help telescope.builtin`
-map("n", "<leader>?", require("telescope.builtin").oldfiles, { desc = "[?] Find recently opened files" })
-map("n", "<leader><space>", require("telescope.builtin").buffers, { desc = "[ ] Find existing buffers" })
-map("n", "<leader>/", function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require("telescope.builtin").current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
+local b = require "telescope.builtin"
+
+-- Fuzzy find
+map("n", "<leader>?", b.oldfiles, { desc = "[?] Find recently opened files" })
+map("n", "<leader><space>", b.buffers, { desc = "Find existing buffers" })
+map("n", "<leader>ff", b.find_files, { desc = "Find Files" })
+map("n", "<leader>fw", b.live_grep, { desc = "Find Word by grep" })
+map("n", "<leader>/", function() -- pass additional configuration to telescope to change theme, layout, etc.
+  b.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
     winblend = 10,
     previewer = false,
   })
 end, { desc = "[/] Fuzzily search in current buffer]" })
 
-map("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "[F]ind [F]iles" })
-map("n", "<leader>sh", require("telescope.builtin").help_tags, { desc = "[S]earch [H]elp" })
-map("n", "<leader>sw", require("telescope.builtin").grep_string, { desc = "[S]earch current [W]ord" })
-map("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "[S]earch by [G]rep" })
-map("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
+-- Git
+map("n", "<leader>fg", b.git_files, { desc = "Find Git files" })
+map("n", "<leader>cm", b.git_commits, { desc = "Git commits" })
+map("n", "<leader>st", b.git_status, { desc = "Git status" })
+
+-- Misc
+map("n", "<leader>fh", b.help_tags, { desc = "Find Help" })
+map("n", "<leader>fc", b.grep_string, { desc = "Find Current word" })
+map("n", "<leader>fd", b.diagnostics, { desc = "Find Diagnostics" })
