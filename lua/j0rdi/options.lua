@@ -1,37 +1,36 @@
 -- See `:help vim.o`
-local opt = vim.o
 
-vim.cmd 'autocmd!'
+local options = {
+  fillchars = { eob = '~' }, -- end of file fill (not working I think its cus of the colorscheme)
+  clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
+  mouse = 'a', -- enable mouse mode
+  incsearch = true, -- highlit while search
+  hlsearch = false, -- highlight on search
+  swapfile = false,
+  number = true, -- make line numbers default
+  rnu = true, -- set relative line numbers
+  wrap = false,
+  smartindent = true, -- make indenting smarter again
+  splitbelow = true, -- force all horizontal splits to go below current window
+  splitright = true, -- force all vertical splits to go to the right of current window
+  cursorline = true, -- highlight current line
+  breakindent = true, -- enable break indent
+  undofile = true, -- save undo history
+  ignorecase = true, -- case insensitive searching UNLESS /C or capital in search
+  smartcase = true,
+  updatetime = 250, -- decrease update time
+  signcolumn = 'yes', -- always show the sign column, otherwise it would shift the text each time
+  termguicolors = true, -- set colorscheme
+  -- cmdheight = 2, -- more space in the neovim command line for displaying messages
+  -- pumheight = 10, -- pop up menu height
+  completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
+}
 
-opt.mouse = 'a' -- Enable mouse mode
-opt.incsearch = true -- Highlit while search
-opt.hlsearch = false -- Highlight on search
-opt.swapfile = false
-
-vim.wo.number = true -- Make line numbers default
-opt.rnu = true
-opt.wrap = false
-opt.cursorline = true -- Highlight current line
-
-opt.breakindent = true -- Enable break indent
-opt.undofile = true -- Save undo history
-
--- Case insensitive searching UNLESS /C or capital in search
-opt.ignorecase = true
-opt.smartcase = true
-
--- Decrease update time
-opt.updatetime = 250
-vim.wo.signcolumn = 'yes'
-
--- Set colorscheme
-opt.termguicolors = true
 vim.cmd [[colorscheme onedark]]
 
-vim.opt.fillchars = { eob = '~' }
-
--- Set completeopt to have a better completion experience
-opt.completeopt = 'menuone,noselect'
+for k, v in pairs(options) do
+  vim.opt[k] = v
+end
 
 --  Highlight on yank, see `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

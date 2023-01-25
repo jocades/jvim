@@ -35,7 +35,7 @@ packer.init {
 }
 
 -- PLUGINS
-packer.startup(function(use)
+return packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
@@ -93,10 +93,10 @@ packer.startup(function(use)
     cond = vim.fn.executable 'make' == 1,
   }
 
-  -- CUSTOM plugins
   -- use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
-  use 'jose-elias-alvarez/null-ls.nvim' --- formatting
+  --- Formatting
+  use 'jose-elias-alvarez/null-ls.nvim'
 
   -- auto pairs and tags (</>)
   use 'windwp/nvim-ts-autotag'
@@ -115,10 +115,3 @@ packer.startup(function(use)
     require('packer').sync()
   end
 end)
-
-if is_bootstrap then
-  print '=================================='
-  print '       Installing plugins,'
-  print '       then restart nvim'
-  print '=================================='
-end
