@@ -1,4 +1,4 @@
-local kmap = function(mode, keys, command, opts)
+local map = function(mode, keys, command, opts)
   vim.keymap.set(mode, keys, command, opts)
 end
 
@@ -7,37 +7,43 @@ end
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Keymaps for better default experience, see `:help vim.keymap.set()`
-kmap({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+local cmd = vim.cmd
 
+-- Keymaps for better default experience, see `:help vim.keymap.set()`
+map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+vim.opt.fillchars = { eob = "~" }
 -- Open netrw (default nvim tree)
-kmap("n", "<leader>e", vim.cmd.Ex)
+map("n", "<leader>e", cmd.Ex)
 
 -- Exit insert mode
-kmap("i", "jk", "<ESC>", { nowait = true })
+map("i", "jk", "<ESC>", { nowait = true })
 
 -- Save buffer
-kmap("n", "<C-s>", vim.cmd.w)
+map("n", "<C-s>", cmd.w)
 
 -- Close buffer
-kmap("n", "<leader>x", "<cmd> bd <CR>")
+map("n", "<leader>x", cmd.bd)
 
 -- Tab navigation
-kmap("n", "<Tab>", "<cmd> bnext <CR>")
-kmap("n", "<S-Tab>", "<cmd> bprevious <CR>")
+map("n", "<Tab>", cmd.bnext)
+map("n", "<S-Tab>", cmd.bprevious)
 
 -- Navigate within insert mode
-kmap("i", "<C-h>", "<Left>")
-kmap("i", "<C-l>", "<Right>")
-kmap("i", "<C-j>", "<Down>")
-kmap("i", "<C-k>", "<Up>")
+map("i", "<C-h>", "<Left>")
+map("i", "<C-l>", "<Right>")
+map("i", "<C-j>", "<Down>")
+map("i", "<C-k>", "<Up>")
 
 -- Navigate between windows
-kmap("n", "<C-h>", "<C-w>h")
-kmap("n", "<C-l>", "<C-w>l")
-kmap("n", "<C-j>", "<C-w>j")
-kmap("n", "<C-k>", "<C-w>k")
+map("n", "<C-h>", "<C-w>h")
+map("n", "<C-l>", "<C-w>l")
+map("n", "<C-j>", "<C-w>j")
+map("n", "<C-k>", "<C-w>k")
+
+-- Move selected block
+map("v", "J", ":m '>+1<CR>gv=gv")
+map("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Navigate in wrapped lines
-kmap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-kmap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })

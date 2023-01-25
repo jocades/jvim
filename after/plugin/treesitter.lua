@@ -8,11 +8,29 @@ local map = function(mode, keys, command, opts)
   vim.keymap.set(mode, keys, command, opts)
 end
 
+-- Diagnostic keymaps
+map("n", "[d", vim.diagnostic.goto_prev)
+map("n", "]d", vim.diagnostic.goto_next)
+map("n", "<leader>f", vim.diagnostic.open_float)
+map("n", "<leader>q", vim.diagnostic.setloclist)
+
 -- See `:help nvim-treesitter`
 treesitter.setup {
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { "c", "cpp", "go", "lua", "python", "rust", "typescript", "help", "vim" },
-
+  ensure_installed = {
+    "python",
+    "typescript",
+    "tsx",
+    "lua",
+    "help",
+    "vim",
+    "json",
+    "css",
+    "html",
+    "c",
+    "cpp",
+    "go",
+    "rust",
+  },
   highlight = { enable = true },
   indent = { enable = true, disable = { "python" } },
   incremental_selection = {
@@ -69,9 +87,3 @@ treesitter.setup {
     },
   },
 }
-
--- Diagnostic keymaps
-map("n", "[d", vim.diagnostic.goto_prev)
-map("n", "]d", vim.diagnostic.goto_next)
-map("n", "<leader>f", vim.diagnostic.open_float)
-map("n", "<leader>q", vim.diagnostic.setloclist)
