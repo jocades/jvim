@@ -38,7 +38,7 @@ packer.init {
 }
 
 -- PLUGINS
-packer.startup(function(use)
+return packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
