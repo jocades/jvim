@@ -5,6 +5,12 @@ local is_bootstrap = false
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   is_bootstrap = true
   vim.fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path }
+
+  print '=================================='
+  print '       Installing Packer,'
+  print '       then restart nvim'
+  print '=================================='
+
   vim.cmd [[packadd packer.nvim]]
 end
 
@@ -112,13 +118,3 @@ packer.startup(function(use)
     require('packer').sync()
   end
 end)
-
--- Return on new config, no need to load the rest
-if is_bootstrap then
-  print '=================================='
-  print '    Plugins are being installed'
-  print '    Wait until Packer completes,'
-  print '       then restart nvim'
-  print '=================================='
-  return
-end
