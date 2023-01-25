@@ -12,12 +12,21 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 -- Automatically source and re-compile packer on save
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | silent! LspStop | silent! LspStart | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
-})
+-- local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
+--
+-- vim.api.nvim_create_autocmd('BufWritePost', {
+--   command = 'plugins.lua source <afile> | PackerSync',
+--   group = packer_group,
+--   pattern = vim.fn.expand '$MYVIMRC',
+-- })
+
+-- Auto compile when savaing this file.
+vim.cmd [[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]]
 
 -- Protected call, no error out on first use
 local present, packer = pcall(require, 'packer')
@@ -39,25 +48,33 @@ return packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
-  use { -- LSP Configuration & Plugins
+  -- LSP Configuration & Plugins
+  use {
     'neovim/nvim-lspconfig',
     requires = {
-      -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
+      'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
       'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LP
-      'j-hui/fidget.nvim',
-
-      -- Additional lua configuration, makes nvim stuff amazing
-      'folke/neodev.nvim',
+      'j-hui/fidget.nvim', -- useful status updates for LP
+      'folke/neodev.nvim', -- additional lua configuration, makes nvim stuff amazing
     },
   }
 
-  use { -- Autocompletion
+  -- Completion
+  use {
     'hrsh7th/nvim-cmp',
-    requires = { 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip' },
+    requires = {
+      'hrsh7th/cmp-nvim-lsp', -- neovim's integrated LSP completion
+      'hrsh7th/cmp-buffer', -- buffer completion
+      'hrsh7th/cmp-cmdline', -- cmdline completions
+      'L3MON4D3/LuaSnip', -- engine
+      'saadparwaiz1/cmp_luasnip', -- snippet completion
+      'hrsh7th/cmp-path', -- path completion
+    },
   }
+
+  -- Snippets
+  -- use  -- engine
+  use 'rafamadriz/friendly-snippets' -- a bunch of snippets to use
 
   -- Highlight, edit, and navigate code
   use {
@@ -66,40 +83,42 @@ return packer.startup(function(use)
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   }
-  -- Additional text objects via treesitter
+  -- Additional text objects via treesitter + playground
   use { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' }
   use { 'nvim-treesitter/playground', after = 'nvim-treesitter' }
+
+  --- Formatting
+  use { 'jose-elias-alvarez/null-ls.nvim', after = 'nvim-lspconfig' }
+
+  -- Fuzzy Finder (files, lsp, etc) + Plenary (common neovim lua utils)
+  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
+  use { -- fuzzy finder algorithm which requires local dependencies to be built, only load if `make` is available
+    'nvim-telescope/telescope-fzf-native.nvim',
+    run = 'make',
+    cond = vim.fn.executable 'make' == 1,
+  }
 
   -- Git related plugins
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
-  use 'navarasu/onedark.nvim' -- Theme inspired by Atom
-
-  -- Fancier statusline
+  -- Fancy statusline
   use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } }
-  use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
 
-  -- Fuzzy Finder (files, lsp, etc)
-  use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
+  -- Colorschemes
+  use 'navarasu/onedark.nvim'
+  use 'folke/tokyonight.nvim'
 
-  -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
-  use {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'make',
-    cond = vim.fn.executable 'make' == 1,
-  }
-
+  -- Snazzy buffer line
   -- use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
-  --- Formatting
-  use 'jose-elias-alvarez/null-ls.nvim'
-
-  -- auto pairs and tags (</>)
-  use 'windwp/nvim-ts-autotag'
+  -- Misc --
+  use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
+  use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically
+  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  use 'p00f/nvim-ts-rainbow' -- colored parenthesis
+  use 'windwp/nvim-ts-autotag' -- auto pairs and tags ("", </>)
   use {
     'windwp/nvim-autopairs',
     config = function()
@@ -107,11 +126,10 @@ return packer.startup(function(use)
     end,
   }
 
-  -- Colored parenthesis
-  use 'p00f/nvim-ts-rainbow'
+  -- Markdown (plugins can have post-install/update hooks)
+  use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' }
 
-  -- Sync on new config
-  if is_bootstrap then
+  if is_bootstrap then -- auto download and compile on first use
     require('packer').sync()
   end
 end)

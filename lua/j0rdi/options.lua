@@ -10,7 +10,7 @@ local options = {
   number = true, -- make line numbers default
   rnu = true, -- set relative line numbers
   wrap = false,
-  smartindent = true, -- make indenting smarter again
+  --  smartindent = true, -- make indenting smarter again
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
   cursorline = true, -- highlight current line
@@ -25,8 +25,6 @@ local options = {
   -- pumheight = 10, -- pop up menu height
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
 }
-
-vim.cmd [[colorscheme onedark]]
 
 for k, v in pairs(options) do
   vim.opt[k] = v
