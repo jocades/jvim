@@ -6,10 +6,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   is_bootstrap = true
   vim.fn.system { 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path }
 
-  print '=================================='
-  print '       Installing Packer,'
-  print '       then restart nvim'
-  print '=================================='
+  print 'Installing packer. Close and reopen neovim.'
 
   vim.cmd [[packadd packer.nvim]]
 end
@@ -38,7 +35,7 @@ packer.init {
 }
 
 -- PLUGINS
-return packer.startup(function(use)
+packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
@@ -118,3 +115,10 @@ return packer.startup(function(use)
     require('packer').sync()
   end
 end)
+
+if is_bootstrap then
+  print '=================================='
+  print '       Installing plugins,'
+  print '       then restart nvim'
+  print '=================================='
+end
