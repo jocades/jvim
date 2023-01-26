@@ -6,9 +6,9 @@ end
 
 lualine.setup {
   options = {
-    icons_enabled = true,
-    theme = 'tokyonight',
+    theme = 'auto',
     globalstatus = true,
+    icons_enabled = true,
     -- component_separators = "|",
     -- section_separators = "",
     component_separators = { left = '', right = '' },
@@ -16,7 +16,7 @@ lualine.setup {
   },
   sections = {
     lualine_b = { 'branch' },
-    lualine_c = { 'buffers' },
+    lualine_c = { 'filename' },
     lualine_x = { 'diff', 'diagnostics' },
     lualine_y = { 'filetype' },
   },

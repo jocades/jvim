@@ -107,7 +107,7 @@ return packer.startup(function(use)
   -- Snazzy statusline, bufferline & file tree
   use 'nvim-lualine/lualine.nvim'
   use 'kyazdani42/nvim-tree.lua'
-  -- use { 'akinsho/bufferline.nvim', tag = 'v3.*' }
+  use { 'akinsho/bufferline.nvim', tag = 'v3.*' }
 
   -- Auto comment, tsx enabled via context. ("gc" to comment visual regions/lines).
   use { 'numToStr/Comment.nvim', requires = { 'JoosepAlviste/nvim-ts-context-commentstring' } }
