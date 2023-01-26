@@ -53,9 +53,10 @@ return packer.startup(function(use)
     'neovim/nvim-lspconfig',
     requires = {
       'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
-      'williamboman/mason-lspconfig.nvim',
+      'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach...)
       'j-hui/fidget.nvim', -- useful status updates for LP
       'folke/neodev.nvim', -- additional lua configuration, makes nvim stuff amazing
+      'jose-elias-alvarez/null-ls.nvim', -- attaches to an LSP and allows formatting, additional linting, etc.
     },
   }
 
@@ -66,28 +67,25 @@ return packer.startup(function(use)
       'hrsh7th/cmp-nvim-lsp', -- lsp completion
       'hrsh7th/cmp-buffer', -- buffer completion
       'hrsh7th/cmp-cmdline', -- cmdline completion
-      'L3MON4D3/LuaSnip', -- snippet engine
       'saadparwaiz1/cmp_luasnip', -- snippet completion
       'hrsh7th/cmp-path', -- path completion
     },
   }
 
   -- Snippets
+  use 'L3MON4D3/LuaSnip' -- snippet engine
   use 'rafamadriz/friendly-snippets' -- a bunch of snippets to use
 
   -- Highlight, edit, and navigate code
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = function()
+    run = function() -- auto install languages
       pcall(require('nvim-treesitter.install').update { with_sync = true })
     end,
   }
   -- Additional text objects via treesitter + playground
   use { 'nvim-treesitter/nvim-treesitter-textobjects', after = 'nvim-treesitter' }
   use { 'nvim-treesitter/playground', after = 'nvim-treesitter' }
-
-  --- Formatting
-  use { 'jose-elias-alvarez/null-ls.nvim', after = 'nvim-lspconfig' }
 
   -- Fuzzy Finder (files, lsp, etc) + Plenary (common neovim lua utils)
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
@@ -102,28 +100,31 @@ return packer.startup(function(use)
   use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
-  -- Fancy statusline
-  use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } }
-
   -- Colorschemes
   use 'navarasu/onedark.nvim'
   use 'folke/tokyonight.nvim'
 
-  -- Snazzy buffer line
-  -- use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
+  -- Snazzy statusline, bufferline & file tree
+  use 'nvim-lualine/lualine.nvim'
+  use 'kyazdani42/nvim-tree.lua'
+  -- use { 'akinsho/bufferline.nvim', tag = 'v3.*' }
 
-  -- Misc --
-  use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
-  use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
-  use 'p00f/nvim-ts-rainbow' -- colored parenthesis
-  use 'windwp/nvim-ts-autotag' -- auto pairs and tags ("", </>)
+  -- Auto comment, tsx enabled via context. ("gc" to comment visual regions/lines).
+  use { 'numToStr/Comment.nvim', requires = { 'JoosepAlviste/nvim-ts-context-commentstring' } }
+
+  -- Auto pairs and tags ("", </>)
+  use 'windwp/nvim-ts-autotag'
   use {
     'windwp/nvim-autopairs',
     config = function()
       require('nvim-autopairs').setup {}
     end,
   }
+  -- Misc --
+  use 'kyazdani42/nvim-web-devicons' -- required by many other plugins
+  use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
+  use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically
+  use 'p00f/nvim-ts-rainbow' -- colored parenthesis
 
   -- Markdown (plugins can have post-install/update hooks)
   use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' }
