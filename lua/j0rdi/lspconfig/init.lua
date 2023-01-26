@@ -1,6 +1,3 @@
-require('j0rdi.lspconfig.setup').init()
-
--- MASON takes care of the LSP config & handlers (capabilities, on_attach, etc.), see `:Mason`
 local mason_present, mason = pcall(require, 'mason')
 if not mason_present then
   return
@@ -11,12 +8,13 @@ if not lspconfig_present then
   return
 end
 
--- Setup neovim lua configuration (vim globals)
-require('neodev').setup()
+require('neodev').setup() -- setup neovim lua configuration (vim globals)
+require('j0rdi.lspconfig.setup').init() -- initial config (mainly UI related)
 
--- List of language servers to install automatically
+-- Language servers to be installed automatically
 local servers = require('j0rdi.lspconfig.setup').servers
 
+-- MASON takes care of the LSP config & handlers (capabilities, on_attach, etc.), see `:Mason`
 mason.setup {
   ensure_installed = require('j0rdi.lspconfig.setup').formatters,
   automatic_installation = true,
@@ -37,5 +35,4 @@ lspconfig.setup_handlers {
   end,
 }
 
--- Turn on lsp status information
-require('fidget').setup()
+require('fidget').setup() -- turn on lsp status information

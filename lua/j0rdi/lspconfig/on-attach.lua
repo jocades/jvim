@@ -8,6 +8,11 @@ return function(client, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+  if client.name == 'tsserver' then
+    client.server_capabilities.documentFormattingProvider = false
+  end
+
+  -- Keymaps
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
@@ -17,9 +22,7 @@ return function(client, bufnr)
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-  -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('K', vim.lsp.buf.hover, 'Hover Documentation') -- see `:help K` for why this keymap
   -- nmap('<C-K>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
@@ -30,7 +33,7 @@ return function(client, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
-  -- Hghlights
+  -- Highlights
   if client.server_capabilities.documentHighlight then
     vim.api.nvim_exec(
       [[
@@ -44,5 +47,3 @@ return function(client, bufnr)
     )
   end
 end
-
--- return on_attach
