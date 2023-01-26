@@ -63,17 +63,16 @@ return packer.startup(function(use)
   use {
     'hrsh7th/nvim-cmp',
     requires = {
-      'hrsh7th/cmp-nvim-lsp', -- neovim's integrated LSP completion
+      'hrsh7th/cmp-nvim-lsp', -- lsp completion
       'hrsh7th/cmp-buffer', -- buffer completion
-      'hrsh7th/cmp-cmdline', -- cmdline completions
-      'L3MON4D3/LuaSnip', -- engine
+      'hrsh7th/cmp-cmdline', -- cmdline completion
+      'L3MON4D3/LuaSnip', -- snippet engine
       'saadparwaiz1/cmp_luasnip', -- snippet completion
       'hrsh7th/cmp-path', -- path completion
     },
   }
 
   -- Snippets
-  -- use  -- engine
   use 'rafamadriz/friendly-snippets' -- a bunch of snippets to use
 
   -- Highlight, edit, and navigate code

@@ -10,7 +10,8 @@ vim.g.maplocalleader = ' '
 map({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Open netrw in left window (default nvim tree)
-map('n', '<leader>e', ':Lex 20 <CR>', opts)
+map('n', '<leader>e', cmd.Explore, opts)
+--map('n', '<leader>e', ':Lex 20 <CR>', opts)
 
 -- Save / Close buffer
 map('n', '<C-s>', cmd.w, opts)
