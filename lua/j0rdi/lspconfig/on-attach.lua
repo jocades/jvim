@@ -1,5 +1,5 @@
 -- This function gets run when an LSP connects to a particular buffer.
-
+--
 return function(client, bufnr)
   local nmap = function(keys, func, desc)
     if desc then

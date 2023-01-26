@@ -34,7 +34,7 @@ nvim_tree.setup {
           symlink_open = '',
         },
         git = {
-          unstaged = '',
+          unstaged = '', -- modified
           staged = 'S',
           unmerged = '',
           renamed = '➜',
@@ -47,12 +47,12 @@ nvim_tree.setup {
   },
   diagnostics = {
     enable = true,
-    show_on_dirs = true,
+    show_on_dirs = false,
     icons = {
-      hint = '',
-      info = '',
-      warning = '',
-      error = '',
+      hint = 'H', -- '',
+      info = 'I', --'',
+      warning = 'W', -- '',
+      error = 'E', --'',
     },
   },
   view = {

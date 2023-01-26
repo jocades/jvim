@@ -100,6 +100,9 @@ return packer.startup(function(use)
   use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
+  -- Copilot
+  use 'github/copilot.vim'
+
   -- Colorschemes
   use 'navarasu/onedark.nvim'
   use 'folke/tokyonight.nvim'
@@ -108,6 +111,16 @@ return packer.startup(function(use)
   use 'nvim-lualine/lualine.nvim'
   use 'kyazdani42/nvim-tree.lua'
   use { 'akinsho/bufferline.nvim', tag = 'v3.*' }
+
+  -- WhichKey
+  use {
+    'folke/which-key.nvim',
+    config = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+      require('which-key').setup {}
+    end,
+  }
 
   -- Auto comment, tsx enabled via context. ("gc" to comment visual regions/lines).
   use { 'numToStr/Comment.nvim', requires = { 'JoosepAlviste/nvim-ts-context-commentstring' } }
@@ -124,7 +137,8 @@ return packer.startup(function(use)
   use 'kyazdani42/nvim-web-devicons' -- required by many other plugins
   use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
   use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically
-  use 'p00f/nvim-ts-rainbow' -- colored parenthesis
+  --use 'p00f/nvim-ts-rainbow' -- colored parenthesis
+  use { 'ahmedkhalf/project.nvim' } -- project management
 
   -- Markdown (plugins can have post-install/update hooks)
   use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' }

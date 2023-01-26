@@ -22,9 +22,7 @@ M.servers = {
       telemetry = { enable = false },
     },
   },
-  jsonls = { -- for common json files, e.g `package.json`, `tsconfig.json`, etc.
-    schemas = require('j0rdi.lspconfig.server-settings').jsonls,
-  },
+  jsonls = {},
   tsserver = {},
 }
 
@@ -35,24 +33,24 @@ M.formatters = {
   'stylua',
 }
 
--- Initial config
+-- Initial config (mainly UI related)
 M.init = function()
-  local signs = {
-    { name = 'DiagnosticSignError', text = '' },
-    { name = 'DiagnosticSignWarn', text = '' },
-    { name = 'DiagnosticSignHint', text = '' },
-    { name = 'DiagnosticSignInfo', text = '' },
-  }
-
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
-  end
+  -- local signs = {
+  --   { name = 'DiagnosticSignError', text = '' },
+  --   { name = 'DiagnosticSignWarn', text = '' },
+  --   { name = 'DiagnosticSignHint', text = '' },
+  --   { name = 'DiagnosticSignInfo', text = '' },
+  -- }
+  --
+  -- for _, sign in ipairs(signs) do
+  --   vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = '' })
+  -- end
 
   vim.diagnostic.config {
     virtual_text = false, -- disable in-line text diagnostic
-    signs = { -- show signs
-      active = signs,
-    },
+    -- signs = { -- show signs
+    --   active = signs,
+    -- },
     update_in_insert = true,
     underline = true,
     severity_sort = true,
