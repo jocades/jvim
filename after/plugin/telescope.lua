@@ -8,13 +8,24 @@ local map = function(mode, keys, command, opts)
   vim.keymap.set(mode, keys, command, opts)
 end
 
+local actions = require 'telescope.actions'
+
 -- See `:help telescope` and `:help telescope.setup()`
 telescope.setup {
+  prompt_prefix = ' ',
+  selection_caret = ' ',
+  path_display = { 'smart' },
+  file_ignore_patterns = { '.git/', 'node_modules' },
+
   defaults = {
     mappings = {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<Down>'] = actions.cycle_history_next,
+        ['<Up>'] = actions.cycle_history_prev,
+        ['<C-j>'] = actions.move_selection_next,
+        ['<C-k>'] = actions.move_selection_previous,
       },
     },
   },

@@ -11,16 +11,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
--- Automatically source and re-compile packer on save
--- local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
---
--- vim.api.nvim_create_autocmd('BufWritePost', {
---   command = 'plugins.lua source <afile> | PackerSync',
---   group = packer_group,
---   pattern = vim.fn.expand '$MYVIMRC',
--- })
-
--- Auto compile when savaing this file.
+-- Auto compile when saving this file.
 vim.cmd [[
   augroup packer_user_config
     autocmd!
@@ -44,7 +35,7 @@ packer.init {
 }
 
 -- PLUGINS
-return packer.startup(function(use)
+packer.startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
@@ -53,10 +44,11 @@ return packer.startup(function(use)
     'neovim/nvim-lspconfig',
     requires = {
       'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
-      'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach...)
-      'j-hui/fidget.nvim', -- useful status updates for LP
-      'folke/neodev.nvim', -- additional lua configuration, makes nvim stuff amazing
-      'jose-elias-alvarez/null-ls.nvim', -- attaches to an LSP and allows formatting, additional linting, etc.
+      'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
+      'j-hui/fidget.nvim', -- lsp status UI
+      'folke/neodev.nvim', -- additional lua configuration (neovim globals, require paths cmp, etc)
+      'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
+      'RRethy/vim-illuminate', -- highlight references on cursor hold
     },
   }
 
@@ -71,10 +63,6 @@ return packer.startup(function(use)
       'hrsh7th/cmp-path', -- path completion
     },
   }
-
-  -- Snippets
-  use 'L3MON4D3/LuaSnip' -- snippet engine
-  use 'rafamadriz/friendly-snippets' -- a bunch of snippets to use
 
   -- Highlight, edit, and navigate code
   use {
@@ -94,6 +82,11 @@ return packer.startup(function(use)
     run = 'make',
     cond = vim.fn.executable 'make' == 1,
   }
+  use { 'ahmedkhalf/project.nvim' } -- telescope project picker
+
+  -- Snippets
+  use 'L3MON4D3/LuaSnip' -- snippet engine
+  use 'rafamadriz/friendly-snippets' -- a bunch of snippets to use
 
   -- Git related plugins
   use 'tpope/vim-fugitive'
@@ -102,6 +95,9 @@ return packer.startup(function(use)
 
   -- Copilot
   use 'github/copilot.vim'
+
+  -- Terminal
+  use 'akinsho/toggleterm.nvim'
 
   -- Colorschemes
   use 'navarasu/onedark.nvim'
@@ -112,8 +108,10 @@ return packer.startup(function(use)
   use 'kyazdani42/nvim-tree.lua'
   use { 'akinsho/bufferline.nvim', tag = 'v3.*' }
 
-  -- WhichKey
-  use {
+  -- Custom home screen
+  use 'goolord/alpha-nvim'
+
+  use { -- Keys helper
     'folke/which-key.nvim',
     config = function()
       vim.o.timeout = true
@@ -133,17 +131,25 @@ return packer.startup(function(use)
       require('nvim-autopairs').setup {}
     end,
   }
+
   -- Misc --
   use 'kyazdani42/nvim-web-devicons' -- required by many other plugins
   use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
   use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically
+  use 'lewis6991/impatient.nvim' -- speed up startup time
   --use 'p00f/nvim-ts-rainbow' -- colored parenthesis
-  use { 'ahmedkhalf/project.nvim' } -- project management
-
-  -- Markdown (plugins can have post-install/update hooks)
-  use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' }
+  use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' } -- markdown preview
 
   if is_bootstrap then -- auto download and compile on first use
     require('packer').sync()
   end
 end)
+
+if is_bootstrap then
+  print '=================================='
+  print '    Plugins are being installed'
+  print '    Wait until Packer completes,'
+  print '       then restart nvim'
+  print '=================================='
+  return
+end

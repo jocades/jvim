@@ -5,11 +5,12 @@ local function nmap(mode, keys, exec, opts)
   if not opts then
     opts = common
   else -- merge common options with the ones passed in
-    for k, v in pairs(common) do
-      if not opts[k] then
-        opts[k] = v
-      end
-    end
+    -- for k, v in pairs(common) do
+    --   if not opts[k] then
+    --     opts[k] = v
+    --   end
+    -- end
+    vim.tbl_extend('force', opts, common)
   end
 
   vim.keymap.set(mode, keys, exec, opts)
@@ -33,6 +34,9 @@ local K = {
     -- Save / Close buffer
     ['<C-s>'] = { cmd.w },
     ['<leader>x'] = { cmd.bd },
+
+    -- Exit (quit all including nvim-tree)
+    ['<leader>Q'] = { cmd.qall },
 
     -- Window navigation
     ['<C-h>'] = { '<C-w>h' },
@@ -58,6 +62,10 @@ local K = {
     -- Insert blank line on top / bottom of the cursor
     ['<CR>'] = { 'o<ESC>' },
     ['<S-CR>'] = { 'O<ESC>' },
+
+    -- Keep cursor centered when scrolling
+    ['<C-d>'] = { '<C-d>zz' },
+    ['<C-u>'] = { '<C-u>zz' },
 
     -- Navigate within wrapped lines
     -- ['k'] = { "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true } },
@@ -88,8 +96,8 @@ local K = {
   },
 }
 
-for mode, keymap in pairs(K) do
-  for keys, t in pairs(keymap) do
+for mode, keymaps in pairs(K) do
+  for keys, t in pairs(keymaps) do
     nmap(mode, keys, t[1], t[2])
   end
 end

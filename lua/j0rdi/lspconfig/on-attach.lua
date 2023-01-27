@@ -36,16 +36,5 @@ return function(client, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- HIGHLIGHTS
-  if client.server_capabilities.documentHighlight then
-    vim.api.nvim_exec( -- double brackets in lua are just strings
-      [[
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]],
-      false
-    )
-  end
+  pcall(require('illuminate').on_attach, client)
 end
