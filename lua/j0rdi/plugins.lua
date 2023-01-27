@@ -19,6 +19,8 @@ vim.cmd [[
   augroup end
 ]]
 
+-- how can i make the above with vim lua api?
+
 -- Protected call, no error out on first use
 local present, packer = pcall(require, 'packer')
 
@@ -83,6 +85,7 @@ packer.startup(function(use)
     cond = vim.fn.executable 'make' == 1,
   }
   use { 'ahmedkhalf/project.nvim' } -- telescope project picker
+  use 'ThePrimeagen/harpoon' -- organize buffers
 
   -- Snippets
   use 'L3MON4D3/LuaSnip' -- snippet engine

@@ -47,6 +47,7 @@ null_ls.setup {
   on_attach = on_attach,
 }
 
+-- Create a custom command to disable LSP formatting
 vim.api.nvim_create_user_command('DisableLspFormatting', function()
   vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
 end, { nargs = 0 })

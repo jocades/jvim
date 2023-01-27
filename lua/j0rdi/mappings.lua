@@ -1,15 +1,10 @@
 -- See `:help vim.keymap.set()`
-local function nmap(mode, keys, exec, opts)
+local function map(mode, keys, exec, opts)
   local common = { silent = true, noremap = true }
 
   if not opts then
     opts = common
-  else -- merge common options with the ones passed in
-    -- for k, v in pairs(common) do
-    --   if not opts[k] then
-    --     opts[k] = v
-    --   end
-    -- end
+  else
     vim.tbl_extend('force', opts, common)
   end
 
@@ -19,7 +14,7 @@ end
 -- Set <SPACE> as the 'LEADER' key, see `:help mapleader` (must happen before plugins are required)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-nmap({ 'n', 'v' }, '<Space>', '<Nop>')
+map({ 'n', 'v' }, '<Space>', '<Nop>')
 
 local cmd = vim.cmd
 
@@ -27,16 +22,16 @@ local K = {
 
   -- NORMAL
   n = {
-    -- Open file trees (netrw, nvim-tree)
+    -- Open file trees
     ['<leader>e'] = { cmd.NvimTreeToggle, { desc = 'Toggle nvim-tree' } },
     ['<leader>n'] = { cmd.Ex, { desc = 'Open netrw' } }, -- ':Lex 20 <CR>'
 
     -- Save / Close buffer
-    ['<C-s>'] = { cmd.w },
-    ['<leader>x'] = { cmd.bd },
+    ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
+    ['<leader>x'] = { cmd.bd, { desc = 'Close buffer' } },
 
     -- Exit (quit all including nvim-tree)
-    ['<leader>Q'] = { cmd.qall },
+    ['<leader>Q'] = { cmd.qall, { desc = 'Quit all (nvim-tree)' } },
 
     -- Window navigation
     ['<C-h>'] = { '<C-w>h' },
@@ -77,11 +72,9 @@ local K = {
     -- Exit insert mode
     ['jk'] = { '<ESC>', { nowait = true } },
 
-    -- Navigate within insert mode
+    -- Navigate horizontally
     ['<C-h>'] = { '<Left>' },
     ['<C-l>'] = { '<Right>' },
-    ['<C-j>'] = { '<Down>' },
-    ['<C-k>'] = { '<Up>' },
   },
 
   -- VISUAL
@@ -98,6 +91,6 @@ local K = {
 
 for mode, keymaps in pairs(K) do
   for keys, t in pairs(keymaps) do
-    nmap(mode, keys, t[1], t[2])
+    map(mode, keys, t[1], t[2])
   end
 end
