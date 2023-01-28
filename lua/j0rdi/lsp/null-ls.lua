@@ -17,7 +17,6 @@ local sources = {
 
 local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 
--- Use null-ls to format on save
 local function format(bufnr)
   vim.lsp.buf.format {
     filter = function(client)
@@ -41,13 +40,12 @@ local function on_attach(client, bufnr)
   end
 end
 
+vim.api.nvim_create_user_command('DisableLspFormatting', function()
+  vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
+end, { nargs = 0 })
+
 null_ls.setup {
   debug = true,
   sources = sources,
   on_attach = on_attach,
 }
-
--- Create a custom command to disable LSP formatting
-vim.api.nvim_create_user_command('DisableLspFormatting', function()
-  vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
-end, { nargs = 0 })

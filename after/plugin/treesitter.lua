@@ -12,7 +12,7 @@ end
 map('n', '[d', vim.diagnostic.goto_prev)
 map('n', ']d', vim.diagnostic.goto_next)
 map('n', '<leader>f', vim.diagnostic.open_float)
-map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' })
+-- map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' })
 
 -- See `:help nvim-treesitter`
 treesitter.setup {
