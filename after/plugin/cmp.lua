@@ -108,7 +108,7 @@ cmp.setup {
     { name = 'path' },
   },
   window = { -- pop-up doc with borders
-    documentation = cmp.config.window.bordered(),
+    --   -- documentation = cmp.config.window.bordered(),
   },
   experimental = {
     ghost_text = false,
