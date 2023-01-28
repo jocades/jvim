@@ -33,7 +33,7 @@ lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = require('j0rdi.lsp.setup').capabilities,
-      on_attach = require 'j0rdi.lsp.on-attach', -- set keymaps, etc.
+      on_attach = require('j0rdi.lsp.setup').on_attach,
       settings = servers[server_name],
     }
   end,

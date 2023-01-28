@@ -21,8 +21,8 @@ local options = {
   updatetime = 250, -- decrease update time
   signcolumn = 'yes', -- always show the sign column, otherwise it would shift the text each time
   termguicolors = true, -- set colorscheme
-  -- cmdheight = 2, -- more space in the neovim command line for displaying messages
-  -- pumheight = 10, -- pop up menu height
+  cmdheight = 2, -- more space in the neovim command line for displaying messages
+  pumheight = 10, -- pop up menu height
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
 }
 
@@ -34,9 +34,7 @@ end
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+  callback = function() vim.highlight.on_yank() end,
   group = highlight_group,
   pattern = '*',
 })

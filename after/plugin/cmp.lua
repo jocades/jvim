@@ -5,12 +5,6 @@ if not cmp_present or not snip_present then
   return
 end
 
-local M = {
-  hello = function()
-    return 'Hey!'
-  end,
-}
-
 require('luasnip/loaders/from_vscode').lazy_load()
 
 -- Fix some backspace behavior
@@ -50,9 +44,7 @@ local kind_icons = {
 
 cmp.setup {
   snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
+    expand = function(args) luasnip.lsp_expand(args.body) end,
   },
   mapping = cmp.mapping.preset.insert {
     ['<C-k>'] = cmp.mapping.select_prev_item(),

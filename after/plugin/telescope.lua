@@ -61,5 +61,5 @@ local K = {
 }
 
 for k, v in pairs(K) do
-  vim.keymap.set('n', k, v[1], { desc = v[2], silent = true })
+  require('j0rdi.utils').map('n', k, v[1], { desc = v[2] })
 end

@@ -25,7 +25,10 @@ local h = {
     return vim.api.nvim_buf_get_name(bufnr)
   end,
 
-  get_file_name = function(path)
+  get_file_name = function(self, path)
+    if not path then
+      return self.get_path():match '([^/]+)$'
+    end
     return path:match '([^/]+)$'
   end,
 }
@@ -75,11 +78,8 @@ local function get_ext()
   return path:match '%.([^.]+)$'
 end
 
-print(get_ext())
-
 -- It seems like i can do it with plenary too, but i might just keep my own methods.
 local file_extension = require('plenary.filetype').detect(h.get_path(), {})
-print(file_extension)
 
 local function get_command(ext)
   local commands = {
@@ -106,30 +106,16 @@ local function run_file()
 end
 
 -- Command test
-vim.api.nvim_create_user_command('AutoRunOnSave', function() end, {})
+vim.api.nvim_create_user_command('AutoRunOnSave', function()
+  print 'Running AutoRunOnSave'
+  print(get_file_name())
+  print(get_ext())
+end, {})
 
 -- Global function
 function CurrBuf()
   vim.notify(tostring(vim.api.nvim_get_current_buf()), vim.log.levels.WARN)
 end
-
--- local class = {
---   field = 'Jordi',
---   method = function(self, a, b, c)
---     print(a, b, c)
---     print(self.field)
---   end,
--- }
---
--- class:method(unpack { 'j', 'k', 'l' })
---
--- local function multiple_returns()
---   return 'string', 10
--- end
---
--- local r1, r2 = multiple_returns()
---
--- print(r1, r2)
 
 -- vim.api.nvim_create_user_command('PyAutoRun', {
 --   nargs = '1',

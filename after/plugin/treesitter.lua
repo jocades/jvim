@@ -4,16 +4,6 @@ if not present then
   return
 end
 
-local map = function(mode, keys, command, opts)
-  vim.keymap.set(mode, keys, command, opts)
-end
-
--- Diagnostic keymaps
-map('n', '[d', vim.diagnostic.goto_prev)
-map('n', ']d', vim.diagnostic.goto_next)
-map('n', '<leader>f', vim.diagnostic.open_float)
--- map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' })
-
 -- See `:help nvim-treesitter`
 treesitter.setup {
   ensure_installed = {
