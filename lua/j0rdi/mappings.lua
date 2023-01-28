@@ -15,6 +15,7 @@ local K = {
 
     -- Quit (including nvim-tree)
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
+    ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
 
     -- Buffer actions
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },

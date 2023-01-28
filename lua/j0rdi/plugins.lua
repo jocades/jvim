@@ -12,20 +12,20 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 -- Auto compile when saving this file.
-vim.cmd [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]]
-
--- how can i make the above with vim lua api?
+vim.api.nvim_create_autocmd('BufWritePost', {
+  group = vim.api.nvim_create_augroup('packer_user_config', { clear = true }),
+  pattern = 'plugins.lua',
+  callback = function()
+    vim.cmd 'source <afile> | PackerCompile'
+    print 'Packer compiled.'
+  end,
+})
 
 -- Protected call, no error out on first use
 local present, packer = pcall(require, 'packer')
-
 if not present then
-  return print 'Error: Packer not installed...'
+  vim.notify('Packer not found.', vim.log.levels.ERROR)
+  return
 end
 
 packer.init {
@@ -143,7 +143,8 @@ packer.startup(function(use)
   --use 'p00f/nvim-ts-rainbow' -- colored parenthesis
   use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = 'MarkdownPreview' } -- markdown preview
 
-  if is_bootstrap then -- auto download and compile on first use
+  -- Auto download and compile on first use
+  if is_bootstrap then
     require('packer').sync()
   end
 end)
