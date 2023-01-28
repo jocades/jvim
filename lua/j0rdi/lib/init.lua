@@ -1,1 +1,1 @@
-require 'j0rdi.lib.autorun.run-on-save'
+require 'j0rdi.lib.autorun.RunOnSave'

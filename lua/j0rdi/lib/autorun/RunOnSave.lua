@@ -8,29 +8,32 @@
 -- i.e. "python", "node", "bash", etc.
 -- If it is not the first time, it will use the last command used.
 
-local write_to_buf = vim.api.nvim_buf_set_lines
+-- Helpers
+local h = {
+  write_to_buf = vim.api.nvim_buf_set_lines,
 
-local get_path = function(bufnr)
-  if not bufnr then
-    return vim.api.nvim_buf_get_name(0)
-  end
+  new_buf = function()
+    vim.cmd.new()
+    return vim.api.nvim_get_current_buf()
+  end,
 
-  return vim.api.nvim_buf_get_name(bufnr)
-end
+  get_path = function(bufnr)
+    if not bufnr then
+      return vim.api.nvim_buf_get_name(0)
+    end
 
-local new_buf = function()
-  vim.cmd.new()
-  return vim.api.nvim_get_current_buf()
-end
+    return vim.api.nvim_buf_get_name(bufnr)
+  end,
 
-local get_file_name = function(path)
-  return path:match '([^/]+)$'
-end
+  get_file_name = function(path)
+    return path:match '([^/]+)$'
+  end,
+}
 
 local group = vim.api.nvim_create_augroup('j0rdi-autorun', { clear = true })
 
 local attach_to_buffer = function(bufnr, command)
-  local output_buf = new_buf()
+  local output_buf = h.new_buf()
   vim.cmd.wincmd 'p'
 
   vim.api.nvim_create_autocmd('BufWritePost', {
@@ -39,14 +42,14 @@ local attach_to_buffer = function(bufnr, command)
     callback = function()
       local function append_data(_, data)
         if data then
-          write_to_buf(output_buf, -1, -1, false, data)
+          h.write_to_buf(output_buf, -1, -1, false, data)
         end
       end
 
-      local file_name = get_file_name(get_path(bufnr))
-      write_to_buf(output_buf, 0, -1, false, { string.format('Running %s', file_name) })
+      local file_name = h.get_file_name(h.get_path(bufnr))
+      h.write_to_buf(output_buf, 0, -1, false, { string.format('Running %s', file_name) })
 
-      vim.fn.jobstart({ command, path }, {
+      vim.fn.jobstart({ command, h.get_path() }, {
         stdout_buffered = true,
         on_stdout = append_data,
         on_stderr = append_data,
@@ -64,16 +67,18 @@ end, {})
 -- for now it will just run python, node, ts-node, bash and lua.
 -- i want to be able to run it from the command line, and from a keybinding.
 -- also run it on demand or on save.
+--
+print(h.get_file_name(h.get_path()))
 
 local function get_ext()
-  local path = get_path()
+  local path = h.get_path()
   return path:match '%.([^.]+)$'
 end
 
 print(get_ext())
 
 -- It seems like i can do it with plenary too, but i might just keep my own methods.
-local file_extension = require('plenary.filetype').detect(get_path(), {})
+local file_extension = require('plenary.filetype').detect(h.get_path(), {})
 print(file_extension)
 
 local function get_command(ext)
