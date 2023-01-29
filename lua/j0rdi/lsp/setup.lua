@@ -18,6 +18,9 @@ M.servers = {
   },
   sumneko_lua = {
     Lua = {
+      diagnostics = {
+        globals = { 'vim' },
+      },
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },

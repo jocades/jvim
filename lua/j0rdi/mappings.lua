@@ -1,11 +1,12 @@
+local cmd = vim.cmd
+local new_buf = require('j0rdi.utils').handle_new_buf
+local mark = require 'harpoon.mark'
+local harpoon = require 'harpoon.ui'
+
 -- Set <SPACE> as the '<LEADER>' key, see `:help mapleader` (must happen before plugins are required)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
--- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
-local cmd = vim.cmd
-local new_buf = require('j0rdi.utils').handle_new_buf
 
 local K = {
   -- NORMAL
@@ -17,21 +18,31 @@ local K = {
 
     -- Buffer actions
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
-    ['<leader>so'] = { ':so %<cr>', { desc = 'Source & exec current config file' } },
     ['<leader>x'] = { cmd.bd, { desc = 'Close buffer', nowait = true } },
     ['<leader>X'] = { ':bd!<cr>', { desc = 'Close buffer without saving' } },
     ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir', nowait = true } },
     ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
+    ['<leader>so'] = { ':w | so %<cr>', { desc = 'Save, source & run current config file' } },
 
     -- Buffer navigation
     ['<Tab>'] = { cmd.bnext },
     ['<S-Tab>'] = { cmd.bprev },
+    ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
+    ['<M-h>'] = { harpoon.toggle_quick_menu },
+    ['<M-j>'] = { function() harpoon.nav_file(1) end },
+    ['<M-k>'] = { function() harpoon.nav_file(2) end },
+    ['<M-l>'] = { function() harpoon.nav_file(3) end },
+    ['<M-;>'] = { function() harpoon.nav_file(4) end },
 
     -- Window actions
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
-    ['<leader>ww'] = { cmd.close, { desc = 'Close window' } },
+    ['<leader>z'] = { cmd.close, { desc = 'Close window' } },
+    ['<C-Up>'] = { ':resize +2<cr>' },
+    ['<C-Down>'] = { ':resize -2<cr>' },
+    ['<C-Left>'] = { ':vertical resize -2<cr>' },
+    ['<C-Right>'] = { ':vertical resize +2<cr>' },
 
     -- Window navigation
     ['<C-h>'] = { '<C-w>h' },
@@ -39,11 +50,11 @@ local K = {
     ['<C-j>'] = { '<C-w>j' },
     ['<C-k>'] = { '<C-w>k' },
 
-    -- Resize windows with arrows
-    ['<C-Up>'] = { ':resize +2<cr>' },
-    ['<C-Down>'] = { ':resize -2<cr>' },
-    ['<C-Left>'] = { ':vertical resize -2<cr>' },
-    ['<C-Right>'] = { ':vertical resize +2<cr>' },
+    -- Diagnostics
+    ['[d'] = { vim.diagnostic.goto_prev },
+    [']d'] = { vim.diagnostic.goto_next },
+    ['<leader>f'] = { vim.diagnostic.open_float },
+    ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
 
     -- Insert blank line on top / bottom of the cursor
     ['<C-cr>'] = { 'o<ESC>' },
@@ -52,12 +63,6 @@ local K = {
     -- Keep cursor centered when scrolling
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
-
-    -- Diagnostics
-    ['[d'] = { vim.diagnostic.goto_prev },
-    [']d'] = { vim.diagnostic.goto_next },
-    ['<leader>f'] = { vim.diagnostic.open_float },
-    ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
   },
 
   -- INSERT

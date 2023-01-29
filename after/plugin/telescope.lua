@@ -38,8 +38,8 @@ local K = {
   ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
   ['<leader>ff'] = { b.find_files, 'Find Files' },
   ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
-  ['<leader>fr'] = { b.oldfiles, 'Find recently opened files' },
   ['<leader>fb'] = { b.buffers, 'Find existing buffers' },
+  ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },
   ['<leader>.'] = {
     function() -- pass additional configuration to telescope to change theme, layout, etc.
       b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {

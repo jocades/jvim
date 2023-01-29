@@ -113,9 +113,7 @@ vim.api.nvim_create_user_command('AutoRunOnSave', function()
 end, {})
 
 -- Global function
-function CurrBuf()
-  vim.notify(tostring(vim.api.nvim_get_current_buf()), vim.log.levels.WARN)
-end
+function CurrBuf() vim.notify(tostring(vim.api.nvim_get_current_buf()), vim.log.levels.WARN) end
 
 -- vim.api.nvim_create_user_command('PyAutoRun', {
 --   nargs = '1',

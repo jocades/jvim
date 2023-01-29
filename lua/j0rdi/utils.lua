@@ -16,7 +16,6 @@ end
 
 M.handle_new_buf = function(opts)
   local name = vim.fn.input 'Enter file name: '
-
   if name == '' then
     return
   end
@@ -33,6 +32,24 @@ M.handle_new_buf = function(opts)
   else
     cmd('split' .. path)
   end
+end
+
+M.p_require = function(module)
+  local ok, mod = pcall(require, module)
+  if not ok then
+    return nil
+  end
+
+  return mod
+end
+
+M.get_filetype = function()
+  local ft = vim.bo.filetype
+  if ft == '' then
+    return nil
+  end
+
+  return ft
 end
 
 return M
