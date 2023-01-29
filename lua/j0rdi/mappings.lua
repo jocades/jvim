@@ -1,7 +1,5 @@
 local cmd = vim.cmd
 local new_buf = require('j0rdi.utils').handle_new_buf
-local mark = require 'harpoon.mark'
-local harpoon = require 'harpoon.ui'
 
 -- Set <SPACE> as the '<LEADER>' key, see `:help mapleader` (must happen before plugins are required)
 vim.g.mapleader = ' '
@@ -25,15 +23,9 @@ local K = {
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
     ['<leader>so'] = { ':w | so %<cr>', { desc = 'Save, source & run current config file' } },
 
-    -- Buffer navigation
+    -- Buffer navigation (harpoon for buf navigation and organization)
     ['<Tab>'] = { cmd.bnext },
     ['<S-Tab>'] = { cmd.bprev },
-    ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
-    ['<M-h>'] = { harpoon.toggle_quick_menu },
-    ['<M-j>'] = { function() harpoon.nav_file(1) end },
-    ['<M-k>'] = { function() harpoon.nav_file(2) end },
-    ['<M-l>'] = { function() harpoon.nav_file(3) end },
-    ['<M-;>'] = { function() harpoon.nav_file(4) end },
 
     -- Window actions
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },

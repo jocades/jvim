@@ -8,112 +8,156 @@
 -- i.e. "python", "node", "bash", etc.
 -- If it is not the first time, it will use the last command used.
 
--- Helpers
-local h = {
-  write_to_buf = vim.api.nvim_buf_set_lines,
-
-  new_buf = function()
-    vim.cmd.new()
-    return vim.api.nvim_get_current_buf()
-  end,
-
-  get_path = function(bufnr)
-    if not bufnr then
-      return vim.api.nvim_buf_get_name(0)
-    end
-
-    return vim.api.nvim_buf_get_name(bufnr)
-  end,
-
-  get_file_name = function(self, path)
-    if not path then
-      return self.get_path():match '([^/]+)$'
-    end
-    return path:match '([^/]+)$'
-  end,
-}
-
+-- It seems like i can do it with plenary too, but i might just keep my own methods.
+-- local file_extension = require('plenary.filetype').detect(get_path(), {})
+--
+local h = require 'j0rdi.lib.helpers'
 local group = vim.api.nvim_create_augroup('j0rdi-autorun', { clear = true })
 
 local attach_to_buffer = function(bufnr, command)
-  local output_buf = h.new_buf()
-  vim.cmd.wincmd 'p'
+  local state = {
+    output_buf = nil,
+    command = command,
+    file_name = h:get_file_name(),
+    pattern = '*.' .. h:get_file_ext(),
+  }
+
+  local inform = string.format('Attached to: %s. Pattern: %s', state.file_name, state.pattern)
+  print(inform)
+
+  local function append_data(_, data)
+    if data then
+      h:write_to_buf(state.output_buf, -1, -1, false, data)
+    end
+  end
 
   vim.api.nvim_create_autocmd('BufWritePost', {
     group = group,
-    pattern = '*.py',
+    pattern = state.pattern,
     callback = function()
-      local function append_data(_, data)
-        if data then
-          h.write_to_buf(output_buf, -1, -1, false, data)
-        end
+      if not state.output_buf then
+        state.output_buf = h:new_nofile_buf 'RunOnSave'
+        vim.cmd.wincmd 'p'
       end
 
-      local file_name = h.get_file_name(h.get_path(bufnr))
-      h.write_to_buf(output_buf, 0, -1, false, { string.format('Running %s', file_name) })
+      h:write_to_buf(state.output_buf, 0, -1, false, { string.format('- Running %s:', state.file_name), '' })
 
-      vim.fn.jobstart({ command, h.get_path() }, {
+      vim.fn.jobstart({ state.command, h:get_path() }, {
         stdout_buffered = true,
         on_stdout = append_data,
         on_stderr = append_data,
       })
     end,
   })
+
+  -- reset when output buffer is closed
+  vim.api.nvim_create_autocmd('BufWipeout', {
+    group = group,
+    pattern = 'RunOnSave',
+    callback = function()
+      state.output_buf = nil
+      print 'BufWipeout'
+    end,
+  })
+
+  --  remove the autocmd when the file to be run is closed
+  vim.api.nvim_create_autocmd('BufWipeout', {
+    group = group,
+    pattern = state.file_name,
+    callback = function()
+      vim.api.nvim_command('autocmd! ' .. group)
+      print 'BufWipeout'
+      print('Detached from: ' .. state.file_name)
+    end,
+  })
+
+  -- it seems like bufwiepout is not working for the runnin buffer, maybe because harpoon is using it.
+  -- what other cmd can i use to detect when the buffer is closed?
+  -- vim.api.nvim_create_autocmd('BufDelete', {
+  --   group = group,
+  --   pattern = state.file_name,
+  --   callback = function()
+  --     vim.api.nvim_command('autocmd! ' .. group)
+  --     print 'BufDelete'
+  --     print('Detached from: ' .. state.file_name)
+  --   end,
+  -- })
 end
 
-vim.api.nvim_create_user_command('PyAutoRunOnSave', function()
-  -- local command = vim.fn.input 'Command to run: '
-  attach_to_buffer(vim.api.nvim_get_current_buf(), 'python')
-end, {})
-
--- i want to make it more flexible, it will detect the file extension and run the correct command
--- for now it will just run python, node, ts-node, bash and lua.
--- i want to be able to run it from the command line, and from a keybinding.
--- also run it on demand or on save.
---
-print(h.get_file_name(h.get_path()))
-
-local function get_ext()
-  local path = h.get_path()
-  return path:match '%.([^.]+)$'
-end
-
--- It seems like i can do it with plenary too, but i might just keep my own methods.
-local file_extension = require('plenary.filetype').detect(h.get_path(), {})
-
-local function get_command(ext)
-  local commands = {
-    py = 'python',
-    lua = 'lua',
-    js = 'node',
-    ts = 'ts-node',
-    sh = 'bash',
-  }
-
-  return commands[ext]
-end
-
-local function run_file()
-  local ext = get_ext()
-  local command = get_command(ext)
+local function run_on_save()
+  local ext = h:get_file_ext()
+  local command = h:get_command(ext)
 
   if not command then
     print('No command found for extension: ' .. ext)
     return
   end
 
-  attach_to_buffer(vim.api.nvim_get_current_buf(), command)
+  attach_to_buffer(h:get_curr_buf(), command)
 end
 
--- Command test
-vim.api.nvim_create_user_command('AutoRunOnSave', function()
-  print 'Running AutoRunOnSave'
-  print(get_file_name())
-  print(get_ext())
+local function run_once()
+  local ext = h:get_file_ext()
+  local command = h:get_command(ext)
+
+  if not command then
+    print('No command found for extension: ' .. ext)
+    return
+  end
+
+  local buf = h:new_buf()
+  vim.api.nvim_buf_set_name(buf, 'RunOnce')
+  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  vim.cmd.wincmd 'p'
+
+  h:write_to_buf(buf, 0, -1, false, { '- Running: ' .. h:get_file_name() })
+
+  vim.fn.jobstart({ command, h:get_path() }, {
+    stdout_buffered = true,
+    on_stdout = function(_, data)
+      if data then
+        h:write_to_buf(buf, -1, -1, false, data)
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        h:write_to_buf(buf, -1, -1, false, data)
+      end
+    end,
+  })
+end
+
+vim.api.nvim_create_user_command('AutoRun', function(c)
+  if c.args == 'watch' then
+    print 'watch'
+    return
+  end
+
+  local ext = h:get_file_ext()
+  local command = h:get_command(ext)
+
+  if not command then
+    print('No command found for extension: ' .. ext)
+    return
+  end
+
+  attach_to_buffer(h:get_curr_buf(), command)
 end, {})
+
+-- how can i pass arguments to the user command?
+vim.api.nvim_create_user_command('Args', function(c)
+  if c.args == 'watch' then
+    print 'watch'
+    return
+  end
+end, { nargs = 1 })
 
 -- Global function
 function CurrBuf() vim.notify(tostring(vim.api.nvim_get_current_buf()), vim.log.levels.WARN) end
+function CurrWin() vim.notify(tostring(vim.api.nvim_get_current_win()), vim.log.levels.WARN) end
+function CurrFile() vim.notify(tostring(vim.api.nvim_buf_get_name(0)), vim.log.levels.WARN) end
+function CurrFileExt() vim.notify(tostring(vim.api.nvim_buf_get_name(0):match '%.([^.]+)$'), vim.log.levels.WARN) end
 
 -- vim.api.nvim_create_user_command('PyAutoRun', {
 --   nargs = '1',
