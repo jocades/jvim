@@ -31,7 +31,7 @@ local attach_to_buffer = function(bufnr, command)
     end
   end
 
-  vim.api.nvim_create_autocmd('BufWritePost', {
+  local id = vim.api.nvim_create_autocmd('BufWritePost', {
     group = group,
     pattern = state.pattern,
     callback = function()
@@ -56,32 +56,41 @@ local attach_to_buffer = function(bufnr, command)
     pattern = 'RunOnSave',
     callback = function()
       state.output_buf = nil
-      print 'BufWipeout'
-    end,
-  })
 
-  --  remove the autocmd when the file to be run is closed
-  vim.api.nvim_create_autocmd('BufWipeout', {
-    group = group,
-    pattern = state.file_name,
-    callback = function()
-      vim.api.nvim_command('autocmd! ' .. group)
-      print 'BufWipeout'
-      print('Detached from: ' .. state.file_name)
+      -- local continue = vim.fn.confirm('Continue watching?', '&Yes\n&No', 1)
+      -- if continue == 2 then
+      --   vim.api.nvim_del_autocmd(id)
+      --   print 'BufWipeout'
+      --   print('Detached from: ' .. state.file_name)
+      -- end
     end,
   })
 
   -- it seems like bufwiepout is not working for the runnin buffer, maybe because harpoon is using it.
-  -- what other cmd can i use to detect when the buffer is closed?
-  -- vim.api.nvim_create_autocmd('BufDelete', {
-  --   group = group,
-  --   pattern = state.file_name,
-  --   callback = function()
-  --     vim.api.nvim_command('autocmd! ' .. group)
-  --     print 'BufDelete'
-  --     print('Detached from: ' .. state.file_name)
-  --   end,
-  -- })
+  -- buf unload seems to work, but i dont know if it is the best way to do it.
+  vim.api.nvim_create_autocmd('BufUnload', {
+    group = group,
+    pattern = state.file_name,
+    callback = function()
+      vim.api.nvim_del_autocmd(id)
+      vim.api.nvim_buf_delete(state.output_buf, { force = true })
+
+      print 'BufUnload'
+      print('Detached from: ' .. state.file_name)
+    end,
+  })
+end
+
+local function init()
+  local ext = h:get_file_ext()
+  local command = h:get_command(ext)
+
+  if not command then
+    print('No command found for extension: ' .. ext)
+    return
+  end
+
+  return ext, command
 end
 
 local function run_on_save()

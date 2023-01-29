@@ -5,7 +5,7 @@ import time
 def main():
     for letter in ascii_lowercase[:5]:
         print(letter)
-        time.sleep(1)
+        # time.sleep(1)
 
     print('Done!')
 

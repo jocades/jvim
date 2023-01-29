@@ -15,15 +15,15 @@ local K = {
     ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
 
     -- Buffer actions
-    ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>x'] = { cmd.bd, { desc = 'Close buffer', nowait = true } },
     ['<leader>X'] = { ':bd!<cr>', { desc = 'Close buffer without saving' } },
-    ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir', nowait = true } },
+    ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir' } },
     ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
     ['<leader>so'] = { ':w | so %<cr>', { desc = 'Save, source & run current config file' } },
+    ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
 
-    -- Buffer navigation (harpoon for buf navigation and organization)
+    -- Buffer navigation (telescope + harpoon)
     ['<Tab>'] = { cmd.bnext },
     ['<S-Tab>'] = { cmd.bprev },
 
@@ -48,11 +48,12 @@ local K = {
     ['<leader>f'] = { vim.diagnostic.open_float },
     ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
 
-    -- Insert blank line on top / bottom of the cursor
+    -- Insert blank line
     ['<C-cr>'] = { 'o<ESC>' },
     ['<S-cr>'] = { 'O<ESC>' },
 
-    -- Keep cursor centered when scrolling
+    -- Centralization
+    ['<leader>c'] = { 'zz', { nowait = true } },
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
   },
@@ -80,8 +81,8 @@ local K = {
 }
 
 -- DRY
-for mode, keymaps in pairs(K) do
-  for keys, t in pairs(keymaps) do
-    require('j0rdi.utils').map(mode, keys, t[1], t[2])
+for mode, mappings in pairs(K) do
+  for k, t in pairs(mappings) do
+    require('j0rdi.utils').map(mode, k, t[1], t[2])
   end
 end

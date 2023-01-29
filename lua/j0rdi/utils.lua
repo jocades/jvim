@@ -20,10 +20,10 @@ M.handle_new_buf = function(opts)
     return
   end
 
-  local path = ' %:h/' .. name
+  local path = '%:h/' .. name
 
   if not opts then
-    cmd('e' .. path)
+    cmd('e ' .. path)
     return
   end
 
