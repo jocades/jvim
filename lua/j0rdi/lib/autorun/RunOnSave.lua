@@ -14,11 +14,23 @@
 local h = require 'j0rdi.lib.helpers'
 local group = vim.api.nvim_create_augroup('j0rdi-autorun', { clear = true })
 
+local function get_buf_info(string)
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  return {
+    path = vim.fn.expand '%:p',
+    name = vim.fn.expand '%:t',
+    ext = vim.fn.expand '%:e',
+  }
+end
+
+print(get_buf_info().name)
+
 local attach_to_buffer = function(bufnr, command)
   local state = {
     output_buf = nil,
     command = command,
-    file_name = h:get_file_name(),
+    file_name = vim.fn.expand '%:t',
     pattern = '*.' .. h:get_file_ext(),
     files = {},
   }
@@ -65,13 +77,16 @@ local attach_to_buffer = function(bufnr, command)
   })
 
   vim.api.nvim_create_autocmd('BufWipeout', {
-    once = true,
     group = group,
-    pattern = state.files,
+    pattern = state.pattern,
     callback = function()
+      -- check if we have any open bufs matching the pattern
+      -- if not, delete the autocmd and the output buffer
+
       vim.api.nvim_del_autocmd(id)
       vim.api.nvim_buf_delete(state.output_buf, { force = true })
       print('Detached from: ' .. h:get_file_name())
+      return true
 
       -- state.files = vim.tbl_filter(function(f) return f ~= h:get_file_path() end, state.files)
       --
@@ -96,51 +111,7 @@ local function init()
   return ext, command
 end
 
-local function run_on_save()
-  local ext = h:get_file_ext()
-  local command = h:get_command(ext)
-
-  if not command then
-    print('No command found for extension: ' .. ext)
-    return
-  end
-
-  attach_to_buffer(h:get_curr_buf(), command)
-end
-
-local function run_once()
-  local ext = h:get_file_ext()
-  local command = h:get_command(ext)
-
-  if not command then
-    print('No command found for extension: ' .. ext)
-    return
-  end
-
-  local buf = h:new_buf()
-  vim.api.nvim_buf_set_name(buf, 'RunOnce')
-  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-  vim.cmd.wincmd 'p'
-
-  h:write_to_buf(buf, 0, -1, false, { '- Running: ' .. h:get_file_name() })
-
-  vim.fn.jobstart({ command, h:get_file_path() }, {
-    stdout_buffered = true,
-    on_stdout = function(_, data)
-      if data then
-        h:write_to_buf(buf, -1, -1, false, data)
-      end
-    end,
-    on_stderr = function(_, data)
-      if data then
-        h:write_to_buf(buf, -1, -1, false, data)
-      end
-    end,
-  })
-end
-
-vim.api.nvim_create_user_command('AutoRun', function(c)
+vim.api.nvim_create_user_command('Run', function(c)
   if c.args == 'watch' then
     print 'watch'
     return
