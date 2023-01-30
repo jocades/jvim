@@ -2,7 +2,7 @@
 
 local options = {
   fillchars = { eob = '~' }, -- end of file fill (not working I think its cus of the colorscheme)
-  clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
+  --clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
   mouse = 'a', -- enable mouse mode
   incsearch = true, -- highlit while search
   hlsearch = false, -- highlight on search

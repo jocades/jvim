@@ -20,6 +20,7 @@ local attach_to_buffer = function(bufnr, command)
     command = command,
     file_name = h:get_file_name(),
     pattern = '*.' .. h:get_file_ext(),
+    files = {},
   }
 
   local inform = string.format('Attached to: %s. Pattern: %s', state.file_name, state.pattern)
@@ -42,11 +43,17 @@ local attach_to_buffer = function(bufnr, command)
 
       h:write_to_buf(state.output_buf, 0, -1, false, { string.format('- Running %s:', state.file_name), '' })
 
-      vim.fn.jobstart({ state.command, h:get_path() }, {
+      local path = h:get_file_path()
+
+      vim.fn.jobstart({ state.command, path }, {
         stdout_buffered = true,
         on_stdout = append_data,
         on_stderr = append_data,
       })
+
+      if not vim.tbl_contains(state.files, path) then
+        table.insert(state.files, path)
+      end
     end,
   })
 
@@ -54,29 +61,25 @@ local attach_to_buffer = function(bufnr, command)
   vim.api.nvim_create_autocmd('BufWipeout', {
     group = group,
     pattern = 'RunOnSave',
-    callback = function()
-      state.output_buf = nil
-
-      -- local continue = vim.fn.confirm('Continue watching?', '&Yes\n&No', 1)
-      -- if continue == 2 then
-      --   vim.api.nvim_del_autocmd(id)
-      --   print 'BufWipeout'
-      --   print('Detached from: ' .. state.file_name)
-      -- end
-    end,
+    callback = function() state.output_buf = nil end,
   })
 
-  -- it seems like bufwiepout is not working for the runnin buffer, maybe because harpoon is using it.
-  -- buf unload seems to work, but i dont know if it is the best way to do it.
-  vim.api.nvim_create_autocmd('BufUnload', {
+  vim.api.nvim_create_autocmd('BufWipeout', {
+    once = true,
     group = group,
-    pattern = state.file_name,
+    pattern = state.files,
     callback = function()
       vim.api.nvim_del_autocmd(id)
       vim.api.nvim_buf_delete(state.output_buf, { force = true })
+      print('Detached from: ' .. h:get_file_name())
 
-      print 'BufUnload'
-      print('Detached from: ' .. state.file_name)
+      -- state.files = vim.tbl_filter(function(f) return f ~= h:get_file_path() end, state.files)
+      --
+      -- if vim.tbl_isempty(state.files) then
+      --   vim.api.nvim_del_autocmd(id)
+      --   vim.api.nvim_buf_delete(state.output_buf, { force = true })
+      --   print('Detached from: ' .. h:get_file_name())
+      -- end
     end,
   })
 end
@@ -122,7 +125,7 @@ local function run_once()
 
   h:write_to_buf(buf, 0, -1, false, { '- Running: ' .. h:get_file_name() })
 
-  vim.fn.jobstart({ command, h:get_path() }, {
+  vim.fn.jobstart({ command, h:get_file_path() }, {
     stdout_buffered = true,
     on_stdout = function(_, data)
       if data then

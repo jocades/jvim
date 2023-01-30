@@ -24,7 +24,7 @@ M.new_nofile_buf = function(_, name)
   return buf
 end
 
-M.get_path = function(_, bufnr)
+M.get_file_path = function(_, bufnr)
   if not bufnr then
     return vim.api.nvim_buf_get_name(0)
   end
@@ -34,7 +34,7 @@ end
 M.get_file_name = function(self, path)
   local regex = '([^/]+)$'
   if not path then
-    return self.get_path():match(regex)
+    return self.get_file_path():match(regex)
   end
   return path:match(regex)
 end
@@ -42,7 +42,7 @@ end
 M.get_file_ext = function(self, path)
   local regex = '%.([^.]+)$'
   if not path then
-    return self.get_path():match(regex)
+    return self.get_file_path():match(regex)
   end
   return path:match(regex)
 end
