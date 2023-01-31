@@ -11,13 +11,28 @@ local function get_cursor()
   }
 end
 
+local function get_comment()
+  local ft = vim.bo.filetype
+  if ft == 'lua' then
+    return '--'
+  elseif ft == 'python' then
+    return '#'
+  elseif ft == 'javascript' then
+    return '//'
+  elseif ft == 'typescript' then
+    return '//'
+  else
+    print('Unknown filetype: ' .. ft)
+  end
+end
+
 local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
 local data_dir = git_root .. '/_data-todos/'
 
 local function set_todo()
   local line = api.nvim_get_current_line()
   local cursor = get_cursor()
-  local new_line = string.format('%s-- TODO: %s', line:sub(1, cursor.x), line:sub(cursor.x + 1))
+  local new_line = string.format('%s%s TODO: %s', line:sub(1, cursor.x), get_comment(), line:sub(cursor.x + 1))
   api.nvim_set_current_line(new_line)
   api.nvim_feedkeys('A', 'n', true)
 end
@@ -46,9 +61,7 @@ local function on_save()
     return
   end
 
-  file_info[api.nvim_buf_get_name(0)] = { todos = todos }
-  --P(file_info)
-
+  file_info[api.nvim_buf_get_name(0)] = todos
   local data_path = string.format('%s%s.txt', data_dir, vim.fn.expand '%:t:r')
   local file = io.open(data_path, 'w')
 
@@ -59,7 +72,7 @@ local function on_save()
 
   for file_path, data in pairs(file_info) do
     file:write(string.format('PATH: %s\n', file_path))
-    for i, todo in ipairs(data.todos) do
+    for i, todo in ipairs(data) do
       file:write(string.format('  %d**%d:%d** %s\n', i, todo.mark.y, todo.mark.x, todo.text))
     end
   end
@@ -71,7 +84,7 @@ local group = api.nvim_create_augroup('j0rdi-todos', { clear = true })
 api.nvim_create_autocmd('BufWritePost', {
   group = group,
   pattern = git_root .. '/**/*',
-  callback = function() print 'saved' end,
+  callback = function() on_save() end,
 })
 
 -- DISPLAY --
@@ -119,7 +132,7 @@ local function scan_todos_data()
   return todos
 end
 
--- TODO: maybe use telescope for this? How would i display the file in the preview?
+-- TODO: maybe use telescope for this? How would i display the file in the preview
 local function display_todos(win)
   local todos_data = scan_todos_data()
   P(todos_data)
@@ -137,9 +150,8 @@ local function display_todos(win)
     table.insert(lines, '--------------------')
   end
 
-  -- open new buffer on the bottom with 30% of the height
-  vim.cmd.new()
-  vim.cmd.resize(20)
+  vim.cmd [[15new]]
+
   api.nvim_buf_set_lines(0, 0, -1, false, lines)
   api.nvim_buf_set_option(0, 'buftype', 'nofile')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')

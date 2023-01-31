@@ -30,9 +30,7 @@ end
 
 packer.init {
   display = {
-    open_fn = function()
-      return require('packer.util').float { border = 'rounded' }
-    end,
+    open_fn = function() return require('packer.util').float { border = 'rounded' } end,
   },
 }
 
@@ -63,6 +61,7 @@ packer.startup(function(use)
       'hrsh7th/cmp-cmdline', -- cmdline completion
       'saadparwaiz1/cmp_luasnip', -- snippet completion
       'hrsh7th/cmp-path', -- path completion
+      'onsails/lspkind-nvim', -- icons for completion
     },
   }
 
@@ -130,9 +129,7 @@ packer.startup(function(use)
   use 'windwp/nvim-ts-autotag'
   use {
     'windwp/nvim-autopairs',
-    config = function()
-      require('nvim-autopairs').setup {}
-    end,
+    config = function() require('nvim-autopairs').setup {} end,
   }
 
   -- Misc --

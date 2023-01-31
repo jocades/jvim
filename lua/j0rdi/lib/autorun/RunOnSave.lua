@@ -1,16 +1,6 @@
--- I want to creat a command which:
--- attaches to te current buffer, runs the curerent file,
--- and displays the ouput in a new buffer to the right of the current buffer.
--- I want to be able to run this command from the command line,
--- or from a keybinding.
-
--- If it is the first time the command is run, it will ask for the command to run.
--- i.e. "python", "node", "bash", etc.
--- If it is not the first time, it will use the last command used.
-
 -- It seems like i can do it with plenary too, but i might just keep my own methods.
 -- local file_extension = require('plenary.filetype').detect(get_path(), {})
---
+
 local h = require 'j0rdi.lib.helpers'
 local group = vim.api.nvim_create_augroup('j0rdi-autorun', { clear = true })
 
@@ -122,7 +112,6 @@ vim.api.nvim_create_user_command('Run', function(c)
   attach_to_buffer(h:get_curr_buf(), command)
 end, { nargs = '?' })
 
--- how can i pass arguments to the user command?
 vim.api.nvim_create_user_command('Args', function(c)
   if c.args == 'watch' then
     print 'watch'

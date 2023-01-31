@@ -22,6 +22,7 @@ local K = {
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
     ['<leader>so'] = { ':w | so %<cr>', { desc = 'Save, source & run current config file' } },
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
+    ['<leader>y'] = { ':%y+<cr>', { desc = 'Copy whole buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
     ['<Tab>'] = { cmd.bnext },

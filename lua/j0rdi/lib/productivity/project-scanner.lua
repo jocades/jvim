@@ -71,6 +71,7 @@ local function save_todos_data(todos)
 
     -- extract the file name without the extension from the file path
     local file_name = file_path:match '^.+/(.+)$'
+    file_name = file_name:match '(.+)%..+$'
     local data_path = string.format('%s%s.txt', data_dir, file_name)
 
     print(data_path)

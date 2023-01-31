@@ -5,42 +5,7 @@ if not cmp_present or not snip_present then
   return
 end
 
-require('luasnip/loaders/from_vscode').lazy_load()
-
--- Fix some backspace behavior
-local check_backspace = function()
-  local col = vim.fn.col '.' - 1
-  return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s'
-end
-
---   פּ ﯟ   some other good icons
-local kind_icons = {
-  Text = '',
-  Method = 'm',
-  Function = '',
-  Constructor = '',
-  Field = '',
-  Variable = '',
-  Class = '',
-  Interface = '',
-  Module = '',
-  Property = '',
-  Unit = '',
-  Value = '',
-  Enum = '',
-  Keyword = '',
-  Snippet = '',
-  Color = '',
-  File = '',
-  Reference = '',
-  Folder = '',
-  EnumMember = '',
-  Constant = '',
-  Struct = '',
-  Event = '',
-  Operator = '',
-  TypeParameter = '',
-}
+local lspkind = require 'lspkind'
 
 cmp.setup {
   snippet = {
@@ -56,54 +21,77 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    -- Cycle menu with tab
-    -- ['<Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_next_item()
-    --   elseif luasnip.expand_or_jumpable() then
-    --     luasnip.expand_or_jump()
-    --   elseif check_backspace() then
-    --     fallback()
-    --   else
-    --     fallback()
-    --   end
-    -- end, { 'i', 's' }),
-    -- ['<S-Tab>'] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   elseif luasnip.jumpable(-1) then
-    --     luasnip.jump(-1)
-    --   else
-    --     fallback()
-    --   end
-    -- end, { 'i', 's' }),
   },
+
   formatting = { -- pop-up menu looks
-    fields = { 'kind', 'abbr', 'menu' },
-    format = function(entry, vim_item)
-      -- Kind icons
-      -- vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
-      vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
-      vim_item.menu = ({
-        luasnip = 'Snippet',
-        buffer = 'Buffer',
-        path = 'Path',
-      })[entry.source.name]
-      return vim_item
-    end,
+
+    format = lspkind.cmp_format {
+      with_text = true,
+      mode = 'symbol_text',
+      maxwidth = 50,
+
+      menu = {
+        buffer = '[buf]',
+        nvim_lsp = '[LSP]',
+        nvim_lua = '[api]',
+        path = '[path]',
+        luasnip = '[snip]',
+      },
+    },
   },
+
   sources = { -- order matters
     { name = 'nvim_lsp' },
-    { name = 'buffer' },
-    { name = 'luasnip' },
     { name = 'nvim-lua' },
+    { name = 'luasnip' },
+    -- {name = 'copilot'},
+    { name = 'buffer', keyword_length = 5 },
     { name = 'path' },
-  },
-  window = { -- pop-up doc with borders
-    --   -- documentation = cmp.config.window.bordered(),
   },
   experimental = {
     ghost_text = false,
     native_menu = false,
   },
 }
+
+--[[ window = { -- pop-up doc with borders
+    --   -- documentation = cmp.config.window.bordered(),
+    -- completion = {
+    --   winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
+    --   col_offset = -3,
+    --   side_padding = 0,
+    -- },
+  }, ]]
+
+--fields = { 'kind', 'abbr', 'menu' },
+-- format = function(entry, vim_item)
+--   local kind = require('lspkind').cmp_format { mode = 'symbol', maxwidth = 50 }(entry, vim_item)
+--   local strings = vim.split(kind.kind, '%s', { trimempty = true })
+--   kind.kind = ' ' .. (strings[1] or '') .. ' '
+--   kind.menu = '    (' .. (strings[2] or '') .. ')'
+--
+--   return kind
+-- end,
+--
+
+-- Cycle menu with tab
+-- ['<Tab>'] = cmp.mapping(function(fallback)
+--   if cmp.visible() then
+--     cmp.select_next_item()
+--   elseif luasnip.expand_or_jumpable() then
+--     luasnip.expand_or_jump()
+--   elseif check_backspace() then
+--     fallback()
+--   else
+--     fallback()
+--   end
+-- end, { 'i', 's' }),
+-- ['<S-Tab>'] = cmp.mapping(function(fallback)
+--   if cmp.visible() then
+--     cmp.select_prev_item()
+--   elseif luasnip.jumpable(-1) then
+--     luasnip.jump(-1)
+--   else
+--     fallback()
+--   end
+-- end, { 'i', 's' }),

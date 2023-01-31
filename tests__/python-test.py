@@ -1,5 +1,7 @@
 import random
 
+# TODO: add some code here
+
 
 def greet(text):
     return f'Hello {text}'
