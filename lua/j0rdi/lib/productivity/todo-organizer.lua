@@ -155,6 +155,7 @@ local function display_todos(win)
   api.nvim_buf_set_lines(0, 0, -1, false, lines)
   api.nvim_buf_set_option(0, 'buftype', 'nofile')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
+  api.nvim_buf_set_name(0, 'TodosList')
   api.nvim_win_set_cursor(0, { 2, 0 })
 
   local function on_enter()

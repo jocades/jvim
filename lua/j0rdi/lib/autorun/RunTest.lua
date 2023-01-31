@@ -14,7 +14,7 @@ local function get_buf_info(string)
   }
 end
 
-print(get_buf_info().name, get_buf_info().ext, get_buf_info().path)
+--print(get_buf_info().name, get_buf_info().ext, get_buf_info().path)
 
 local attach_to_buffer = function(bufnr, command)
   local state = {
@@ -101,7 +101,7 @@ local function init()
   return command, ext
 end
 
-vim.api.nvim_create_user_command('Run', function(c)
+vim.api.nvim_create_user_command('RunTest', function(c)
   if c.args == 'watch' then
     print 'watch'
     return
@@ -112,7 +112,7 @@ vim.api.nvim_create_user_command('Run', function(c)
   attach_to_buffer(h:get_curr_buf(), command)
 end, { nargs = '?' })
 
-vim.api.nvim_create_user_command('Args', function(c)
+vim.api.nvim_create_user_command('ArgsTest', function(c)
   if c.args == 'watch' then
     print 'watch'
     return

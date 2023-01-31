@@ -1,6 +1,6 @@
 --vim.cmd [[colorscheme onedark]]
 
-local colorscheme = 'tokyonight'
+local colorscheme = 'tokyonight-night'
 
 local present, _ = pcall(vim.cmd, 'colorscheme ' .. colorscheme)
 

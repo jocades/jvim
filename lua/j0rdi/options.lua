@@ -1,8 +1,7 @@
 -- See `:help vim.o`
 
 local options = {
-  fillchars = { eob = '~' }, -- end of file fill (not working I think its cus of the colorscheme)
-  --clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
+  clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
   mouse = 'a', -- enable mouse mode
   incsearch = true, -- highlit while search
   hlsearch = false, -- highlight on search
@@ -21,9 +20,13 @@ local options = {
   updatetime = 250, -- decrease update time
   signcolumn = 'yes', -- always show the sign column, otherwise it would shift the text each time
   termguicolors = true, -- set colorscheme
-  cmdheight = 2, -- more space in the neovim command line for displaying messages
+  cmdheight = 1, -- more space in the neovim command line for displaying messages
   pumheight = 10, -- pop up menu height
+  pumblend = 17,
+  wildmode = 'longest:full',
+  wildoptions = 'pum',
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
+  fillchars = { eob = '~' }, -- end of file fill (not working I think its cus of the colorscheme)
 }
 
 for k, v in pairs(options) do

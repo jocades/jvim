@@ -47,6 +47,8 @@ M.get_file_ext = function(self, path)
   return path:match(regex)
 end
 
+M.print_err = function(_, msg) vim.notify(msg, vim.log.levels.ERROR) end
+
 M.get_command = function(_, ext)
   local commands = {
     py = 'python',
