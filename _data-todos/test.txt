@@ -1,0 +1,3 @@
+PATH: /home/j0rdi/.config/nvim/lua/j0rdi/lib/productivity/test.lua
+  1**1:2**  TODO: Add description
+  2**2:2**  TODO: Add license

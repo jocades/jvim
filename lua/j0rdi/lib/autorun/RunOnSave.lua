@@ -24,7 +24,7 @@ local function get_buf_info(string)
   }
 end
 
-print(get_buf_info().name)
+print(get_buf_info().name, get_buf_info().ext, get_buf_info().path)
 
 local attach_to_buffer = function(bufnr, command)
   local state = {
@@ -108,7 +108,7 @@ local function init()
     return
   end
 
-  return ext, command
+  return command, ext
 end
 
 vim.api.nvim_create_user_command('Run', function(c)
@@ -117,16 +117,10 @@ vim.api.nvim_create_user_command('Run', function(c)
     return
   end
 
-  local ext = h:get_file_ext()
-  local command = h:get_command(ext)
-
-  if not command then
-    print('No command found for extension: ' .. ext)
-    return
-  end
+  local command = init()
 
   attach_to_buffer(h:get_curr_buf(), command)
-end, {})
+end, { nargs = '?' })
 
 -- how can i pass arguments to the user command?
 vim.api.nvim_create_user_command('Args', function(c)
