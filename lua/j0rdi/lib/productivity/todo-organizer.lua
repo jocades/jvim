@@ -1,4 +1,6 @@
 local api = vim.api
+
+local function print_err(msg) vim.notify(msg, vim.log.levels.ERROR) end
 -- TODO: testing
 
 local function get_cursor()
@@ -11,100 +13,6 @@ end
 
 local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
 local data_dir = git_root .. '/_data-todos/'
-
-local function scan_file(file_path)
-  if vim.fn.isdirectory(file_path) == 1 then
-    return
-  end
-
-  if vim.fn.filereadable(file_path) == 0 then
-    return
-  end
-
-  local file = io.open(file_path, 'r')
-  if not file then
-    vim.notify('Could not open file: ' .. file_path, vim.log.levels.ERROR)
-    return
-  end
-
-  local todos = {}
-  local line_nr = 0
-
-  for line in file:lines() do
-    line_nr = line_nr + 1
-    local todo = line:match '(.+)TODO:(.+)'
-    if todo then
-      table.insert(todos, {
-        text = line:sub(todo:len() + 1),
-        mark = {
-          y = line_nr,
-          x = #todo,
-        },
-      })
-    end
-  end
-  file:close()
-  --P(todos)
-
-  return todos
-end
-
---scan_file(vim.fn.expand '%:p')
-
-local function scan_todos()
-  local todos = {}
-  local files = vim.fn.systemlist 'git ls-files | grep .lua$'
-  for i, f in ipairs(files) do
-    files[i] = string.format('%s/%s', git_root, f)
-  end
-
-  --print(vim.inspect(files))
-
-  for _, f in ipairs(files) do
-    local file_todos = scan_file(f)
-    if not file_todos or vim.tbl_isempty(file_todos) then
-      todos[f] = nil
-    else
-      todos[f] = file_todos
-    end
-  end
-
-  return todos
-end
-
---P(scan_todos())
-
-local function save_todos_data(todos)
-  for file_path, data in pairs(todos) do
-    if not data then
-      goto continue
-    end
-
-    -- extract the file name without the extension from the file path
-    local file_name = file_path:match '^.+/(.+)$'
-    local data_path = string.format('%s%s.txt', data_dir, file_name)
-
-    print(data_path)
-    local file = io.open(data_path, 'w')
-    if not file then
-      return
-    end
-
-    file:write(string.format('PATH: %s\n', file_path))
-
-    for i, todo in ipairs(data) do
-      file:write(string.format('  %d**%d:%d** %s\n', i, todo.mark.y, todo.mark.x, todo.text))
-    end
-
-    file:close()
-    ::continue::
-  end
-end
-
---save_todos_data(scan_todos())
-
-local global_todos = scan_todos()
-save_todos_data(global_todos)
 
 local function set_todo()
   local line = api.nvim_get_current_line()
@@ -145,7 +53,7 @@ local function on_save()
   local file = io.open(data_path, 'w')
 
   if not file then
-    vim.notify('Could not open todos file', vim.log.levels.ERROR)
+    print_err('Could not open todos file: ' .. data_path)
     return
   end
 
@@ -166,40 +74,7 @@ api.nvim_create_autocmd('BufWritePost', {
   callback = function() print 'saved' end,
 })
 
--- IDEA: use a buffer as db to store the todos and load them on startup
--- use the db to display the todos in a floating window with a nice structure
--- the todos will no be display the x and y position of the todo in the file
--- so i will need to map the todo of the display with the todo in the file and retrieve the x and y position of the todo in that file(key)
---
--- the db will be a table like so:
--- {
--- '/path/to/file': {
--- todos: {
--- 1: {
--- text: 'some text',
--- mark: {x = 1, y = 1},
--- },
--- 2: {
--- text: 'some text',
--- mark: {x = 1, y = 1},
--- },
--- },
--- },
--- '/path/to/file': {
--- ...
--- },
---
--- when the user press enter on a todo in the floating window, the plugin will jump to the todo in the file and set the cursor at the right position
--- it will be displayed like so:
--- - '/path/to/file' (from git root)
--- 1- some text
--- 2- some text
--- --------------------
---
--- - '/path/to/file' (from git root)
--- 1- some text
--- etc...
-
+-- DISPLAY --
 local function scan_todos_data()
   local files = vim.fn.globpath(data_dir, '*.txt', true, true)
   local todos = {}
@@ -244,7 +119,8 @@ local function scan_todos_data()
   return todos
 end
 
-local function display_todos()
+-- TODO: maybe use telescope for this? How would i display the file in the preview?
+local function display_todos(win)
   local todos_data = scan_todos_data()
   P(todos_data)
   if not todos_data then
@@ -271,8 +147,8 @@ local function display_todos()
 
   local function on_enter()
     local cursor = get_cursor()
-    local curr_line = lines[cursor.y]
-    local index = curr_line:match '%d+'
+    local line = lines[cursor.y]
+    local index = line:match '%d+'
 
     local file_path = nil
     for i = cursor.y, 1, -1 do
@@ -290,23 +166,21 @@ local function display_todos()
 
     local todo = todos_data[file_path][tonumber(index)]
     if not todo then
-      vim.notify('Could not find todo', vim.log.levels.ERROR)
+      print_err 'Could not find todo'
       return
     end
 
     print('todo', todo.text)
     P(todo)
 
-    vim.cmd.e(file_path)
+    vim.cmd.wincmd 'p'
+    vim.cmd.edit(file_path)
     api.nvim_win_set_cursor(0, { todo.mark.y, todo.mark.x })
     api.nvim_feedkeys('zz', 'n', true)
   end
 
   -- remap enter to a custom action only in this buffer
   vim.keymap.set('n', '<cr>', on_enter, { buffer = 0 })
-  --
-  -- -- set the keymap
-  -- vim.keymap.set('n', '<leader>tk', jump_to_todo, { buffer = buf })
 end
 
-api.nvim_create_user_command('Todos', function() display_todos() end, {})
+api.nvim_create_user_command('Todos', function() display_todos(api.nvim_get_current_win()) end, {})

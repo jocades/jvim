@@ -1,6 +1,8 @@
 local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
 local data_dir = git_root .. '/_data-todos/'
 
+local function print_err(msg) vim.notify(msg, vim.log.levels.ERROR) end
+
 local function scan_file(file_path)
   if vim.fn.isdirectory(file_path) == 1 then
     return
@@ -40,7 +42,7 @@ end
 
 --scan_file(vim.fn.expand '%:p')
 
-local function scan_todos()
+local function scan_project()
   local todos = {}
   local files = vim.fn.systemlist 'git ls-files | grep .lua$'
   for i, f in ipairs(files) do
@@ -51,9 +53,7 @@ local function scan_todos()
 
   for _, f in ipairs(files) do
     local file_todos = scan_file(f)
-    if not file_todos or vim.tbl_isempty(file_todos) then
-      todos[f] = nil
-    else
+    if file_todos and not vim.tbl_isempty(file_todos) then
       todos[f] = file_todos
     end
   end
@@ -61,7 +61,7 @@ local function scan_todos()
   return todos
 end
 
---P(scan_todos())
+-- P(scan_todos())
 
 local function save_todos_data(todos)
   for file_path, data in pairs(todos) do
@@ -76,6 +76,7 @@ local function save_todos_data(todos)
     print(data_path)
     local file = io.open(data_path, 'w')
     if not file then
+      print_err('Could not open file: ' .. data_path)
       return
     end
 
@@ -90,7 +91,22 @@ local function save_todos_data(todos)
   end
 end
 
---save_todos_data(scan_todos())
+vim.api.nvim_create_user_command('ScanTodos', function()
+  local todos = scan_project()
+  save_todos_data(todos)
+end, {})
 
-local global_todos = scan_todos()
-save_todos_data(global_todos)
+vim.api.nvim_create_user_command(
+  'CheckTodos',
+  function()
+    require('telescope.builtin').find_files {
+      prompt_title = 'Scan Todos',
+      cwd = data_dir,
+      layout_strategy = 'vertical',
+      layout_config = {
+        height = 0.8,
+      },
+    }
+  end,
+  {}
+)

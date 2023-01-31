@@ -1,0 +1,2 @@
+PATH: /home/j0rdi/.config/nvim/after/plugin/lualine.lua
+  1**2:3** TODO: Add a spaces info
