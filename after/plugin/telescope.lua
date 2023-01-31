@@ -35,7 +35,6 @@ local b = require 'telescope.builtin'
 -- KEYMAPS
 local K = {
   -- Fuzzy find
-  ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
   ['<leader>ff'] = { b.find_files, 'Find Files' },
   ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
   ['<leader>fb'] = { b.buffers, 'Find existing buffers' },
@@ -58,6 +57,7 @@ local K = {
   -- Misc
   ['<leader>fh'] = { b.help_tags, 'Find Help' },
   ['<leader>fc'] = { b.grep_string, 'Find Current word' },
+  ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
 }
 
 for k, v in pairs(K) do

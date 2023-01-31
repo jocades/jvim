@@ -12,6 +12,100 @@ end
 local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
 local data_dir = git_root .. '/_data-todos/'
 
+local function scan_file(file_path)
+  if vim.fn.isdirectory(file_path) == 1 then
+    return
+  end
+
+  if vim.fn.filereadable(file_path) == 0 then
+    return
+  end
+
+  local file = io.open(file_path, 'r')
+  if not file then
+    vim.notify('Could not open file: ' .. file_path, vim.log.levels.ERROR)
+    return
+  end
+
+  local todos = {}
+  local line_nr = 0
+
+  for line in file:lines() do
+    line_nr = line_nr + 1
+    local todo = line:match '(.+)TODO:(.+)'
+    if todo then
+      table.insert(todos, {
+        text = line:sub(todo:len() + 1),
+        mark = {
+          y = line_nr,
+          x = #todo,
+        },
+      })
+    end
+  end
+  file:close()
+  --P(todos)
+
+  return todos
+end
+
+--scan_file(vim.fn.expand '%:p')
+
+local function scan_todos()
+  local todos = {}
+  local files = vim.fn.systemlist 'git ls-files | grep .lua$'
+  for i, f in ipairs(files) do
+    files[i] = string.format('%s/%s', git_root, f)
+  end
+
+  --print(vim.inspect(files))
+
+  for _, f in ipairs(files) do
+    local file_todos = scan_file(f)
+    if not file_todos or vim.tbl_isempty(file_todos) then
+      todos[f] = nil
+    else
+      todos[f] = file_todos
+    end
+  end
+
+  return todos
+end
+
+--P(scan_todos())
+
+local function save_todos_data(todos)
+  for file_path, data in pairs(todos) do
+    if not data then
+      goto continue
+    end
+
+    -- extract the file name without the extension from the file path
+    local file_name = file_path:match '^.+/(.+)$'
+    local data_path = string.format('%s%s.txt', data_dir, file_name)
+
+    print(data_path)
+    local file = io.open(data_path, 'w')
+    if not file then
+      return
+    end
+
+    file:write(string.format('PATH: %s\n', file_path))
+
+    for i, todo in ipairs(data) do
+      file:write(string.format('  %d**%d:%d** %s\n', i, todo.mark.y, todo.mark.x, todo.text))
+    end
+
+    file:close()
+    ::continue::
+  end
+end
+
+--save_todos_data(scan_todos())
+
+local global_todos = scan_todos()
+save_todos_data(global_todos)
+
 local function set_todo()
   local line = api.nvim_get_current_line()
   local cursor = get_cursor()
@@ -23,11 +117,12 @@ end
 vim.keymap.set('n', '<leader>td', set_todo, { noremap = true })
 
 local function on_save()
-  local file_info = {}
   local lines = api.nvim_buf_get_lines(0, 0, -1, false)
+  local file_info = {}
   local todos = {}
+
   for i, line in ipairs(lines) do
-    local todo = line:match '(.+)-- TODO:(.+)'
+    local todo = line:match '(.+)TODO:(.+)'
     if todo then
       table.insert(todos, {
         text = line:sub(todo:len() + 1),
@@ -44,7 +139,7 @@ local function on_save()
   end
 
   file_info[api.nvim_buf_get_name(0)] = { todos = todos }
-  P(file_info)
+  --P(file_info)
 
   local data_path = string.format('%s%s.txt', data_dir, vim.fn.expand '%:t:r')
   local file = io.open(data_path, 'w')
@@ -63,6 +158,13 @@ local function on_save()
 
   file:close()
 end
+
+local group = api.nvim_create_augroup('j0rdi-todos', { clear = true })
+api.nvim_create_autocmd('BufWritePost', {
+  group = group,
+  pattern = git_root .. '/**/*',
+  callback = function() print 'saved' end,
+})
 
 -- IDEA: use a buffer as db to store the todos and load them on startup
 -- use the db to display the todos in a floating window with a nice structure
@@ -133,7 +235,7 @@ local function scan_todos_data()
     end
 
     if file_path then
-      todos[file_path] = { todos = file_todos }
+      todos[file_path] = file_todos
     end
 
     file:close() -- Note that files are automatically closed when their handles are garbage collected, but that takes an unpredictable amount of time to happen.
@@ -153,13 +255,15 @@ local function display_todos()
 
   for file_path, data in pairs(todos_data) do
     table.insert(lines, string.format('- File: %s', file_path))
-    for i, todo in ipairs(data.todos) do
+    for i, todo in ipairs(data) do
       table.insert(lines, string.format('  %d- %s', i, todo.text))
     end
     table.insert(lines, '--------------------')
   end
 
+  -- open new buffer on the bottom with 30% of the height
   vim.cmd.new()
+  vim.cmd.resize(20)
   api.nvim_buf_set_lines(0, 0, -1, false, lines)
   api.nvim_buf_set_option(0, 'buftype', 'nofile')
   api.nvim_buf_set_option(0, 'bufhidden', 'wipe')
@@ -180,11 +284,11 @@ local function display_todos()
     end
 
     if not file_path or not index then
-      vim.notify('Could not find todo', vim.log.levels.ERROR)
+      print 'Error while parsing todo'
       return
     end
 
-    local todo = todos_data[file_path].todos[tonumber(index)]
+    local todo = todos_data[file_path][tonumber(index)]
     if not todo then
       vim.notify('Could not find todo', vim.log.levels.ERROR)
       return

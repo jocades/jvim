@@ -1,4 +1,0 @@
-PATH: /home/j0rdi/.config/nvim/lua/j0rdi/lib/productivity/todo-organizer.lua
-  1**2:2**  TODO: testing
-  2**18:38**  TODO: %s', line:sub(1, cursor.x), line:sub(cursor.x + 1))
-  3**30:35**  TODO:(.+)'

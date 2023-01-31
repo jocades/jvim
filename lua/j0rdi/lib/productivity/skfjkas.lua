@@ -8,7 +8,23 @@ for i = 1, 10 do
   })
 end
 
-print(t[6].x)
+--print(t[6].x)
+
+-- for i, v in ipairs(t) do
+--   if i == 6 then
+--     return
+--   end
+--   print(i)
+-- end
+
+-- how to make the above but continue if i == 6? and just ignore it?
+for i, v in ipairs(t) do
+  if i == 6 then
+    goto continue
+  end
+  print(i)
+  ::continue::
+end
 
 local todos = {
   ['/path/to/file'] = t,
@@ -18,37 +34,4 @@ local todos = {
 local function get_todos_file()
   local todos_file = vim.fn.stdpath 'data' .. '/todos.txt'
   return todos_file
-end
-
-local function scan_todos_file()
-  local todos_file = get_todos_file()
-  local file = io.open(todos_file, 'r')
-  if not file then
-    vim.notify('Could not open todos file', vim.log.levels.ERROR)
-    return
-  end
-
-  local todos = {}
-  local file_path = nil
-
-  for line in file:lines() do
-    local path = line:match 'PATH: (.+)'
-    if path then
-      file_path = path
-      todos[file_path] = {}
-    else
-      local todo = line:match '(%d+)%*%*(%d+):(%d+)%*%* TODO:(.+)'
-      if todo then
-        table.insert(todos[file_path], {
-          x = tonumber(todo[2]),
-          y = tonumber(todo[3]),
-          text = todo[4],
-        })
-      end
-    end
-  end
-
-  file:close()
-
-  return todos
 end
