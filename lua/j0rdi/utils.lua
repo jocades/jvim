@@ -47,27 +47,6 @@ M.handle_new_buf = function(opts)
   end
 end
 
--- i dont want nvim to mess up my windows when i close a buffer, take onw of the open buffer and put it where the closed one was
-M.close_buf = function()
-  local buf = vim.api.nvim_get_current_buf()
-  local win = vim.api.nvim_get_current_win()
-  local buf_count = vim.api.nvim_list_bufs()
-  local win_count = vim.api.nvim_list_wins()
-
-  if #buf_count == 1 then
-    cmd 'q'
-    return
-  end
-
-  if #win_count == 1 then
-    cmd 'q'
-    return
-  end
-
-  cmd 'bd'
-  vim.api.nvim_set_current_win(win)
-end
-
 M.p_require = function(module)
   local ok, mod = pcall(require, module)
   if not ok then
