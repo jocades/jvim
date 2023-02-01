@@ -7,11 +7,6 @@ local actions = require 'telescope.actions'
 
 -- See `:help telescope` and `:help telescope.setup()`
 telescope.setup {
-  prompt_prefix = ' ',
-  selection_caret = ' ',
-  path_display = { 'smart' },
-  file_ignore_patterns = { '.git/', 'node_modules' },
-
   defaults = {
     mappings = {
       i = {
@@ -23,6 +18,45 @@ telescope.setup {
         ['<Up>'] = actions.cycle_history_prev,
       },
     },
+    prompt_prefix = '   ',
+    selection_caret = '> ', --' ',
+    path_display = { 'absolute' }, -- truncate, shorten, absolute, tail, smart
+    file_ignore_patterns = { '.git/', 'node_modules' },
+
+    layout_strategy = 'horizontal',
+    layout_config = {
+      width = 0.95,
+      height = 0.85,
+      -- preview_cutoff = 120,
+      prompt_position = 'top',
+
+      horizontal = {
+        preview_width = function(_, cols, _)
+          if cols > 200 then
+            return math.floor(cols * 0.4)
+          else
+            return math.floor(cols * 0.6)
+          end
+        end,
+      },
+
+      vertical = {
+        width = 0.9,
+        height = 0.95,
+        preview_height = 0.5,
+      },
+
+      flex = {
+        horizontal = {
+          preview_width = 0.9,
+        },
+      },
+    },
+
+    selection_strategy = 'reset',
+    sorting_strategy = 'ascending',
+    scroll_strategy = 'cycle',
+    color_devicons = true,
   },
 }
 
