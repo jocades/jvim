@@ -10,7 +10,7 @@ local options = {
   rnu = false, -- set relative line numbers
   wrap = false,
   --  smartindent = true, -- make indenting smarter again
-  --equalalways = true, -- make windows always equal height
+  equalalways = true, -- make windows always equal height
 
   scrolloff = 10, -- always 10 lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
@@ -26,11 +26,8 @@ local options = {
   termguicolors = true, -- set colorscheme
   cmdheight = 1, -- more space in the neovim command line for displaying messages
   pumheight = 10, -- pop up menu height
-  pumblend = 17,
-  wildmode = 'longest:full',
-  wildoptions = 'pum',
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
-  fillchars = { eob = '~' }, -- end of file fill (not working I think its cus of the colorscheme)
+  fillchars = { eob = '~' },
 }
 
 for k, v in pairs(options) do

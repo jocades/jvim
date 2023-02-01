@@ -1,5 +1,4 @@
 local present, lualine = pcall(require, 'lualine')
--- TODO: Add a spaces info
 if not present then
   return
 end

@@ -10,13 +10,14 @@ local K = {
   -- NORMAL
   n = {
     -- Common
-    ['<leader>e'] = { cmd.NvimTreeToggle, { desc = 'Toggle nvim-tree' } },
+    ['<C-n>'] = { cmd.NvimTreeToggle, { desc = 'Toggle nvim-tree' } },
+    ['<leader>e'] = { cmd.NvimTreeFocus, { desc = 'Focus nvim-tree' } },
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
     ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
 
     -- Buffer actions
     ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = { ':Beleted!<cr>', { desc = 'Close buffer without saving' } },
+    ['<leader>X'] = { ':Bdelete!<cr>', { desc = 'Close buffer without saving' } },
     ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir' } },
     ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
@@ -29,7 +30,7 @@ local K = {
     ['<S-Tab>'] = { cmd.bprev },
 
     -- Window actions
-    ['<leader>w'] = { cmd.close, { desc = 'Close window', nowait = true } },
+    ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
     ['<C-Up>'] = { ':resize +2<cr>' },

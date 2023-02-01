@@ -1,0 +1,2 @@
+PATH: /home/j0rdi/.config/nvim/lua/j0rdi/colorscheme.lua
+  1**15:7** TODO: Brighter color for split windows separators

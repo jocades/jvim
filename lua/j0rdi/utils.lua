@@ -14,6 +14,19 @@ M.map = function(mode, keys, exec, opts)
   vim.keymap.set(mode, keys, exec, opts)
 end
 
+-- Close all buffers expect modified ones whihc hvant been saved
+M.close_all = function()
+  local bufs = vim.api.nvim_list_bufs()
+  for _, buf in ipairs(bufs) do
+    local modified = vim.api.nvim_buf_get_option(buf, 'modified')
+    if not modified then
+      vim.cmd('Bdelete ' .. buf)
+    end
+  end
+end
+
+-- vim.keymap.set('n', '<leader>cl', ':lua require("j0rdi.utils").close_all()<CR>')
+
 M.handle_new_buf = function(opts)
   local name = vim.fn.input 'Enter file name: '
   if name == '' then
