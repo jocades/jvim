@@ -80,12 +80,13 @@ local function on_save()
   file:close()
 end
 
+--[[ -- CREATE AUTOCMD --
 local group = api.nvim_create_augroup('j0rdi-todos', { clear = true })
 api.nvim_create_autocmd('BufWritePost', {
   group = group,
   pattern = git_root .. '/**/*',
   callback = function() on_save() end,
-})
+}) ]]
 
 -- DISPLAY --
 local function scan_todos_data()

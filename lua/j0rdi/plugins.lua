@@ -133,6 +133,9 @@ packer.startup(function(use)
   }
 
   -- Misc --
+  use 'folke/zen-mode.nvim' -- distraction free writing
+  use 'moll/vim-bbye' -- better buffer deletion
+  use 'NvChad/nvim-colorizer.lua' -- color highlighter
   use 'kyazdani42/nvim-web-devicons' -- required by many other plugins
   use 'lukas-reineke/indent-blankline.nvim' -- add indentation guides even on blank lines
   use 'tpope/vim-sleuth' -- detect tabstop and shiftwidth automatically

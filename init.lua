@@ -5,5 +5,3 @@ require 'j0rdi.copilot'
 require 'j0rdi.colorscheme'
 require 'j0rdi.lsp'
 require 'j0rdi.lib'
-
-vim.opt.fillchars = { eob = '~' }

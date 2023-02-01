@@ -1,6 +1,12 @@
-local present, npairs = pcall(require, 'nvim-autopairs')
-if not present then
+local ok1, npairs = pcall(require, 'nvim-autopairs')
+local ok2, auto_tag = pcall(require, 'nvim-ts-autotag') -- React, HTML auto closing tags
+
+if not ok1 then
   return
+end
+
+if ok2 then
+  auto_tag.setup()
 end
 
 npairs.setup {

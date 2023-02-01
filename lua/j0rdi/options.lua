@@ -10,9 +10,13 @@ local options = {
   rnu = false, -- set relative line numbers
   wrap = false,
   --  smartindent = true, -- make indenting smarter again
+  --equalalways = true, -- make windows always equal height
+
+  scrolloff = 10, -- always 10 lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
   cursorline = true, -- highlight current line
+
   breakindent = true, -- enable break indent
   undofile = true, -- save undo history
   ignorecase = true, -- case insensitive searching UNLESS /C or capital in search
@@ -41,3 +45,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+-- Cursorline control
+-- local group = vim.api.nvim_create_augroup('CursorLineControl', { clear = true })
+-- local function set_cursorline(event, value, pattern)
+--   vim.api.nvim_create_autocmd(event, {
+--     group = group,
+--     pattern = pattern,
+--     callback = function() vim.opt_local.cursorline = value end,
+--   })
+-- end
+-- set_cursorline('WinLeave', false)
+-- set_cursorline('WinEnter', true)
+-- set_cursorline('FileType', false, 'TelescopePrompt')

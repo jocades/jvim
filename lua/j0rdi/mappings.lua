@@ -15,8 +15,8 @@ local K = {
     ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
 
     -- Buffer actions
-    ['<leader>x'] = { cmd.bd, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = { ':bd!<cr>', { desc = 'Close buffer without saving' } },
+    ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },
+    ['<leader>X'] = { ':Beleted!<cr>', { desc = 'Close buffer without saving' } },
     ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir' } },
     ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
@@ -29,9 +29,9 @@ local K = {
     ['<S-Tab>'] = { cmd.bprev },
 
     -- Window actions
+    ['<leader>w'] = { cmd.close, { desc = 'Close window', nowait = true } },
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
-    ['<leader>z'] = { cmd.close, { desc = 'Close window' } },
     ['<C-Up>'] = { ':resize +2<cr>' },
     ['<C-Down>'] = { ':resize -2<cr>' },
     ['<C-Left>'] = { ':vertical resize -2<cr>' },
@@ -46,7 +46,8 @@ local K = {
     -- Diagnostics
     ['[d'] = { vim.diagnostic.goto_prev },
     [']d'] = { vim.diagnostic.goto_next },
-    ['<leader>f'] = { vim.diagnostic.open_float },
+    ['<leader>d'] = { vim.diagnostic.open_float, nowait = true },
+    ['<leader>dc'] = { vim.diagnostic.setqflist, { desc = 'Show diagnostics in quickfix' } },
     ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
 
     -- Insert blank line
