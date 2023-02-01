@@ -1,9 +1,6 @@
 local cmd = vim.cmd
 local new_buf = require('j0rdi.utils').handle_new_buf
 
--- Set <SPACE> as the '<LEADER>' key, see `:help mapleader` (must happen before plugins are required)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 local K = {

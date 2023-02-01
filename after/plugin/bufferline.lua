@@ -79,7 +79,7 @@ bufferline.setup {
     --   return buffer_a.modified > buffer_b.modified
     -- end
   },
-  highlights = {
+  --[[ highlights = {
     fill = {
       fg = { attribute = 'fg', highlight = '#ff0000' },
       bg = { attribute = 'bg', highlight = 'TabLine' },
@@ -171,5 +171,5 @@ bufferline.setup {
       fg = { attribute = 'fg', highlight = 'LspDiagnosticsDefaultHint' },
       bg = { attribute = 'bg', highlight = 'Normal' },
     },
-  },
+  }, ]]
 }

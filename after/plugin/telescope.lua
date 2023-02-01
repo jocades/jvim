@@ -87,6 +87,8 @@ local K = {
   ['<leader>fg'] = { b.git_files, 'Find Git files' },
   ['<leader>cm'] = { b.git_commits, 'Git commits' },
   ['<leader>st'] = { b.git_status, 'Git status' },
+  ['<leader>gb'] = { b.git_branches, 'Git branches' },
+  ['<leader>gs'] = { b.git_stash, 'Git stash' },
 
   -- Misc
   ['<leader>fh'] = { b.help_tags, 'Find Help' },
