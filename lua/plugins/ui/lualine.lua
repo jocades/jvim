@@ -1,4 +1,29 @@
-local function spaces()
+return {
+  'nvim-lualine/lualine.nvim',
+  event = 'VeryLazy',
+  config = function()
+    require('lualine').setup {
+      options = {
+        theme = 'auto',
+        globalstatus = true,
+        icons_enabled = true,
+        component_separators = '|',
+        section_separators = '',
+        -- component_separators = { left = '', right = '' },
+        -- section_separators = { left = '', right = '' },
+      },
+      sections = {
+        lualine_b = { 'branch' },
+        lualine_c = { 'filename', 'diff' },
+        lualine_x = { 'diagnostics' },
+        lualine_y = { 'filetype' },
+        lualine_z = { 'location' },
+      },
+    }
+  end,
+}
+
+--[[ local function spaces()
   local spaces = vim.api.nvim_buf_get_option(0, 'expandtab') and 'sp' or 'tb'
   local width = vim.api.nvim_buf_get_option(0, 'shiftwidth')
   return string.format('%s: %d', spaces, width)
@@ -18,32 +43,4 @@ local function lsp_server()
     end
   end
   return msg
-end
-
-return {
-  'nvim-lualine/lualine.nvim',
-  config = function()
-    require('lualine').setup {
-      options = {
-        theme = 'auto',
-        globalstatus = true,
-        icons_enabled = true,
-        component_separators = '|',
-        section_separators = '',
-        -- component_separators = { left = '', right = '' },
-        -- section_separators = { left = '', right = '' },
-      },
-      sections = {
-        lualine_b = { 'branch' },
-        lualine_c = { 'filename', 'diff' },
-        lualine_x = { 'diagnostics' },
-        lualine_y = {
-          -- lsp_server,
-          --'fileformat',
-          'filetype',
-        },
-        lualine_z = { 'location' },
-      },
-    }
-  end,
-}
+end ]]

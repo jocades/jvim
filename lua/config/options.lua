@@ -12,6 +12,8 @@ local options = {
   --  smartindent = true, -- make indenting smarter again
   equalalways = true, -- make windows always equal height
 
+  -- winbar
+
   scrolloff = 10, -- always 10 lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
@@ -29,6 +31,8 @@ local options = {
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
   fillchars = { eob = '~' },
 }
+
+--vim.opt.winbar = '%=%m %f'
 
 for k, v in pairs(options) do
   vim.opt[k] = v

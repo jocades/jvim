@@ -1,5 +1,6 @@
 return {
   'kyazdani42/nvim-tree.lua',
+  cmd = { 'NvimTreeToggle', 'NvimTreeFocus' },
   config = function()
     local callback = require('nvim-tree.config').nvim_tree_callback
 
