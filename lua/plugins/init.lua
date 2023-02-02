@@ -15,21 +15,8 @@ return {
     },
   },
 
-  -- Fuzzy Finder (files, lsp, etc) + Plenary (common neovim lua utils)
-  {
-    'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'ahmedkhalf/project.nvim', -- telescope project picker
-      'ThePrimeagen/harpoon', -- organize buffers
-    },
-  },
-  { -- Telescope fzf native
-    'nvim-telescope/telescope-fzf-native.nvim',
-    build = 'make',
-    cond = vim.fn.executable 'make' == 1,
-  },
+  -- UI
+  { require 'plugins.ui.alpha' },
 
   -- Snippets
   'L3MON4D3/LuaSnip', -- snippet engine
@@ -53,7 +40,7 @@ return {
   'akinsho/bufferline.nvim',
 
   -- Custom home screen
-  'goolord/alpha-nvim',
+  -- 'goolord/alpha-nvim',
 
   { -- Keys helper
     'folke/which-key.nvim',
@@ -64,10 +51,10 @@ return {
     end,
   },
 
+  { 'NvChad/nvim-colorizer.lua', config = true }, -- color highlighter
   -- Misc --
   'folke/zen-mode.nvim', -- distraction free writing
   'moll/vim-bbye', -- better buffer deletion
-  'NvChad/nvim-colorizer.lua', -- color highlighter
   'lukas-reineke/indent-blankline.nvim', -- add indentation guides even on blank lines
   'tpope/vim-sleuth', -- detect tabstop and shiftwidth automatically
   'lewis6991/impatient.nvim', -- speed up startup time
