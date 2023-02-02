@@ -6,8 +6,7 @@ return {
     'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
     'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
     'j-hui/fidget.nvim', -- lsp status UI
-    'RRethy/vim-illuminate', -- highlight references on cursor hold
-    --{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+    { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
     { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
     'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
   },

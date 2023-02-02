@@ -2,25 +2,8 @@ require 'config.options'
 require 'config.mappings'
 
 return {
-  -- Highlight, edit, and navigate code
-  --  {
-  --   'nvim-treesitter/nvim-treesitter',
-  --  build = function() -- auto install languages
-  --   pcall(require('nvim-treesitter.install').update { with_sync = true })
-  --end,
-  -- dependencies = {
-  --     'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
-
-  --    'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
-  --   'nvim-treesitter/playground', -- treesitter playground
-  -- },
-  --  },
 
   'folke/zen-mode.nvim', -- distraction free writing
-  -- UI
-  { require 'plugins.ui' },
-  -- Coding
-  { require 'plugins.coding' },
 
   -- Snippets
   'L3MON4D3/LuaSnip', -- snippet engine
