@@ -16,7 +16,7 @@ return {
   },
 
   -- UI
-  { require 'plugins.ui.alpha' },
+  { require 'plugins.ui' },
 
   -- Snippets
   'L3MON4D3/LuaSnip', -- snippet engine
@@ -35,9 +35,9 @@ return {
 
   'kyazdani42/nvim-web-devicons', -- required by many other plugins
   -- Snazzy statusline, bufferline & file tree
-  'nvim-lualine/lualine.nvim',
-  'kyazdani42/nvim-tree.lua',
-  'akinsho/bufferline.nvim',
+  --'nvim-lualine/lualine.nvim',
+  --'kyazdani42/nvim-tree.lua',
+  --'akinsho/bufferline.nvim',
 
   -- Custom home screen
   -- 'goolord/alpha-nvim',
