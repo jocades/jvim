@@ -3,20 +3,24 @@ require 'config.mappings'
 
 return {
   -- Highlight, edit, and navigate code
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = function() -- auto install languages
-      pcall(require('nvim-treesitter.install').update { with_sync = true })
-    end,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
-      'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
-      'nvim-treesitter/playground', -- treesitter playground
-    },
-  },
+  --  {
+  --   'nvim-treesitter/nvim-treesitter',
+  --  build = function() -- auto install languages
+  --   pcall(require('nvim-treesitter.install').update { with_sync = true })
+  --end,
+  -- dependencies = {
+  --     'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
 
+  --    'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
+  --   'nvim-treesitter/playground', -- treesitter playground
+  -- },
+  --  },
+
+  'folke/zen-mode.nvim', -- distraction free writing
   -- UI
   { require 'plugins.ui' },
+  -- Coding
+  { require 'plugins.coding' },
 
   -- Snippets
   'L3MON4D3/LuaSnip', -- snippet engine
@@ -53,7 +57,6 @@ return {
 
   { 'NvChad/nvim-colorizer.lua', config = true }, -- color highlighter
   -- Misc --
-  'folke/zen-mode.nvim', -- distraction free writing
   'moll/vim-bbye', -- better buffer deletion
   'lukas-reineke/indent-blankline.nvim', -- add indentation guides even on blank lines
   'tpope/vim-sleuth', -- detect tabstop and shiftwidth automatically
