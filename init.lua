@@ -16,10 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require('lazy').setup 'j0rdi.plugins'
+require('lazy').setup 'plugins'
 
-require 'j0rdi.options'
-require 'j0rdi.mappings'
-require 'j0rdi.colorscheme'
-require 'j0rdi.lsp'
+require 'config.options'
+require 'config.mappings'
 require 'j0rdi.lib'

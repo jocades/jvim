@@ -1,6 +1,10 @@
 return {
+  -- Colorschemes
+  'navarasu/onedark.nvim',
+  -- 'folke/tokyonight.nvim',
+
   -- LSP Configuration & Plugins
-  {
+  --[[ {
     'neovim/nvim-lspconfig',
     dependencies = {
       'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
@@ -10,20 +14,9 @@ return {
       'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
       'RRethy/vim-illuminate', -- highlight references on cursor hold
     },
-  },
+  }, ]]
 
   -- Completion
-  {
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp', -- lsp completion
-      'hrsh7th/cmp-buffer', -- buffer completion
-      'hrsh7th/cmp-cmdline', -- cmdline completion
-      'saadparwaiz1/cmp_luasnip', -- snippet completion
-      'hrsh7th/cmp-path', -- path completion
-      'onsails/lspkind-nvim', -- icons for completion
-    },
-  },
 
   -- Highlight, edit, and navigate code
   {
@@ -68,10 +61,6 @@ return {
 
   -- Terminal
   'akinsho/toggleterm.nvim',
-
-  -- Colorschemes
-  'navarasu/onedark.nvim',
-  'folke/tokyonight.nvim',
 
   'kyazdani42/nvim-web-devicons', -- required by many other plugins
   -- Snazzy statusline, bufferline & file tree

@@ -58,7 +58,7 @@ M.on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
   end
 
-  require 'j0rdi.lsp.mappings'(bufnr) -- load keymaps
+  require 'plugins.lsp.mappings'(bufnr) -- load keymaps
   pcall(require('illuminate').on_attach, client) -- highlights
 end
 
