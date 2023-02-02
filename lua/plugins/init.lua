@@ -1,23 +1,7 @@
+require 'config.options'
+require 'config.mappings'
+
 return {
-  -- Colorschemes
-  'navarasu/onedark.nvim',
-  -- 'folke/tokyonight.nvim',
-
-  -- LSP Configuration & Plugins
-  --[[ {
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
-      'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
-      'j-hui/fidget.nvim', -- lsp status UI
-      'folke/neodev.nvim', -- additional lua configuration (neovim globals, require paths cmp, etc)
-      'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
-      'RRethy/vim-illuminate', -- highlight references on cursor hold
-    },
-  }, ]]
-
-  -- Completion
-
   -- Highlight, edit, and navigate code
   {
     'nvim-treesitter/nvim-treesitter',
@@ -78,16 +62,6 @@ return {
       vim.o.timeoutlen = 300
       require('which-key').setup {}
     end,
-  },
-
-  -- Auto comment, tsx enabled via context. ("gc" to comment visual regions/lines).
-  { 'numToStr/Comment.nvim', dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' } },
-
-  -- Auto pairs and tags ("", </>)
-  'windwp/nvim-ts-autotag',
-  {
-    'windwp/nvim-autopairs',
-    config = function() require('nvim-autopairs').setup() end,
   },
 
   -- Misc --
