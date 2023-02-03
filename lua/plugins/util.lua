@@ -19,7 +19,7 @@ return {
   },
 
   'nvim-lua/plenary.nvim',
-  'moll/vim-bbye', -- better buffer deletion
+  { 'moll/vim-bbye', event = 'VeryLazy' }, -- better buffer deletion
   'tpope/vim-sleuth', -- detect tabstop and shiftwidth automatically
   'github/copilot.vim',
   --'p00f/nvim-ts-rainbow', -- colored parenthesis

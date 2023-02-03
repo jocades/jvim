@@ -44,7 +44,7 @@ local K = {
     -- Diagnostics
     ['[d'] = { vim.diagnostic.goto_prev },
     [']d'] = { vim.diagnostic.goto_next },
-    ['<leader>d'] = { vim.diagnostic.open_float, nowait = true },
+    ['<leader>d'] = { vim.diagnostic.open_float, { nowait = true, desc = 'Open diag float' } },
     ['<leader>dc'] = { vim.diagnostic.setqflist, { desc = 'Show diagnostics in quickfix' } },
     ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
 
@@ -80,7 +80,6 @@ local K = {
   },
 }
 
--- DRY
 for mode, mappings in pairs(K) do
   for k, t in pairs(mappings) do
     require('j0rdi.utils').map(mode, k, t[1], t[2])

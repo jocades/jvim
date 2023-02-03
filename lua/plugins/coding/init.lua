@@ -5,4 +5,5 @@ return {
   require 'plugins.coding.illuminate',
   require 'plugins.coding.comment',
   require 'plugins.coding.snippets',
+  require 'plugins.coding.spectre',
 }

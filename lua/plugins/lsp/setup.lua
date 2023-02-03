@@ -39,7 +39,8 @@ M.formatters = {
 -- Initial config
 M.init = function()
   vim.diagnostic.config {
-    virtual_text = false, -- disable in-line text diagnostic
+    -- virtual_text = false, -- disable in-line text diagnostic
+    virtual_text = { spacing = 4, prefix = '●' },
     update_in_insert = true,
     underline = true,
     severity_sort = true,
@@ -55,7 +56,13 @@ end
 -- It is used to set up keymaps and other things.
 M.on_attach = function(client, bufnr)
   if client.name == 'tsserver' then
-    client.server_capabilities.documentFormattingProvider = false
+    local map = require('j0rdi.utils').map
+    local ts = require 'typescript'
+    map('n', '<leader>tO', ts.actions.organizeImports, { buffer = bufnr, desc = 'Organize Imports' })
+    map('n', '<leader>tM', ts.actions.addMissingImports, { desc = 'Add Missing Imports', buffer = bufnr })
+    map('n', '<leader>tU', ts.actions.removeUnused, { desc = 'Remove unused imports', buffer = bufnr })
+    map('n', '<leader>tR', function() ts.renameFile() end, { desc = 'Rename File', buffer = bufnr })
+    --client.server_capabilities.documentFormattingProvider = false
   end
 
   require 'plugins.lsp.mappings'(bufnr) -- load keymaps

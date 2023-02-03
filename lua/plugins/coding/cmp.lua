@@ -1,6 +1,7 @@
 return {
-  -- Auto completion
   'hrsh7th/nvim-cmp',
+  version = false,
+  event = 'InsertEnter',
   dependencies = {
     'hrsh7th/cmp-nvim-lsp', -- lsp completion
     'hrsh7th/cmp-buffer', -- buffer completion
@@ -9,27 +10,25 @@ return {
     'hrsh7th/cmp-path', -- path completion
     'onsails/lspkind-nvim', -- icons for completion
   },
-  config = function()
+  opts = function()
     local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
-    local lspkind = require 'lspkind'
-    cmp.setup {
+    return {
       snippet = {
-        expand = function(args) luasnip.lsp_expand(args.body) end,
+        expand = function(args) require('luasnip').lsp_expand(args.body) end,
       },
       mapping = cmp.mapping.preset.insert {
         ['<C-k>'] = cmp.mapping.select_prev_item(),
         ['<C-j>'] = cmp.mapping.select_next_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-Space>'] = cmp.mapping.complete {},
         ['<C-i>'] = cmp.mapping.confirm {
           behavior = cmp.ConfirmBehavior.Replace,
           select = true,
         },
       },
       formatting = { -- pop-up menu looks
-        format = lspkind.cmp_format {
+        format = require('lspkind').cmp_format {
           with_text = true,
           mode = 'symbol_text',
           maxwidth = 50,
@@ -44,7 +43,7 @@ return {
       },
       sources = { -- order matters
         { name = 'nvim_lsp' },
-        { name = 'nvim-lua' },
+        --{ name = 'nvim-lua' },
         { name = 'luasnip' },
         -- TODO:
         -- {name = 'copilot'},

@@ -2,7 +2,7 @@
 return {
   'windwp/nvim-autopairs',
   event = 'VeryLazy',
-  dependencies = { { 'windwp/nvim-ts-autotag', config = true } },
+  dependencies = { { 'windwp/nvim-ts-autotag', lazy = true, config = true } },
   config = function()
     require('nvim-autopairs').setup {
       check_ts = true,
@@ -24,11 +24,9 @@ return {
         highlight_grey = 'LineNr',
       },
     }
-    local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
-    local cmp_present, cmp = pcall(require, 'cmp')
-    if not cmp_present then
-      return
-    end
-    cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done { map_char = { tex = '' } })
+    require('cmp').event:on(
+      'confirm_done',
+      require('nvim-autopairs.completion.cmp').on_confirm_done { map_char = { tex = '' } }
+    )
   end,
 }

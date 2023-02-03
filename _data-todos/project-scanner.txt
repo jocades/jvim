@@ -1,2 +1,0 @@
-PATH: /home/j0rdi/.config/nvim/lua/j0rdi/lib/productivity/project-scanner.lua
-  1**26:33** TODO:(.+)'

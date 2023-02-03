@@ -9,6 +9,7 @@ return {
     { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
     { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
     'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
+    { 'jose-elias-alvarez/typescript.nvim', config = true },
   },
 
   config = function()

@@ -1,2 +1,0 @@
-PATH: /home/j0rdi/.config/nvim/tests__/python-test.py
-  1**3:2** TODO: add some code here

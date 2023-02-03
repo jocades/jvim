@@ -1,5 +1,6 @@
 return {
   'RRethy/vim-illuminate', -- highlight references on cursor hold
+  event = 'BufReadPost',
   config = function()
     vim.g.Illuminate_ftblacklist = { 'alpha', 'NvimTree' }
     vim.api.nvim_set_keymap(

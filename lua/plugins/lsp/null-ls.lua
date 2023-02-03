@@ -7,7 +7,7 @@ local b = null_ls.builtins
 
 -- Enable the following formatters
 local sources = {
-  b.formatting.prettierd.with { extra_args = { '--no-semi', '--single-quote' } },
+  b.formatting.prettierd, --.with { extra_args = { '--no-semi', '--single-quote' } },
   b.formatting.autopep8, -- Python
   b.formatting.stylua, -- Lua
   b.formatting.shfmt, -- Shell
