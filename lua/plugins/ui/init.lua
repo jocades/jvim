@@ -5,5 +5,6 @@ return {
   require 'plugins.ui.indent-blankline',
   require 'plugins.ui.bufferline',
   require 'plugins.ui.alpha',
+  require 'plugins.ui.notify',
   { 'NvChad/nvim-colorizer.lua', config = true }, -- color highlighter
 }

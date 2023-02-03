@@ -1,5 +1,11 @@
 return {
+  { 'nvim-lua/plenary.nvim', lazy = true },
+  { 'moll/vim-bbye', event = 'VeryLazy' }, -- better buffer deletion
+  { 'tpope/vim-sleuth', event = 'BufReadPre' }, -- detect tabstop and shiftwidth automatically
+  --'p00f/nvim-ts-rainbow', -- colored parenthesis
+
   -- Git related plugins
+  'github/copilot.vim',
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   {
@@ -16,12 +22,17 @@ return {
     },
   },
 
-  'github/copilot.vim',
-  'nvim-lua/plenary.nvim',
-  { 'moll/vim-bbye', event = 'VeryLazy' }, -- better buffer deletion
-  'tpope/vim-sleuth', -- detect tabstop and shiftwidth automatically
-  --'p00f/nvim-ts-rainbow', -- colored parenthesis
-  { 'iamcco/markdown-preview.nvim', build = 'cd app && yarn install', cmd = 'MarkdownPreview' }, -- markdown preview
+  -- Session management
+  {
+    'folke/persistence.nvim',
+    event = 'BufReadPre',
+    opts = { options = { 'buffers', 'curdir', 'tabpages', 'winsize', 'help' } },
+    keys = {
+      { '<leader>qs', function() require('persistence').load() end, desc = 'Restore Session' },
+      { '<leader>ql', function() require('persistence').load { last = true } end, desc = 'Restore Last Session' },
+      { '<leader>qd', function() require('persistence').stop() end, desc = "Don't Save Current Session" },
+    },
+  },
 
   {
     'folke/which-key.nvim',

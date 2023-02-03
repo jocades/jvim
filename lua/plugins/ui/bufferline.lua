@@ -66,7 +66,7 @@ return {
         --     return true
         --   end
         -- end,
-        offsets = { { filetype = 'NvimTree', text = '', padding = 1 } },
+        offsets = { { filetype = 'NvimTree', text = '', text_align = 'left' } },
         show_buffer_icons = true,
         show_buffer_close_icons = true,
         show_close_icon = false,

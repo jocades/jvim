@@ -30,6 +30,7 @@ local K = {
     ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
+    ['<leader>re'] = { cmd.ZenMode, { desc = 'Toggle Zen mode' } },
     ['<C-Up>'] = { ':resize +2<cr>' },
     ['<C-Down>'] = { ':resize -2<cr>' },
     ['<C-Left>'] = { ':vertical resize -2<cr>' },

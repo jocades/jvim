@@ -11,15 +11,7 @@ return {
         build = 'make',
         cond = vim.fn.executable 'make' == 1,
       },
-      { -- telescope project picker
-        'ahmedkhalf/project.nvim',
-        config = function()
-          require('project_nvim').setup {
-            detection_methods = { 'pattern' },
-            patterns = { '.git', 'Makefile', 'package.json' },
-          }
-        end,
-      },
+      'nvim-telescope/telescope-file-browser.nvim',
     },
     config = function()
       local actions = require 'telescope.actions'
@@ -73,16 +65,17 @@ return {
           color_devicons = true,
         },
       }
-      -- Enable telescope fzf native, if installed
-      pcall(require('telescope').load_extension, 'fzf')
-      -- See `:help telescope.builtin`
+      pcall(telescope.load_extension, 'fzf')
+      telescope.load_extension 'file_browser'
+      telescope.load_extension 'harpoon'
+
       local b = require 'telescope.builtin'
       -- KEYMAPS
       local K = {
         -- Fuzzy find
         ['<leader>ff'] = { b.find_files, 'Find Files' },
         ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
-        ['<leader>fb'] = { b.buffers, 'Find existing buffers' },
+        ['<leader>/'] = { b.buffers, 'Find existing buffers' },
         ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },
         ['<leader>.'] = {
           function() -- pass additional configuration to telescope to change theme, layout, etc.
@@ -103,13 +96,12 @@ return {
         ['<leader>fh'] = { b.help_tags, 'Find Help' },
         ['<leader>fc'] = { b.grep_string, 'Find Current word' },
         ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
+        ['<leader>fb'] = { ':Telescope file_browser<cr>', 'Open File Browser' },
+        ['<leader>fo'] = { ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
       }
       for k, v in pairs(K) do
         map('n', k, v[1], { desc = v[2] })
       end
-
-      telescope.load_extension 'projects'
-      telescope.load_extension 'harpoon'
     end,
   },
 
