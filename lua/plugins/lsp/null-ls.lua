@@ -7,7 +7,7 @@ local b = null_ls.builtins
 
 -- Enable the following formatters
 local sources = {
-  b.formatting.prettier.with { extra_args = { '--no-semi', '--single-quote' } },
+  b.formatting.prettierd.with { extra_args = { '--no-semi', '--single-quote' } },
   b.formatting.autopep8, -- Python
   b.formatting.stylua, -- Lua
   b.formatting.shfmt, -- Shell
@@ -19,9 +19,7 @@ local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
 
 local function format(bufnr)
   vim.lsp.buf.format {
-    filter = function(client)
-      return client.name == 'null-ls'
-    end,
+    filter = function(client) return client.name == 'null-ls' end,
     bufnr = bufnr,
   }
 end
@@ -33,16 +31,16 @@ local function on_attach(client, bufnr)
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = augroup,
       buffer = bufnr,
-      callback = function()
-        format(bufnr)
-      end,
+      callback = function() format(bufnr) end,
     })
   end
 end
 
-vim.api.nvim_create_user_command('DisableLspFormatting', function()
-  vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 }
-end, { nargs = 0 })
+vim.api.nvim_create_user_command(
+  'DisableLspFormatting',
+  function() vim.api.nvim_clear_autocmds { group = augroup, buffer = 0 } end,
+  { nargs = 0 }
+)
 
 null_ls.setup {
   debug = true,

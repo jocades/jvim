@@ -31,7 +31,7 @@ M.servers = {
 
 -- Enable the following langauge formatters
 M.formatters = {
-  'prettier',
+  'prettierd',
   'autopep8',
   'stylua',
 }
