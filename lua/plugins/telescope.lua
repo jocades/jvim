@@ -1,4 +1,5 @@
--- Fuzzy Finder (files, lsp, etc) + Plenary (common neovim lua utils)
+local map = require('utils').map
+
 return {
   {
     'nvim-telescope/telescope.nvim',
@@ -22,7 +23,6 @@ return {
     },
     config = function()
       local actions = require 'telescope.actions'
-      -- See `:help telescope` and `:help telescope.setup()`
       local telescope = require 'telescope'
       telescope.setup {
         defaults = {
@@ -105,7 +105,7 @@ return {
         ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
       }
       for k, v in pairs(K) do
-        require('j0rdi.utils').map('n', k, v[1], { desc = v[2] })
+        map('n', k, v[1], { desc = v[2] })
       end
 
       telescope.load_extension 'projects'
@@ -130,7 +130,7 @@ return {
       }
 
       for k, v in pairs(K) do
-        require('j0rdi.utils').map('n', k, v[1], v[2])
+        map('n', k, v[1], v[2])
       end
     end,
   },

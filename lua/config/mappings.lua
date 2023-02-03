@@ -1,5 +1,5 @@
 local cmd = vim.cmd
-local new_buf = require('j0rdi.utils').handle_new_buf
+local new_buf = require('utils').handle_new_buf
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
@@ -82,6 +82,6 @@ local K = {
 
 for mode, mappings in pairs(K) do
   for k, t in pairs(mappings) do
-    require('j0rdi.utils').map(mode, k, t[1], t[2])
+    require('utils').map(mode, k, t[1], t[2])
   end
 end

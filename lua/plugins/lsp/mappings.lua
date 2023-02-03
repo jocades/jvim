@@ -1,6 +1,6 @@
 local lsp = vim.lsp.buf
 local telescope = require 'telescope.builtin'
-local map = require('j0rdi.utils').map
+local map = require('utils').map
 
 -- LSP KEYMAPS
 local K = {
