@@ -26,6 +26,8 @@ return {
           behavior = cmp.ConfirmBehavior.Replace,
           select = true,
         },
+        ['<C-n>'] = cmp.config.disable,
+        ['<C-p>'] = cmp.config.disable,
       },
       formatting = { -- pop-up menu looks
         format = require('lspkind').cmp_format {

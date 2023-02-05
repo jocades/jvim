@@ -2,18 +2,24 @@ local lsp = vim.lsp.buf
 local telescope = require 'telescope.builtin'
 local map = require('utils').map
 
--- LSP KEYMAPS
 local K = {
-  -- Common
-  ['<leader>rn'] = { lsp.rename, 'Rename' },
-  ['<leader>ca'] = { lsp.code_action, 'Code Action' },
+  -- Movement
+  ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
+  [']d'] = { vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
   ['gd'] = { lsp.definition, 'Goto Definition' },
   ['gr'] = { telescope.lsp_references, 'Goto References' },
-  ['gI'] = { lsp.implementation, 'Goto Implementation' },
   ['<leader>D'] = { lsp.type_definition, 'Type Definition' },
+  ['gI'] = { lsp.implementation, 'Goto Implementation' },
+  ['<leader>dp'] = { vim.diagnostic.setqflist, 'Show all diagnostics in quickfix' },
+  ['<leader>dl'] = { vim.diagnostic.setloclist, 'Show diagnostics in quickfix' },
+
+  -- Actions
+  ['K'] = { lsp.hover, 'Hover Documentation' },
+  ['<leader>k'] = { vim.diagnostic.open_float, 'Open diag float' },
+  ['<leader>rn'] = { lsp.rename, 'Rename' },
+  ['<leader>ca'] = { lsp.code_action, 'Code Action' },
   ['<leader>ds'] = { telescope.lsp_document_symbols, 'Document Symbols' },
   ['<leader>ws'] = { telescope.lsp_dynamic_workspace_symbols, 'Workspace Symbols' },
-  ['K'] = { lsp.hover, 'Hover Documentation' },
   -- ['<C-K>'] = { vim.lsp.buf.signature_help, 'Signature Documentation' },
 
   -- Less used

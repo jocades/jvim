@@ -14,10 +14,19 @@ M.map = function(mode, keys, exec, opts)
   vim.keymap.set(mode, keys, exec, opts)
 end
 
--- vim.keymap.set('n', '<leader>cl', ':lua require("j0rdi.utils").close_all()<CR>')
+---@param on_attach fun(client, buffer)
+M.on_attach = function(on_attach)
+  vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+      local buffer = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      on_attach(client, buffer)
+    end,
+  })
+end
 
+---@param opts? table { type: 'v' | 'h' }
 M.handle_new_buf = function(opts)
-  -- how to disable lsp fro this line of sumneko lua
   local name = vim.fn.input 'Enter file name: '
   if name == '' then
     return
@@ -37,7 +46,6 @@ M.handle_new_buf = function(opts)
   end
 end
 
--- Close all buffers expect modified ones whihc hvant been saved
 M.close_all = function()
   local bufs = vim.api.nvim_list_bufs()
   for _, buf in ipairs(bufs) do

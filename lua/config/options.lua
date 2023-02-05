@@ -10,7 +10,7 @@ local options = {
   rnu = false, -- set relative line numbers
   wrap = false,
   --  smartindent = true, -- make indenting smarter again
-  equalalways = true, -- make windows always equal height
+  equalalways = false, -- make windows always equal height
 
   scrolloff = 10, -- always 10 lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
@@ -31,6 +31,7 @@ local options = {
 }
 
 vim.opt.winbar = '%=%m %f'
+--vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 for k, v in pairs(options) do
   vim.opt[k] = v

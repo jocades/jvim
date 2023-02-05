@@ -23,8 +23,8 @@ local K = {
     ['<leader>y'] = { ':%y+<cr>', { desc = 'Copy whole buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
-    ['<Tab>'] = { cmd.bnext },
-    ['<S-Tab>'] = { cmd.bprev },
+    ['L'] = { cmd.bnext },
+    ['H'] = { cmd.bprev },
 
     -- Window actions
     ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
@@ -41,13 +41,6 @@ local K = {
     ['<C-l>'] = { '<C-w>l' },
     ['<C-j>'] = { '<C-w>j' },
     ['<C-k>'] = { '<C-w>k' },
-
-    -- Diagnostics
-    ['[d'] = { vim.diagnostic.goto_prev },
-    [']d'] = { vim.diagnostic.goto_next },
-    ['<leader>d'] = { vim.diagnostic.open_float, { nowait = true, desc = 'Open diag float' } },
-    ['<leader>dc'] = { vim.diagnostic.setqflist, { desc = 'Show diagnostics in quickfix' } },
-    ['<leader>dl'] = { vim.diagnostic.setloclist, { desc = 'Show diagnostics in quickfix' } },
 
     -- Insert blank line
     ['<C-cr>'] = { 'o<ESC>' },

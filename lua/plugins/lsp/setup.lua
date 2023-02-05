@@ -18,9 +18,6 @@ M.servers = {
   },
   sumneko_lua = {
     Lua = {
-      diagnostics = {
-        globals = { 'vim' },
-      },
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
@@ -53,7 +50,6 @@ M.init = function()
 end
 
 -- This function gets run when an LSP connects to a particular buffer.
--- It is used to set up keymaps and other things.
 M.on_attach = function(client, bufnr)
   if client.name == 'tsserver' then
     local map = require('utils').map
@@ -65,6 +61,9 @@ M.on_attach = function(client, bufnr)
     --client.server_capabilities.documentFormattingProvider = false
   end
 
+  --if client.server_capabilities.documentSymbolProvider then
+  -- require('nvim-navic').attach(client, bufnr)
+  --end
   require 'plugins.lsp.mappings'(bufnr) -- load keymaps
   pcall(require('illuminate').on_attach, client) -- highlights
 end
