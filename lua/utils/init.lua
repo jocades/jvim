@@ -2,7 +2,7 @@ local cmd = vim.cmd
 
 local M = {}
 
-M.map = function(mode, keys, exec, opts)
+function M.map(mode, keys, exec, opts)
   local common = { silent = true, noremap = true }
 
   if not opts then
@@ -15,7 +15,7 @@ M.map = function(mode, keys, exec, opts)
 end
 
 ---@param on_attach fun(client, buffer)
-M.on_attach = function(on_attach)
+function M.on_attach(on_attach)
   vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
       local buffer = args.buf
@@ -26,7 +26,7 @@ M.on_attach = function(on_attach)
 end
 
 ---@param opts? table { type: 'v' | 'h' }
-M.handle_new_buf = function(opts)
+function M.handle_new_buf(opts)
   ---@diagnostic disable-next-line
   local name = vim.fn.input 'Enter file name: '
   if name == '' then
@@ -47,7 +47,7 @@ M.handle_new_buf = function(opts)
   end
 end
 
-M.close_all = function()
+function M.close_all()
   local bufs = vim.api.nvim_list_bufs()
   for _, buf in ipairs(bufs) do
     local modified = vim.api.nvim_buf_get_option(buf, 'modified')
