@@ -1,8 +1,9 @@
 local lsp = vim.lsp.buf
 local telescope = require 'telescope.builtin'
-local map = require('utils').map
 
-local K = {
+local M = {}
+
+local mappings = {
   -- Movement
   ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
@@ -29,8 +30,18 @@ local K = {
   ['<leader>wl'] = { function() print(vim.inspect(lsp.list_workspace_folders())) end, 'Workspace List Folders' },
 }
 
-return function(bufnr)
-  for k, v in pairs(K) do
-    map('n', k, v[1], { buffer = bufnr, desc = 'LSP: ' .. v[2] })
+function M.on_attach(client, bufnr)
+  if client.name == 'tsserver' then
+    local ts = require 'typescript'
+    mappings['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports' }
+    mappings['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports' }
+    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove unused imports' }
+    mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File' }
+  end
+
+  for k, v in pairs(mappings) do
+    require('utils').map('n', k, v[1], { buffer = bufnr, desc = 'LSP: ' .. v[2] })
   end
 end
+
+return M

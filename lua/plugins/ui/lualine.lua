@@ -1,21 +1,28 @@
 return {
   'nvim-lualine/lualine.nvim',
   event = 'VeryLazy',
-  config = function()
-    require('lualine').setup {
+  opts = function()
+    return {
       options = {
         theme = 'auto',
         globalstatus = true,
         icons_enabled = true,
-        component_separators = '|',
-        section_separators = '',
-        -- component_separators = { left = '', right = '' },
-        -- section_separators = { left = '', right = '' },
+        --[[ component_separators = '|',
+        section_separators = '', ]]
+        component_separators = { left = '', right = '' },
+        section_separators = '', --{ left = '', right = '' },
       },
       sections = {
         lualine_b = { 'branch' },
-        lualine_c = { 'filename', 'diff' },
-        lualine_x = { 'diagnostics' },
+        lualine_c = {
+          { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+          'filename',
+          {
+            function() return require('nvim-navic').get_location() end,
+            cond = function() return package.loaded['nvim-navic'] and require('nvim-navic').is_available() end,
+          },
+        },
+        lualine_x = { 'diff', 'diagnostics' },
         lualine_y = { 'filetype' },
         lualine_z = { 'location' },
       },

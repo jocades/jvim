@@ -1,20 +1,3 @@
---
---
--- LSP Configuration & Plugins
---
-local M = {}
-
----@param on_attach fun(client, buffer)
-function M.on_attach(on_attach)
-  vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-      local buffer = args.buf
-      local client = vim.lsp.get_client_by_id(args.data.client_id)
-      on_attach(client, buffer)
-    end,
-  })
-end
-
 return {
   {
     'neovim/nvim-lspconfig',
@@ -25,39 +8,105 @@ return {
       { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
-      'jose-elias-alvarez/null-ls.nvim', -- attaches to a LS and allows formatting, additional linting, etc.
-      { 'jose-elias-alvarez/typescript.nvim', config = true },
     },
+    opts = {
+      diagnostics = {
+        -- virtual_text = false, -- disable in-line text diagnostic
+        underline = true,
+        update_in_insert = false,
+        virtual_text = { spacing = 4, prefix = '●' },
+        severity_sort = true,
+      },
+      autoformat = true,
+      format = {
+        formatting_options = nil,
+        timeout_ms = nil,
+      },
+      servers = {
+        pyright = {
+          analysis = {
+            typeCheckingMode = 'off',
+          },
+        },
+        sumneko_lua = {
+          Lua = {
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
+          },
+        },
+        jsonls = {},
+        tsserver = {},
+      },
+    },
+    config = function(_, opts)
+      vim.diagnostic.config(opts.diagnostics)
 
-    config = function()
-      -- MASON handles neovim's built-in LSP config, auto installs servers,
-      -- and sets up handlers (capabilities, on_attach, etc.), see `:Mason`
-      require('mason').setup {
-        ensure_installed = require('plugins.lsp.setup').formatters,
-      }
+      local lsp_config = require 'mason-lspconfig'
+      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-      local lspconfig = require 'mason-lspconfig'
-
-      require('plugins.lsp.setup').init()
-      local servers = require('plugins.lsp.setup').servers
-
-      lspconfig.setup {
-        ensure_installed = vim.tbl_keys(servers),
+      lsp_config.setup {
+        ensure_installed = vim.tbl_keys(opts.servers),
         automatic_installation = true,
       }
 
-      lspconfig.setup_handlers {
+      lsp_config.setup_handlers {
         function(server_name)
           require('lspconfig')[server_name].setup {
-            capabilities = require('plugins.lsp.setup').capabilities,
-            on_attach = require('plugins.lsp.setup').on_attach,
-            settings = servers[server_name],
+            capabilities = capabilities,
+            on_attach = require('plugins.lsp.mappings').on_attach,
+            settings = opts.servers[server_name],
           }
         end,
       }
+    end,
+  },
 
-      -- Turn on formatting with null-ls (prettier, autopep8, etc.)
-      require 'plugins.lsp.null-ls'
+  -- Formatting
+  {
+    'jose-elias-alvarez/null-ls.nvim',
+    event = 'BufReadPre',
+    dependencies = {
+      { 'jose-elias-alvarez/typescript.nvim', config = true },
+    },
+    config = function()
+      local b = require('null-ls').builtins
+      local sources = {
+        b.formatting.prettierd,
+        b.formatting.stylua,
+        b.formatting.shfmt,
+        b.diagnostics.shellcheck,
+      }
+      require('null-ls').setup {
+        debug = true,
+        sources = sources,
+        on_attach = require('plugins.lsp.formatting').on_attach,
+      }
+    end,
+  },
+
+  -- Lsp server manager
+  {
+    'williamboman/mason.nvim',
+    cmd = 'Mason',
+    opts = {
+      ensure_installed = {
+        'prettierd',
+        'autopep8',
+        'stylua',
+        'shellcheck',
+        'shfmt',
+        'flake8',
+      },
+    },
+    config = function(_, opts)
+      require('mason').setup(opts)
+      local mr = require 'mason-registry'
+      for _, tool in ipairs(opts.ensure_installed) do
+        local p = mr.get_package(tool)
+        if not p:is_installed() then
+          p:install()
+        end
+      end
     end,
   },
 
@@ -66,8 +115,8 @@ return {
     'SmiteshP/nvim-navic',
     lazy = true,
     init = function()
-      -- vim.g.navic_silence = true
-      M.on_attach(function(client, buffer)
+      vim.g.navic_silence = true
+      require('utils').on_attach(function(client, buffer)
         if client.server_capabilities.documentSymbolProvider then
           require('nvim-navic').attach(client, buffer)
         end
@@ -76,3 +125,93 @@ return {
     opts = { separator = ' ', highlight = true, depth_limit = 5 },
   },
 }
+
+--[[ {
+    'folke/trouble.nvim',
+    cmd = 'TroubleToggle',
+    config = function()
+      require('trouble').setup {
+        auto_open = false,
+        auto_close = true,
+        auto_preview = false,
+        auto_fold = true,
+        signs = {
+          error = '',
+          warning = '',
+          hint = '',
+          information = '',
+          other = '﫠',
+        },
+        use_lsp_diagnostic_signs = true,
+      }
+    end,
+  },
+
+  {
+    'folke/lsp-colors.nvim',
+    event = 'BufReadPre',
+    config = function()
+      require('lsp-colors').setup {
+        Error = '#db4b4b',
+        Warning = '#e0af68',
+        Information = '#0db9d7',
+        Hint = '#10B981',
+      }
+    end,
+  },
+]]
+
+--[[ {
+    'folke/lsp-trouble.nvim',
+    cmd = 'LspTroubleToggle',
+    config = function()
+      require('lsp-trouble').setup {
+        auto_open = false,
+        auto_close = true,
+        auto_preview = false,
+        auto_fold = true,
+        signs = {
+          error = '',
+          warning = '',
+          hint = '',
+          information = '',
+          other = '﫠',
+        },
+        use_lsp_diagnostic_signs = true,
+      }
+    end,
+  },
+
+  {
+    'folke/lsp-peek.nvim',
+    cmd = 'LspPeek',
+    config = function()
+      require('lsp-peek').setup {
+        auto_open = false,
+        auto_close = true,
+        auto_preview = false,
+        auto_fold = true,
+        signs = {
+          error = '',
+          warning = '',
+          hint = '',
+          information = '',
+          other = '﫠',
+        },
+        use_lsp_diagnostic_signs = true,
+      }
+    end,
+  },
+
+  {
+    'folke/lsp-symbols.nvim',
+    cmd = 'LspSymbols',
+    config = function()
+      require('lsp-symbols').setup {
+        auto_open = false,
+        auto_close = true,
+        auto_preview = false,
+  }
+
+    end
+  }, ]]

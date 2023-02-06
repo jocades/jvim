@@ -11,6 +11,7 @@ local K = {
     ['<leader>e'] = { cmd.NvimTreeFocus, { desc = 'Focus nvim-tree' } },
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
     ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
+    ['<leader>la'] = { ':Lazy<cr>', { desc = 'Open pkg manager' } },
 
     -- Buffer actions
     ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },

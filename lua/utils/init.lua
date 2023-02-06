@@ -27,6 +27,7 @@ end
 
 ---@param opts? table { type: 'v' | 'h' }
 M.handle_new_buf = function(opts)
+  ---@diagnostic disable-next-line
   local name = vim.fn.input 'Enter file name: '
   if name == '' then
     return

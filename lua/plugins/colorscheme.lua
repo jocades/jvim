@@ -3,6 +3,7 @@ return {
     'folke/tokyonight.nvim',
     priority = 1000,
     opts = {
+      style = 'night',
       on_highlights = function(hl, c)
         hl.EndOfBuffer = { fg = c.dark5 } -- I like tildes
         hl.NvimTreeEndOfBuffer = { fg = c.bg_dark }
@@ -47,5 +48,11 @@ return {
     'navarasu/onedark.nvim',
     lazy = true,
     name = 'onedark',
+  },
+
+  {
+    'catppuccin/nvim',
+    lazy = true,
+    name = 'catppuccin',
   },
 }
