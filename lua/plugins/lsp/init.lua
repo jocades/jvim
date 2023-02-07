@@ -8,6 +8,7 @@ return {
       { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
+      'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
       diagnostics = {
@@ -40,15 +41,10 @@ return {
     },
     config = function(_, opts)
       vim.diagnostic.config(opts.diagnostics)
-
-      local lsp_config = require 'mason-lspconfig'
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-      lsp_config.setup {
-        ensure_installed = vim.tbl_keys(opts.servers),
-        automatic_installation = true,
-      }
-
+      local lsp_config = require 'mason-lspconfig'
+      lsp_config.setup { ensure_installed = vim.tbl_keys(opts.servers) }
       lsp_config.setup_handlers {
         function(server_name)
           require('lspconfig')[server_name].setup {
@@ -65,16 +61,34 @@ return {
   {
     'jose-elias-alvarez/null-ls.nvim',
     event = 'BufReadPre',
-    dependencies = {
-      { 'jose-elias-alvarez/typescript.nvim', config = true },
-    },
+    --[[ dependencies = {
+      { ]]
+    -- 'jose-elias-alvarez/typescript.nvim',
+    --[[  config = function()
+          require('typescript').setup {
+            server = {
+              on_attach = function(client, bufnr)
+                local map = require('utils').map
+                local ts = require 'typescript'
+                map('n', '<leader>tO', ts.actions.organizeImports, { buffer = bufnr, desc = 'Organize Imports' })
+                map('n', '<leader>tM', ts.actions.addMissingImports, { desc = 'Add Missing Imports', buffer = bufnr })
+                map('n', '<leader>tU', ts.actions.removeUnused, { desc = 'Remove unused imports', buffer = bufnr })
+                map('n', '<leader>tR', function() ts.renameFile() end, { desc = 'Rename File', buffer = bufnr })
+              end,
+            },
+          }
+        end, ]]
+    --[[ },
+    }, ]]
     config = function()
       local b = require('null-ls').builtins
       local sources = {
+        --b.diagnostics.flake8,
+        b.formatting.autopep8,
         b.formatting.prettierd,
         b.formatting.stylua,
         b.formatting.shfmt,
-        b.diagnostics.shellcheck,
+        b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
       }
       require('null-ls').setup {
         debug = true,

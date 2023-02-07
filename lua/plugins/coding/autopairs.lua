@@ -1,4 +1,3 @@
--- Auto pairs and tags ("", </>)
 return {
   'windwp/nvim-autopairs',
   event = 'VeryLazy',

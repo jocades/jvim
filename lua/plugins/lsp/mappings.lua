@@ -5,8 +5,8 @@ local M = {}
 
 local mappings = {
   -- Movement
-  ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
   [']d'] = { vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
+  ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
   ['gd'] = { lsp.definition, 'Goto Definition' },
   ['gr'] = { telescope.lsp_references, 'Goto References' },
   ['<leader>D'] = { lsp.type_definition, 'Type Definition' },

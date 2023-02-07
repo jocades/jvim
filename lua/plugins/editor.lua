@@ -52,6 +52,8 @@ return {
     },
   },
 
+  { 'folke/lsp-colors.nvim', event = 'BufReadPre', config = true },
+
   -- Distraction free coding
   { 'folke/zen-mode.nvim', cmd = 'ZenMode', config = true },
 
