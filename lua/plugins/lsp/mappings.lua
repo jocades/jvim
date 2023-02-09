@@ -1,18 +1,28 @@
 local lsp = vim.lsp.buf
-local telescope = require 'telescope.builtin'
+local telescope = require('telescope.builtin')
 
 local M = {}
 
+local function diagnostic_goto(next, severity)
+  local move = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function() move { severity = severity } end
+end
+
 local mappings = {
   -- Movement
-  [']d'] = { vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
-  ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
   ['gd'] = { lsp.definition, 'Goto Definition' },
   ['gr'] = { telescope.lsp_references, 'Goto References' },
   ['<leader>D'] = { lsp.type_definition, 'Type Definition' },
   ['gI'] = { lsp.implementation, 'Goto Implementation' },
   ['<leader>dp'] = { vim.diagnostic.setqflist, 'Show all diagnostics in quickfix' },
   ['<leader>dl'] = { vim.diagnostic.setloclist, 'Show diagnostics in quickfix' },
+  [']d'] = { vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
+  ['[d'] = { vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },
+  [']e'] = { diagnostic_goto(true, 'ERROR'), 'Goto Next Error' },
+  ['[e'] = { diagnostic_goto(false, 'ERROR'), 'Goto Previous Error' },
+  [']w'] = { diagnostic_goto(true, 'WARNING'), 'Goto Next Warning' },
+  ['[w'] = { diagnostic_goto(false, 'WARNING'), 'Goto Previous Warning' },
 
   -- Actions
   ['K'] = { lsp.hover, 'Hover Documentation' },
@@ -21,7 +31,7 @@ local mappings = {
   ['<leader>ca'] = { lsp.code_action, 'Code Action' },
   ['<leader>ds'] = { telescope.lsp_document_symbols, 'Document Symbols' },
   ['<leader>ws'] = { telescope.lsp_dynamic_workspace_symbols, 'Workspace Symbols' },
-  -- ['<C-K>'] = { vim.lsp.buf.signature_help, 'Signature Documentation' },
+  ['gK'] = { vim.lsp.buf.signature_help, 'Signature Documentation' },
 
   -- Less used
   ['gD'] = { lsp.declaration, 'Goto Declaration' },
@@ -32,11 +42,11 @@ local mappings = {
 
 function M.on_attach(client, bufnr)
   if client.name == 'tsserver' then
-    local ts = require 'typescript'
-    mappings['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports' }
-    mappings['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports' }
-    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove unused imports' }
-    mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File' }
+    local ts = require('typescript')
+    mappings['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports (ts)' }
+    mappings['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports (ts)' }
+    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove unused imports (ts)' }
+    mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File (ts)' }
   end
 
   for k, v in pairs(mappings) do

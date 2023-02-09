@@ -61,25 +61,6 @@ return {
   {
     'jose-elias-alvarez/null-ls.nvim',
     event = 'BufReadPre',
-    --[[ dependencies = {
-      { ]]
-    -- 'jose-elias-alvarez/typescript.nvim',
-    --[[  config = function()
-          require('typescript').setup {
-            server = {
-              on_attach = function(client, bufnr)
-                local map = require('utils').map
-                local ts = require 'typescript'
-                map('n', '<leader>tO', ts.actions.organizeImports, { buffer = bufnr, desc = 'Organize Imports' })
-                map('n', '<leader>tM', ts.actions.addMissingImports, { desc = 'Add Missing Imports', buffer = bufnr })
-                map('n', '<leader>tU', ts.actions.removeUnused, { desc = 'Remove unused imports', buffer = bufnr })
-                map('n', '<leader>tR', function() ts.renameFile() end, { desc = 'Rename File', buffer = bufnr })
-              end,
-            },
-          }
-        end, ]]
-    --[[ },
-    }, ]]
     config = function()
       local b = require('null-ls').builtins
       local sources = {
