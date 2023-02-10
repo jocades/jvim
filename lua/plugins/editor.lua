@@ -27,7 +27,7 @@ return {
         vim.api.nvim_buf_set_keymap(0, 't', '<C-k>', [[<C-\><C-n><C-W>k]], opts)
         vim.api.nvim_buf_set_keymap(0, 't', '<C-l>', [[<C-\><C-n><C-W>l]], opts)
       end
-      vim.cmd 'autocmd! TermOpen term://* lua set_terminal_keymaps()'
+      vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
       local Terminal = require('toggleterm.terminal').Terminal
       -- Global functions can be executed from anywhere e.g `:lua Python()`
       local python = Terminal:new { cmd = 'python', hidden = true }
@@ -40,19 +40,6 @@ return {
       function Lazygit() lazygit:toggle() end
     end,
   },
-
-  -- better diagnostics list and others
-  {
-    'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
-    opts = { use_diagnostic_signs = true },
-    keys = {
-      { '<leader>xx', '<cmd>TroubleToggle document_diagnostics<cr>', desc = 'Document Diagnostics (Trouble)' },
-      { '<leader>xX', '<cmd>TroubleToggle workspace_diagnostics<cr>', desc = 'Workspace Diagnostics (Trouble)' },
-    },
-  },
-
-  { 'folke/lsp-colors.nvim', event = 'BufReadPre', config = true },
 
   -- Distraction free coding
   { 'folke/zen-mode.nvim', cmd = 'ZenMode', config = true },

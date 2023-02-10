@@ -12,7 +12,20 @@ local options = {
   --  smartindent = true, -- make indenting smarter again
   equalalways = false, -- make windows always equal height
 
-  scrolloff = 10, -- always 10 lines below the cursor
+  expandtab = true, -- Use spaces instead of tabs
+  formatoptions = 'jcroqlnt', -- tcqj
+  grepformat = '%f:%l:%c:%m',
+  grepprg = 'rg --vimgrep',
+  inccommand = 'nosplit', -- preview incremental substitute
+  laststatus = 0,
+  --list = true, -- Show some invisible characters (tabs...
+  --pumblend = 10, -- Popup blend
+  sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
+  shiftround = true, -- Round indent
+  --shiftwidth = 2, -- Size of an indent
+  sidescrolloff = 8, -- Columns of context
+
+  scrolloff = 6, -- always n lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
   cursorline = true, -- highlight current line
@@ -28,33 +41,12 @@ local options = {
   pumheight = 10, -- pop up menu height
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
   fillchars = { eob = '~' },
+  showmode = false,
+  winbar = '%=%m %f',
 }
 
-vim.opt.winbar = '%=%m %f'
 --vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-
---  Highlight on yank, see `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function() vim.highlight.on_yank() end,
-  group = highlight_group,
-  pattern = '*',
-})
-
--- Cursorline control
--- local group = vim.api.nvim_create_augroup('CursorLineControl', { clear = true })
--- local function set_cursorline(event, value, pattern)
---   vim.api.nvim_create_autocmd(event, {
---     group = group,
---     pattern = pattern,
---     callback = function() vim.opt_local.cursorline = value end,
---   })
--- end
--- set_cursorline('WinLeave', false)
--- set_cursorline('WinEnter', true)
--- set_cursorline('FileType', false, 'TelescopePrompt')

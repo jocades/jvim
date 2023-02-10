@@ -15,6 +15,7 @@ return {
       ensure_installed = {
         'python',
         'typescript',
+        'javascript',
         'tsx',
         'lua',
         'bash',
@@ -23,6 +24,10 @@ return {
         'markdown',
         'markdown_inline',
         'json',
+        'json5',
+        'jsonc',
+        'yaml',
+        'toml',
         'css',
         'html',
         'go',

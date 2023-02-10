@@ -9,13 +9,15 @@ return {
       { -- Telescope fzf native
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
-        cond = vim.fn.executable 'make' == 1,
+        cond = vim.fn.executable('make') == 1,
       },
+      'nvim-lua/popup.nvim',
       'nvim-telescope/telescope-file-browser.nvim',
+      'nvim-telescope/telescope-media-files.nvim',
     },
     config = function()
-      local actions = require 'telescope.actions'
-      local telescope = require 'telescope'
+      local actions = require('telescope.actions')
+      local telescope = require('telescope')
       telescope.setup {
         defaults = {
           mappings = {
@@ -64,12 +66,21 @@ return {
           scroll_strategy = 'cycle',
           color_devicons = true,
         },
+        extensions = {
+          media_files = {
+            -- filetypes whitelist
+            -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+            filetypes = { 'png', 'webp', 'jpg', 'jpeg' },
+            find_cmd = 'rg', -- find command (defaults to `fd`)
+          },
+        },
       }
       pcall(telescope.load_extension, 'fzf')
-      telescope.load_extension 'file_browser'
-      telescope.load_extension 'harpoon'
+      telescope.load_extension('file_browser')
+      telescope.load_extension('harpoon')
+      telescope.load_extension('media_files')
 
-      local b = require 'telescope.builtin'
+      local b = require('telescope.builtin')
       -- KEYMAPS
       local K = {
         -- Fuzzy find
@@ -86,6 +97,10 @@ return {
           end,
           'Fuzzily search in current buffer]',
         },
+        ['<leader>:'] = { b.command_history, 'Command history' },
+        ['<leader>fm'] = { b.marks, 'Find marks' },
+        ['<leader>fk'] = { b.keymaps, 'Find keymaps' },
+        ['<leader>th'] = { b.colorscheme, 'Switch colorscheme' },
         -- Git
         ['<leader>fg'] = { b.git_files, 'Find Git files' },
         ['<leader>cm'] = { b.git_commits, 'Git commits' },
@@ -109,8 +124,8 @@ return {
   {
     'ThePrimeagen/harpoon',
     config = function()
-      local mark = require 'harpoon.mark'
-      local ui = require 'harpoon.ui'
+      local mark = require('harpoon.mark')
+      local ui = require('harpoon.ui')
 
       local K = {
         ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },

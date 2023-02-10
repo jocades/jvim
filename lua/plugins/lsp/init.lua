@@ -8,14 +8,15 @@ return {
       { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
+      { 'b0o/SchemaStore.nvim', version = false },
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
       diagnostics = {
-        -- virtual_text = false, -- disable in-line text diagnostic
         underline = true,
         update_in_insert = false,
-        virtual_text = { spacing = 4, prefix = '●' },
+        virtual_text = false, -- disable in-line text diagnostic
+        --virtual_text = { spacing = 4, prefix = '●' },
         severity_sort = true,
       },
       autoformat = true,
@@ -23,6 +24,7 @@ return {
         formatting_options = nil,
         timeout_ms = nil,
       },
+      -- Servers & Settings
       servers = {
         pyright = {
           analysis = {
@@ -35,7 +37,16 @@ return {
             telemetry = { enable = false },
           },
         },
-        jsonls = {},
+        jsonls = {
+          --[[ on_new_config = function(new_config)
+            new_config.settings.json.schemas = new_config.settings.json.schemas or {}
+            vim.list_extend(new_config.settings.json.schemas, require('schemastore').json.schemas())
+          end, ]]
+          json = {
+            format = { enable = true },
+            validate = { enable = true },
+          },
+        },
         tsserver = {},
       },
     },
@@ -43,7 +54,7 @@ return {
       vim.diagnostic.config(opts.diagnostics)
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-      local lsp_config = require 'mason-lspconfig'
+      local lsp_config = require('mason-lspconfig')
       lsp_config.setup { ensure_installed = vim.tbl_keys(opts.servers) }
       lsp_config.setup_handlers {
         function(server_name)
@@ -67,7 +78,7 @@ return {
         --b.diagnostics.flake8,
         b.formatting.autopep8,
         b.formatting.prettierd,
-        b.formatting.stylua,
+        b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
         b.formatting.shfmt,
         b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
       }
@@ -79,7 +90,7 @@ return {
     end,
   },
 
-  -- Lsp server manager
+  -- LS manager
   {
     'williamboman/mason.nvim',
     cmd = 'Mason',
@@ -95,7 +106,7 @@ return {
     },
     config = function(_, opts)
       require('mason').setup(opts)
-      local mr = require 'mason-registry'
+      local mr = require('mason-registry')
       for _, tool in ipairs(opts.ensure_installed) do
         local p = mr.get_package(tool)
         if not p:is_installed() then
@@ -105,7 +116,15 @@ return {
     end,
   },
 
-  -- lsp symbol outline
+  -- Better diagnostics lists
+  {
+    'folke/trouble.nvim',
+    cmd = { 'TroubleToggle', 'Trouble' },
+    opts = { use_diagnostic_signs = true },
+  },
+  { 'folke/lsp-colors.nvim', event = 'BufReadPre', config = true },
+
+  -- Lsp symbol outline
   {
     'SmiteshP/nvim-navic',
     lazy = true,
@@ -117,96 +136,6 @@ return {
         end
       end)
     end,
-    opts = { separator = ' ', highlight = true, depth_limit = 5 },
+    opts = { separator = ' ', highlight = false, depth_limit = 5 },
   },
 }
-
---[[ {
-    'folke/trouble.nvim',
-    cmd = 'TroubleToggle',
-    config = function()
-      require('trouble').setup {
-        auto_open = false,
-        auto_close = true,
-        auto_preview = false,
-        auto_fold = true,
-        signs = {
-          error = '',
-          warning = '',
-          hint = '',
-          information = '',
-          other = '﫠',
-        },
-        use_lsp_diagnostic_signs = true,
-      }
-    end,
-  },
-
-  {
-    'folke/lsp-colors.nvim',
-    event = 'BufReadPre',
-    config = function()
-      require('lsp-colors').setup {
-        Error = '#db4b4b',
-        Warning = '#e0af68',
-        Information = '#0db9d7',
-        Hint = '#10B981',
-      }
-    end,
-  },
-]]
-
---[[ {
-    'folke/lsp-trouble.nvim',
-    cmd = 'LspTroubleToggle',
-    config = function()
-      require('lsp-trouble').setup {
-        auto_open = false,
-        auto_close = true,
-        auto_preview = false,
-        auto_fold = true,
-        signs = {
-          error = '',
-          warning = '',
-          hint = '',
-          information = '',
-          other = '﫠',
-        },
-        use_lsp_diagnostic_signs = true,
-      }
-    end,
-  },
-
-  {
-    'folke/lsp-peek.nvim',
-    cmd = 'LspPeek',
-    config = function()
-      require('lsp-peek').setup {
-        auto_open = false,
-        auto_close = true,
-        auto_preview = false,
-        auto_fold = true,
-        signs = {
-          error = '',
-          warning = '',
-          hint = '',
-          information = '',
-          other = '﫠',
-        },
-        use_lsp_diagnostic_signs = true,
-      }
-    end,
-  },
-
-  {
-    'folke/lsp-symbols.nvim',
-    cmd = 'LspSymbols',
-    config = function()
-      require('lsp-symbols').setup {
-        auto_open = false,
-        auto_close = true,
-        auto_preview = false,
-  }
-
-    end
-  }, ]]

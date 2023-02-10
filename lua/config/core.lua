@@ -7,6 +7,7 @@ require('lazy').setup {
   { import = 'plugins.coding' },
 }
 
+require('config.autocmds')
 require('config.options')
 require('config.mappings')
 require('utils.lib')

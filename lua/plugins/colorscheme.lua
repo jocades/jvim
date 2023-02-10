@@ -40,19 +40,24 @@ return {
     },
     config = function(_, opts)
       require('tokyonight').setup(opts)
-      vim.cmd [[colorscheme tokyonight]]
+      -- vim.cmd([[colorscheme tokyonight]])
     end,
   },
 
   {
     'navarasu/onedark.nvim',
-    lazy = true,
+    -- lazy = true,
     name = 'onedark',
   },
 
   {
     'catppuccin/nvim',
-    lazy = true,
+    -- lazy = true,
     name = 'catppuccin',
+  },
+
+  {
+    'rebelot/kanagawa.nvim',
+    config = function() vim.cmd([[colorscheme kanagawa]]) end,
   },
 }

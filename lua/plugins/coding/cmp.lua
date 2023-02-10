@@ -11,7 +11,7 @@ return {
     'onsails/lspkind-nvim', -- icons for completion
   },
   opts = function()
-    local cmp = require 'cmp'
+    local cmp = require('cmp')
     return {
       snippet = {
         expand = function(args) require('luasnip').lsp_expand(args.body) end,
@@ -22,7 +22,7 @@ return {
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete {},
-        ['<C-i>'] = cmp.mapping.confirm {
+        ['<Enter>'] = cmp.mapping.confirm {
           behavior = cmp.ConfirmBehavior.Replace,
           select = true,
         },
