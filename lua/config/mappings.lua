@@ -7,8 +7,8 @@ local K = {
   -- NORMAL
   n = {
     -- Common
-    ['<C-n>'] = { cmd.NvimTreeToggle, { desc = 'Toggle nvim-tree' } },
-    ['<leader>e'] = { cmd.NvimTreeFocus, { desc = 'Focus nvim-tree' } },
+    ['<C-n>'] = { ':Neotree toggle<cr>', { desc = 'Toggle nvim-tree' } },
+    ['<leader>e'] = { cmd.Neotree, { desc = 'Focus nvim-tree' } },
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
     ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
     ['<leader>la'] = { ':Lazy<cr>', { desc = 'Open pkg manager' } },
