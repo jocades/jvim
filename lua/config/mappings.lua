@@ -7,21 +7,22 @@ local K = {
   -- NORMAL
   n = {
     -- Common
-    ['<C-n>'] = { ':Neotree toggle<cr>', { desc = 'Toggle nvim-tree' } },
+    ['<C-n>'] = { '<cmd>Neotree toggle<cr>', { desc = 'Toggle nvim-tree' } },
     ['<leader>e'] = { cmd.Neotree, { desc = 'Focus nvim-tree' } },
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
-    ['<leader>Q'] = { ':qall!<cr>', { desc = 'Quit no save' } },
-    ['<leader>la'] = { ':Lazy<cr>', { desc = 'Open pkg manager' } },
+    ['<leader>Q'] = { '<cmd>qall!<cr>', { desc = 'Quit no save' } },
+    ['<leader>la'] = { '<cmd>Lazy<cr>', { desc = 'Open pkg manager' } },
 
     -- Buffer actions
     ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = { ':Bdelete!<cr>', { desc = 'Close buffer without saving' } },
+    ['<leader>X'] = { '<cmd>Bdelete!<cr>', { desc = 'Close buffer without saving' } },
+    ['<leader>bd'] = { require('utils').close_saved, { desc = 'Close all saved buffers' } },
     ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir' } },
     ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
     ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
-    ['<leader>so'] = { ':w | so %<cr>', { desc = 'Save, source & run current config file' } },
+    ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' } },
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
-    ['<leader>y'] = { ':%y+<cr>', { desc = 'Copy whole buffer' } },
+    ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
     ['L'] = { cmd.bnext },
@@ -32,10 +33,10 @@ local K = {
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
     ['<leader>re'] = { cmd.ZenMode, { desc = 'Toggle Zen mode' } },
-    ['<C-Up>'] = { ':resize +2<cr>' },
-    ['<C-Down>'] = { ':resize -2<cr>' },
-    ['<C-Left>'] = { ':vertical resize -2<cr>' },
-    ['<C-Right>'] = { ':vertical resize +2<cr>' },
+    ['<C-Up>'] = { '<cmd>resize +2<cr>' },
+    ['<C-Down>'] = { '<cmd>resize -2<cr>' },
+    ['<C-Left>'] = { '<cmd>vertical resize -2<cr>' },
+    ['<C-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
     -- Window navigation
     ['<C-h>'] = { '<C-w>h' },
@@ -66,8 +67,8 @@ local K = {
   -- VISUAL
   v = {
     -- Move selected block
-    ['J'] = { ":m '>+1<CR>gv=gv" },
-    ['K'] = { ":m '<-2<CR>gv=gv" },
+    ['J'] = { "<cmd>m '>+1<CR>gv=gv" },
+    ['K'] = { "<cmd>m '<-2<CR>gv=gv" },
 
     -- Stay in indent mode
     ['<'] = { '<gv' },

@@ -1,37 +1,39 @@
+local api = vim.api
+
 local M = {}
 
-M.get_curr_buf = function(_) return vim.api.nvim_get_current_buf() end
+function M.get_curr_buf(_) return api.nvim_get_current_buf() end
 
-M.write_to_buf = function(_, buf, start, finish, clear, data)
+function M.write_to_buf(_, buf, start, finish, clear, data)
   if clear then
-    vim.api.nvim_buf_set_lines(buf, start, finish, false, {})
+    api.nvim_buf_set_lines(buf, start, finish, false, {})
   end
 
-  vim.api.nvim_buf_set_lines(buf, start, finish, false, data)
+  api.nvim_buf_set_lines(buf, start, finish, false, data)
 end
 
-M.new_buf = function(self)
+function M.new_buf(self)
   vim.cmd.new()
   return self.get_curr_buf()
 end
 
-M.new_nofile_buf = function(_, name)
+function M.new_nofile_buf(_, name)
   vim.cmd.new()
-  local buf = vim.api.nvim_get_current_buf()
-  vim.api.nvim_buf_set_name(buf, name)
-  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+  local buf = api.nvim_get_current_buf()
+  api.nvim_buf_set_name(buf, name)
+  api.nvim_buf_set_option(buf, 'buftype', 'nofile')
+  api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
   return buf
 end
 
-M.get_file_path = function(_, bufnr)
+function M.get_file_path(_, bufnr)
   if not bufnr then
-    return vim.api.nvim_buf_get_name(0)
+    return api.nvim_buf_get_name(0)
   end
-  return vim.api.nvim_buf_get_name(bufnr)
+  return api.nvim_buf_get_name(bufnr)
 end
 
-M.get_file_name = function(self, path)
+function M.get_file_name(self, path)
   local regex = '([^/]+)$'
   if not path then
     return self.get_file_path():match(regex)
@@ -39,7 +41,7 @@ M.get_file_name = function(self, path)
   return path:match(regex)
 end
 
-M.get_file_ext = function(self, path)
+function M.get_file_ext(self, path)
   local regex = '%.([^.]+)$'
   if not path then
     return self.get_file_path():match(regex)
@@ -47,9 +49,9 @@ M.get_file_ext = function(self, path)
   return path:match(regex)
 end
 
-M.print_err = function(_, msg) vim.notify(msg, vim.log.levels.ERROR) end
+function M.print_err(_, msg) vim.notify(msg, vim.log.levels.ERROR) end
 
-M.get_command = function(_, ext)
+function M.get_command(_, ext)
   local commands = {
     py = 'python',
     lua = 'lua',
@@ -61,25 +63,25 @@ M.get_command = function(_, ext)
   return commands[ext]
 end
 
-M.get_buf_names = function(_)
-  local bufs = vim.api.nvim_list_bufs()
+function M.get_buf_names(_)
+  local bufs = api.nvim_list_bufs()
   local names = {}
   for _, buf in ipairs(bufs) do
-    table.insert(names, vim.api.nvim_buf_get_name(buf))
+    table.insert(names, api.nvim_buf_get_name(buf))
   end
 
   return names
 end
 
-M.get_buf_by_name = function(_, name)
-  local bufs = vim.api.nvim_list_bufs()
+function M.get_buf_by_name(_, name)
+  local bufs = api.nvim_list_bufs()
   for _, buf in ipairs(bufs) do
-    if vim.api.nvim_buf_get_name(buf) == name then
+    if api.nvim_buf_get_name(buf) == name then
       return buf
     end
   end
 end
 
-M.test_module_relaod = function() return 5 end
+function M.test_module_relaod() return 5 end
 
 return M

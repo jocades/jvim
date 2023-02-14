@@ -1,14 +1,27 @@
 local cmd = vim.cmd
+local api = vim.api
 
 local M = {}
 
+-- Merge 2 or more dictionaries
+---@param ... table[]
+---@return table
+function M.merge(...)
+  local result = {}
+  for _, t in ipairs { ... } do
+    for k, v in pairs(t) do
+      result[k] = v
+    end
+  end
+  return result
+end
+
 function M.map(mode, keys, exec, opts)
   local common = { silent = true, noremap = true }
-
   if not opts then
     opts = common
   else
-    vim.tbl_extend('force', opts, common)
+    M.merge(common, opts)
   end
 
   vim.keymap.set(mode, keys, exec, opts)
@@ -16,7 +29,7 @@ end
 
 ---@param on_attach fun(client, buffer)
 function M.on_attach(on_attach)
-  vim.api.nvim_create_autocmd('LspAttach', {
+  api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
       local buffer = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -27,8 +40,7 @@ end
 
 ---@param opts? table { type: 'v' | 'h' }
 function M.handle_new_buf(opts)
-  ---@diagnostic disable-next-line
-  local name = vim.fn.input 'Enter file name: '
+  local name = vim.fn.input('Enter file name: ')
   if name == '' then
     return
   end
@@ -47,12 +59,14 @@ function M.handle_new_buf(opts)
   end
 end
 
-function M.close_all()
-  local bufs = vim.api.nvim_list_bufs()
+-- Close all saved buffers
+function M.close_saved()
+  local bufs = api.nvim_list_bufs()
   for _, buf in ipairs(bufs) do
-    local modified = vim.api.nvim_buf_get_option(buf, 'modified')
-    if not modified then
-      vim.cmd('Bdelete ' .. buf)
+    if api.nvim_buf_is_loaded(buf) then
+      if not api.nvim_buf_get_option(buf, 'modified') then
+        api.nvim_buf_delete(buf, { force = true })
+      end
     end
   end
 end
@@ -65,7 +79,7 @@ end
 ---@return string
 function M.get_root()
   ---@type string?
-  local path = vim.api.nvim_buf_get_name(0)
+  local path = api.nvim_buf_get_name(0)
   path = path ~= '' and vim.loop.fs_realpath(path) or nil
   ---@type string[]
   local roots = {}
