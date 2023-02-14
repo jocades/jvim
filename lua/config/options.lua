@@ -42,7 +42,7 @@ local options = {
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
   fillchars = { eob = '~' },
   showmode = false,
-  winbar = '%=%m %f',
+  --winbar = '%=%m %f',
 }
 
 --vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
