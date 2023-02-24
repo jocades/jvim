@@ -27,24 +27,32 @@ return {
       -- Servers & Settings
       servers = {
         pyright = {
-          analysis = {
-            typeCheckingMode = 'off',
+          settings = {
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              typeCheckingMode = 'off',
+            },
           },
         },
         sumneko_lua = {
-          Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
+          settings = {
+            Lua = {
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            },
           },
         },
         jsonls = {
-          --[[ on_new_config = function(new_config)
+          on_new_config = function(new_config)
             new_config.settings.json.schemas = new_config.settings.json.schemas or {}
             vim.list_extend(new_config.settings.json.schemas, require('schemastore').json.schemas())
-          end, ]]
-          json = {
-            format = { enable = true },
-            validate = { enable = true },
+          end,
+          settings = {
+            json = {
+              format = { enable = true },
+              validate = { enable = true },
+            },
           },
         },
         tsserver = {},
@@ -61,7 +69,7 @@ return {
           require('lspconfig')[server_name].setup {
             capabilities = capabilities,
             on_attach = require('plugins.lsp.mappings').on_attach,
-            settings = opts.servers[server_name],
+            settings = opts.servers[server_name].settings,
           }
         end,
       }
@@ -79,7 +87,7 @@ return {
         b.formatting.autopep8,
         b.formatting.prettierd,
         b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
-        b.formatting.shfmt,
+        b.formatting.shfmt.with { extra_args = { '-i', '4' } },
         b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
       }
       require('null-ls').setup {

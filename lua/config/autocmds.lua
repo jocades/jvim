@@ -6,12 +6,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.highlight.on_yank() end,
 })
 
--- resize splits if window got resized
+-- Resize splits if window got resized
 -- vim.api.nvim_create_autocmd({ 'VimResized' }, {
 --   callback = function() vim.cmd('tabdo wincmd =') end,
 -- })
 
--- go to last loc when opening a buffer
+-- Go to last loc when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
@@ -22,7 +22,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
--- close some filetypes with <q>
+-- Close some filetypes with <q>
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
     'qf',
@@ -41,6 +41,7 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- Set wrap and spell for some filetypes
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'gitcommit', 'markdown' },
   callback = function()

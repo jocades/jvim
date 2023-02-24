@@ -16,6 +16,11 @@ function M.merge(...)
   return result
 end
 
+-- Set keymaps with default options
+---@param mode string
+---@param keys string
+---@param exec string | function
+---@param opts? table
 function M.map(mode, keys, exec, opts)
   local common = { silent = true, noremap = true }
   if not opts then
@@ -44,14 +49,11 @@ function M.handle_new_buf(opts)
   if name == '' then
     return
   end
-
   local path = '%:h/' .. name
-
   if not opts then
     cmd.e(path)
     return
   end
-
   if opts.type == 'v' then
     cmd('vsplit' .. path)
   else

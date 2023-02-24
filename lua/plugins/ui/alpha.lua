@@ -3,7 +3,7 @@ return {
   enabled = true,
   event = 'VimEnter',
   config = function()
-    local dashboard = require 'alpha.themes.dashboard'
+    local dashboard = require('alpha.themes.dashboard')
     -- dynamic header padding
     --[[ local fn = vim.fn
     local marginTopPercent = 0.3 ]]

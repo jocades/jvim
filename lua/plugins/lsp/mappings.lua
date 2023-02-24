@@ -4,9 +4,9 @@ local telescope = require('telescope.builtin')
 local M = {}
 
 local function diagnostic_goto(next, severity)
-  local move = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  local go_to = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
   severity = severity and vim.diagnostic.severity[severity] or nil
-  return function() move { severity = severity } end
+  return function() go_to { severity = severity } end
 end
 
 local mappings = {
@@ -47,7 +47,7 @@ function M.on_attach(client, bufnr)
     local ts = require('typescript')
     mappings['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports (ts)' }
     mappings['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports (ts)' }
-    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove unused imports (ts)' }
+    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove Unused Imports (ts)' }
     mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File (ts)' }
   end
 
