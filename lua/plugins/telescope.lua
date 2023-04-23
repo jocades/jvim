@@ -84,7 +84,7 @@ return {
       -- KEYMAPS
       local K = {
         -- Fuzzy find
-        ['<leader>ff'] = { b.find_files, 'Find Files' },
+        ['<C-p>'] = { b.find_files, 'Find Files' },
         ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
         ['<leader>/'] = { b.buffers, 'Find existing buffers' },
         ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },

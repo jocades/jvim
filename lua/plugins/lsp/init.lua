@@ -35,7 +35,7 @@ return {
             },
           },
         },
-        sumneko_lua = {
+        lua_ls = {
           settings = {
             Lua = {
               workspace = { checkThirdParty = false },
@@ -84,7 +84,7 @@ return {
       local b = require('null-ls').builtins
       local sources = {
         --b.diagnostics.flake8,
-        b.formatting.autopep8,
+        b.formatting.autopep8.with { extra_args = { '--max-line-length', '120' } },
         b.formatting.prettierd,
         b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
         b.formatting.shfmt.with { extra_args = { '-i', '4' } },
