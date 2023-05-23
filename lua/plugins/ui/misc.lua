@@ -3,7 +3,11 @@ return {
   {
     'NvChad/nvim-colorizer.lua',
     event = 'BufReadPre',
-    config = true,
+    opts = {
+      user_default_options = {
+        tailwind = true,
+      },
+    },
   },
   { 'MunifTanjim/nui.nvim', lazy = true },
   { 'b0o/incline.nvim', event = 'BufReadPre', config = true },

@@ -21,11 +21,12 @@ return {
       },
       autoformat = true,
       format = {
-        formatting_options = nil,
+        formatting_options = nil, -- handled by null-ls
         timeout_ms = nil,
       },
       -- Servers & Settings
       servers = {
+        -- Python
         pyright = {
           settings = {
             analysis = {
@@ -35,6 +36,7 @@ return {
             },
           },
         },
+        -- Lua
         lua_ls = {
           settings = {
             Lua = {
@@ -43,6 +45,7 @@ return {
             },
           },
         },
+        -- JSON
         jsonls = {
           on_new_config = function(new_config)
             new_config.settings.json.schemas = new_config.settings.json.schemas or {}
@@ -55,12 +58,48 @@ return {
             },
           },
         },
+        -- TypeScript (handled by typescript.nvim)
         tsserver = {},
+        -- C
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--completion-style=detailed',
+            '--header-insertion=iwyu',
+          },
+          init_options = {
+            clangdFileStatus = true,
+            usePlaceholders = true,
+            completeUnimported = true,
+            semanticHighlighting = true,
+          },
+        },
+        -- Go
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              completeUnimported = true,
+              staticcheck = true,
+            },
+          },
+        },
+        -- Prisma DB
+        prismals = {},
+        -- Tailwind CSS
+        tailwindcss = {},
       },
     },
     config = function(_, opts)
       vim.diagnostic.config(opts.diagnostics)
       local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      -- Fix clang formatter warnings
+      capabilities.offsetEncoding = { 'utf-16' }
 
       local lsp_config = require('mason-lspconfig')
       lsp_config.setup { ensure_installed = vim.tbl_keys(opts.servers) }
@@ -89,6 +128,8 @@ return {
         b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
         b.formatting.shfmt.with { extra_args = { '-i', '4' } },
         b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
+        b.formatting.clang_format.with { extra_args = { '-style=file' } },
+        b.formatting.gofmt.with { extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } },
       }
       require('null-ls').setup {
         debug = true,
@@ -110,6 +151,7 @@ return {
         'shellcheck',
         'shfmt',
         'flake8',
+        'clangd',
       },
     },
     config = function(_, opts)

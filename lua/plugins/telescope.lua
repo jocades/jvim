@@ -18,6 +18,7 @@ return {
     config = function()
       local actions = require('telescope.actions')
       local telescope = require('telescope')
+      local trouble = require('trouble.providers.telescope')
       telescope.setup {
         defaults = {
           mappings = {
@@ -28,6 +29,8 @@ return {
               ['<C-k>'] = actions.move_selection_previous,
               ['<C-n>'] = actions.cycle_history_next,
               ['<C-p>'] = actions.cycle_history_prev,
+              -- Set results loclist with troble
+              ['<C-l>'] = trouble.open_with_trouble,
             },
           },
           prompt_prefix = ' ', --  ',
