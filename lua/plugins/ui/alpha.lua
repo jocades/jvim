@@ -41,12 +41,12 @@ return {
     dashboard.section.header.val = vim.split(lazy_logo, '\n')
     dashboard.section.buttons.val = {
       dashboard.button('f', ' ' .. ' Find file', ':Telescope find_files<cr>'), -- 
-      dashboard.button('n', ' ' .. ' New file', ':ene <BAR> startinsert<cr>'),
-      dashboard.button('r', ' ' .. ' Recent files', ':Telescope oldfiles<cr>'),
-      dashboard.button('w', ' ' .. ' Find word', ':Telescope live_grep<cr>'),
-      dashboard.button('s', '勒' .. ' Restore Session', [[:lua require("persistence").load()<cr>]]),
+      dashboard.button('n', '󱇧 ' .. ' New file', ':ene <BAR> startinsert<cr>'),
+      dashboard.button('r', '󰈙 ' .. ' Recent files', ':Telescope oldfiles<cr>'),
+      dashboard.button('w', '󰈭 ' .. ' Find word', ':Telescope live_grep<cr>'),
+      dashboard.button('s', '󰦛 ' .. ' Restore Session', [[:lua require("persistence").load()<cr>]]),
       dashboard.button('c', ' ' .. ' Config', ':e $MYVIMRC<cr>'),
-      dashboard.button('l', '鈴' .. ' Lazy', ':Lazy<cr>'),
+      dashboard.button('l', '󰒲 ' .. ' Lazy', ':Lazy<cr>'),
       dashboard.button('q', ' ' .. ' Quit', ':qa<cr>'),
     }
     for _, button in ipairs(dashboard.section.buttons.val) do

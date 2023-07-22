@@ -1,7 +1,7 @@
 return {
   {
     'folke/tokyonight.nvim',
-    priority = 1000,
+    -- priority = 1000,
     opts = {
       style = 'night',
       on_highlights = function(hl, c)
@@ -58,6 +58,37 @@ return {
 
   {
     'rebelot/kanagawa.nvim',
-    config = function() vim.cmd([[colorscheme kanagawa]]) end,
+    priority = 1000,
+    config = function()
+      require('kanagawa').setup {
+        -- overrides = function(color) end,
+        colors = {
+          theme = {
+            all = {
+              syn = {
+                -- variable = '#e0e0e0',
+                constant = '#e0e0e0',
+              },
+            },
+          },
+        },
+      }
+
+      vim.cmd([[colorscheme kanagawa]])
+    end,
+  },
+
+  {
+    'bluz71/vim-nightfly-colors',
+    -- name = 'nightfly',
+    -- priority = 1000,
+    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
+  },
+
+  {
+
+    'EdenEast/nightfox.nvim',
+    -- priority = 1000,
+    -- config = function() vim.cmd([[colorscheme nightfox]]) end,
   },
 }

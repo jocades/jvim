@@ -52,6 +52,17 @@ local K = {
     ['<leader>c'] = { 'zz', { nowait = true } },
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
+
+    -- Git
+    ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
+    ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
+    ['<leader>gp'] = {
+      function()
+        vim.cmd('!git pull')
+        vim.notify('Git pull', vim.log.levels.WARN, { title = 'Git' })
+      end,
+      { desc = 'Git pull' },
+    },
   },
 
   -- INSERT

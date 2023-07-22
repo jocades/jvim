@@ -24,6 +24,36 @@ return {
     filesystem = {
       bind_to_cwd = false,
       follow_current_file = true,
+      window = {
+        mappings = {
+          ['gd'] = function(state)
+            -- Copy of `open` command from author
+            require('neo-tree.sources.common.commands').open(
+              state,
+              require('neo-tree.utils').wrap(require('neo-tree.sources.filesystem').toggle_directory, state)
+            )
+
+            vim.cmd('Gvdiffsplit')
+          end,
+        },
+      },
+    },
+    default_component_configs = {
+      git_status = {
+        symbols = {
+          -- Change type
+          added = '✚',
+          deleted = '✖',
+          modified = '',
+          renamed = '',
+          -- Status type
+          untracked = '',
+          ignored = '',
+          unstaged = '',
+          staged = '',
+          conflict = '',
+        },
+      },
     },
     event_handlers = {
       {

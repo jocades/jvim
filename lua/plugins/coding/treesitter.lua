@@ -19,7 +19,6 @@ return {
         'tsx',
         'lua',
         'bash',
-        'help',
         'vim',
         'markdown',
         'markdown_inline',
