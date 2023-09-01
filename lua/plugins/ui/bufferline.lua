@@ -8,7 +8,7 @@ tab = collection of windows (gt, gT to cicle tabs)
 return {
   'akinsho/bufferline.nvim',
   event = 'BufReadPre',
-  enabled = true,
+  enabled = false,
   config = function()
     require('bufferline').setup {
       options = {

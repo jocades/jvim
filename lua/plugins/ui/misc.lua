@@ -5,6 +5,8 @@ return {
     event = 'BufReadPre',
     opts = {
       user_default_options = {
+        -- background, foreground, virtualtext
+        mode = 'foreground',
         tailwind = true,
       },
     },

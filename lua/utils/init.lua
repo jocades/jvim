@@ -112,4 +112,30 @@ function M.get_root()
   return root
 end
 
+function M.file_exists(path)
+  if vim.fn.filereadable(path) == 1 then
+    return true
+  end
+
+  return false
+end
+
+-- local cwd = vim.fn.getcwd()
+-- print(cwd)
+
+-- local files = require('plenary.scandir').scan_dir(vim.fn.getcwd())
+-- print(vim.inspect(fojkujkujkles))
+
+--[[ local file = M.get_root() .. '/init.lua'
+print(file)
+
+if not M.file_exists(file) then
+  print('file exists')
+end
+
+local t = { 'a', 'b', 'c' }
+
+table.insert(t, 'd')
+P(t) ]]
+
 return M
