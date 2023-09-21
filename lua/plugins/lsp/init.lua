@@ -132,11 +132,13 @@ return {
   -- Formatting
   {
     'jose-elias-alvarez/null-ls.nvim',
-    -- event = 'BufReadPre',
+    event = 'BufReadPre',
     config = function()
       local b = require('null-ls').builtins
 
-      local ts_formatter
+      local ts_formatter = b.formatting.deno_fmt.with {
+        extra_args = { '--no-semicolons', '--single-quote' },
+      }
 
       local root_dir = vim.fn.getcwd()
       local prettier_files = { '.prettierrc', 'prettier.config.js' }
@@ -145,11 +147,10 @@ return {
         local prettier_config = root_dir .. '/' .. file
         if require('utils').file_exists(prettier_config) then
           ts_formatter = b.formatting.prettierd
-          -- print('Using ' .. file .. ' for formatting')
+          print('Using ' .. file .. ' for formatting')
           break
         else
-          ts_formatter = b.formatting.deno_fmt
-          -- print('Using deno fmt for formatting')
+          print('Using deno fmt for formatting')
         end
       end
 

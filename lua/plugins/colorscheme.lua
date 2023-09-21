@@ -40,7 +40,7 @@ return {
     },
     config = function(_, opts)
       require('tokyonight').setup(opts)
-      -- vim.cmd([[colorscheme tokyonight]])
+      vim.cmd([[colorscheme tokyonight-night]])
     end,
   },
 
@@ -67,14 +67,14 @@ return {
             all = {
               syn = {
                 -- variable = '#e0e0e0',
-                constant = '#e0e0e0',
+                -- constant = '#e0e0e0',
               },
             },
           },
         },
       }
 
-      vim.cmd([[colorscheme kanagawa]])
+      -- vim.cmd([[colorscheme kanagawa]])
     end,
   },
 

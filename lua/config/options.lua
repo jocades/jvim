@@ -43,6 +43,7 @@ local options = {
   fillchars = { eob = '~' },
   showmode = false,
   --winbar = '%=%m %f',
+  colorcolumn = '80', -- Line length marker (ruler)
 }
 
 --vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
