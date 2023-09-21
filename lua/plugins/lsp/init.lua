@@ -1,3 +1,5 @@
+local utils = require('utils')
+
 return {
   {
     'neovim/nvim-lspconfig',
@@ -60,6 +62,8 @@ return {
         },
         -- TypeScript (handled by typescript.nvim)
         tsserver = {},
+        -- Deno
+        denols = {},
         -- C
         clangd = {
           cmd = {
@@ -78,19 +82,17 @@ return {
         },
         -- Go
         gopls = {
+          cmd = { 'gopls', 'serve' },
           settings = {
             gopls = {
               analyses = {
                 unusedparams = true,
                 shadow = true,
               },
-              completeUnimported = true,
               staticcheck = true,
             },
           },
         },
-        -- Prisma DB
-        prismals = {},
         -- Tailwind CSS
         tailwindcss = {},
       },
@@ -102,14 +104,26 @@ return {
       capabilities.offsetEncoding = { 'utf-16' }
 
       local lsp_config = require('mason-lspconfig')
+
       lsp_config.setup { ensure_installed = vim.tbl_keys(opts.servers) }
+
       lsp_config.setup_handlers {
         function(server_name)
-          require('lspconfig')[server_name].setup {
+          local setup = {
             capabilities = capabilities,
             on_attach = require('plugins.lsp.mappings').on_attach,
             settings = opts.servers[server_name].settings,
           }
+
+          if server_name == 'denols' then
+            setup.root_dir = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
+            setup.init_options = { enable = true, unstable = true }
+          elseif server_name == 'tsserver' then
+            setup.root_dir = require('lspconfig.util').root_pattern('package.json')
+            setup.single_file_support = false
+          end
+
+          require('lspconfig')[server_name].setup(setup)
         end,
       }
     end,
@@ -121,16 +135,37 @@ return {
     event = 'BufReadPre',
     config = function()
       local b = require('null-ls').builtins
+
+      local ts_formatter = b.formatting.deno_fmt.with {
+        extra_args = { '--no-semicolons', '--single-quote' },
+      }
+
+      local root_dir = vim.fn.getcwd()
+      local prettier_files = { '.prettierrc', 'prettier.config.js' }
+
+      for _, file in ipairs(prettier_files) do
+        local prettier_config = root_dir .. '/' .. file
+        if require('utils').file_exists(prettier_config) then
+          ts_formatter = b.formatting.prettierd
+          print('Using ' .. file .. ' for formatting')
+          break
+        else
+          print('Using deno fmt for formatting')
+        end
+      end
+
       local sources = {
-        --b.diagnostics.flake8,
-        b.formatting.autopep8.with { extra_args = { '--max-line-length', '120' } },
-        b.formatting.prettierd,
+        ts_formatter,
+        -- b.formatting.deno_fmt,
+        -- b.formatting.prettierd,
+        b.formatting.autopep8.with { extra_args = { '--max-line-length', '120', '--experimental' } },
         b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
         b.formatting.shfmt.with { extra_args = { '-i', '4' } },
         b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
         b.formatting.clang_format.with { extra_args = { '-style=file' } },
         b.formatting.gofmt.with { extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } },
       }
+
       require('null-ls').setup {
         debug = true,
         sources = sources,

@@ -25,18 +25,20 @@ local K = {
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
-    ['L'] = { cmd.bnext },
-    ['H'] = { cmd.bprev },
+    ['<C-]>'] = { cmd.bnext },
+    ['<C-[>'] = { cmd.bprev },
 
     -- Window actions
     ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
     ['<leader>re'] = { cmd.ZenMode, { desc = 'Toggle Zen mode' } },
-    ['<C-Up>'] = { '<cmd>resize +2<cr>' },
-    ['<C-Down>'] = { '<cmd>resize -2<cr>' },
-    ['<C-Left>'] = { '<cmd>vertical resize -2<cr>' },
-    ['<C-Right>'] = { '<cmd>vertical resize +2<cr>' },
+    -- do ctrl + shift + arrow to resize
+    -- add shift
+    ['<C-S-Up>'] = { '<cmd>resize +2<cr>' },
+    ['<C-S-Down>'] = { '<cmd>resize -2<cr>' },
+    ['<C-S-Left>'] = { '<cmd>vertical resize -2<cr>' },
+    ['<C-S-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
     -- Window navigation
     ['<C-h>'] = { '<C-w>h' },
@@ -52,6 +54,17 @@ local K = {
     ['<leader>c'] = { 'zz', { nowait = true } },
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
+
+    -- Git
+    ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
+    ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
+    ['<leader>gp'] = {
+      function()
+        vim.cmd('!git pull')
+        vim.notify('Git pull', vim.log.levels.WARN, { title = 'Git' })
+      end,
+      { desc = 'Git pull' },
+    },
   },
 
   -- INSERT
