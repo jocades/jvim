@@ -38,10 +38,10 @@ return {
         }
       end,
     },
-    config = function(_, opts)
-      require('tokyonight').setup(opts)
-      vim.cmd([[colorscheme tokyonight-night]])
-    end,
+    -- config = function(_, opts)
+    --   require('tokyonight').setup(opts)
+    --   vim.cmd([[colorscheme tokyonight-night]])
+    -- end,
   },
 
   {
@@ -79,10 +79,9 @@ return {
   },
 
   {
-    'bluz71/vim-nightfly-colors',
-    -- name = 'nightfly',
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
+    'bluz71/vim-nightfly-guicolors',
+    priority = 1000,
+    config = function() vim.cmd([[colorscheme nightfly]]) end,
   },
 
   {

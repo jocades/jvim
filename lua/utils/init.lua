@@ -73,6 +73,21 @@ function M.close_saved()
   end
 end
 
+-- Check if file exists
+---@param path string
+---@return boolean
 function M.file_exists(path) return vim.fn.filereadable(path) == 1 end
+
+-- Reduce function for lua tables
+---@param arr table
+---@param fn function
+---@param initial unknown
+function M.reduce(arr, fn, initial)
+  local acc = initial
+  for _, value in ipairs(arr) do
+    acc = fn(acc, value)
+  end
+  return acc
+end
 
 return M
