@@ -1,5 +1,3 @@
-local utils = require('utils')
-
 return {
   {
     'neovim/nvim-lspconfig',
@@ -17,8 +15,8 @@ return {
       diagnostics = {
         underline = true,
         update_in_insert = false,
-        virtual_text = false, -- disable in-line text diagnostic
-        --virtual_text = { spacing = 4, prefix = '●' },
+        -- virtual_text = false, -- disable in-line text diagnostic
+        virtual_text = { spacing = 4, prefix = '●' },
         severity_sort = true,
       },
       autoformat = true,

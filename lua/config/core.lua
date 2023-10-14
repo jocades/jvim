@@ -1,11 +1,26 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require('lazy').setup {
-  { import = 'plugins' },
-  { import = 'plugins.ui' },
-  { import = 'plugins.coding' },
+local modules = {
+  'plugins',
+  'plugins.ui',
+  'plugins.coding',
 }
+
+local imports = require('utils').reduce(modules, function(acc, mod)
+  table.insert(acc, { import = mod })
+  return acc
+end, {})
+
+require('lazy').setup(imports, {
+  checker = {
+    enabled = true,
+    notify = false,
+  },
+  change_detection = {
+    notify = false,
+  },
+})
 
 require('config.autocmds')
 require('config.options')
