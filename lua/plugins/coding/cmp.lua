@@ -23,10 +23,10 @@ return {
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete {},
-        ['<Enter>'] = cmp.mapping.confirm {
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = true,
-        },
+        -- ['<Enter>'] = cmp.mapping.confirm {
+        --   behavior = cmp.ConfirmBehavior.Replace,
+        --   select = true,
+        -- },
         ['<C-n>'] = cmp.config.disable,
         ['<C-p>'] = cmp.config.disable,
       },
@@ -66,10 +66,7 @@ return {
       },
       sources = { -- order matters
         { name = 'nvim_lsp' },
-        --{ name = 'nvim-lua' },
         { name = 'luasnip' },
-        -- TODO:
-        -- {name = 'copilot'},
         { name = 'buffer', keyword_length = 5 },
         { name = 'path' },
       },

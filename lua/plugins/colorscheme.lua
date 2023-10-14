@@ -74,14 +74,14 @@ return {
         },
       }
 
-      -- vim.cmd([[colorscheme kanagawa]])
+      vim.cmd([[colorscheme kanagawa]])
     end,
   },
 
   {
     'bluz71/vim-nightfly-guicolors',
     priority = 1000,
-    config = function() vim.cmd([[colorscheme nightfly]]) end,
+    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
   },
 
   {
