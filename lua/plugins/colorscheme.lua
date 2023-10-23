@@ -74,20 +74,20 @@ return {
         },
       }
 
-      vim.cmd([[colorscheme kanagawa]])
+      -- vim.cmd([[colorscheme kanagawa]])
     end,
   },
 
   {
     'bluz71/vim-nightfly-guicolors',
-    priority = 1000,
+    -- priority = 1000,
     -- config = function() vim.cmd([[colorscheme nightfly]]) end,
   },
 
   {
 
     'EdenEast/nightfox.nvim',
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme nightfox]]) end,
+    priority = 1000,
+    config = function() vim.cmd([[colorscheme carbonfox]]) end,
   },
 }
