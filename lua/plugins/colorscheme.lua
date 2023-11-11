@@ -2,6 +2,7 @@ return {
   {
     'folke/tokyonight.nvim',
     -- priority = 1000,
+    enabled = false,
     opts = {
       style = 'night',
       on_highlights = function(hl, c)
@@ -46,19 +47,21 @@ return {
 
   {
     'navarasu/onedark.nvim',
+    enabled = false,
     -- lazy = true,
     name = 'onedark',
   },
 
   {
     'catppuccin/nvim',
-    -- lazy = true,
     name = 'catppuccin',
+    priority = 1000,
+    config = function() vim.cmd([[colorscheme catppuccin]]) end,
   },
 
   {
     'rebelot/kanagawa.nvim',
-    priority = 1000,
+    enabled = false,
     config = function()
       require('kanagawa').setup {
         -- overrides = function(color) end,
@@ -80,6 +83,7 @@ return {
 
   {
     'bluz71/vim-nightfly-guicolors',
+    enabled = false,
     -- priority = 1000,
     -- config = function() vim.cmd([[colorscheme nightfly]]) end,
   },
@@ -87,7 +91,8 @@ return {
   {
 
     'EdenEast/nightfox.nvim',
-    priority = 1000,
-    config = function() vim.cmd([[colorscheme carbonfox]]) end,
+    enabled = false,
+    -- priority = 1000,
+    -- config = function() vim.cmd([[colorscheme carbonfox]]) end,
   },
 }
