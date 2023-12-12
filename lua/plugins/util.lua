@@ -5,7 +5,10 @@ return {
   --'p00f/nvim-ts-rainbow', -- colored parenthesis
 
   -- Git related plugins
-  'github/copilot.vim',
+  {
+    'github/copilot.vim',
+    event = 'InsertEnter',
+  },
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
   {

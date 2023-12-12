@@ -1,5 +1,51 @@
 return {
   {
+    'navarasu/onedark.nvim',
+    enabled = false,
+    -- lazy = true,
+    name = 'onedark',
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    config = function() vim.cmd([[colorscheme catppuccin]]) end,
+  },
+  {
+    'rebelot/kanagawa.nvim',
+    enabled = false,
+    config = function()
+      require('kanagawa').setup {
+        -- overrides = function(color) end,
+        colors = {
+          theme = {
+            all = {
+              syn = {
+                -- variable = '#e0e0e0',
+                -- constant = '#e0e0e0',
+              },
+            },
+          },
+        },
+      }
+
+      -- vim.cmd([[colorscheme kanagawa]])
+    end,
+  },
+  {
+    'bluz71/vim-nightfly-guicolors',
+    enabled = false,
+    -- priority = 1000,
+    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
+  },
+  {
+
+    'EdenEast/nightfox.nvim',
+    enabled = false,
+    -- priority = 1000,
+    -- config = function() vim.cmd([[colorscheme carbonfox]]) end,
+  },
+  {
     'folke/tokyonight.nvim',
     -- priority = 1000,
     enabled = false,
@@ -43,56 +89,5 @@ return {
     --   require('tokyonight').setup(opts)
     --   vim.cmd([[colorscheme tokyonight-night]])
     -- end,
-  },
-
-  {
-    'navarasu/onedark.nvim',
-    enabled = false,
-    -- lazy = true,
-    name = 'onedark',
-  },
-
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    config = function() vim.cmd([[colorscheme catppuccin]]) end,
-  },
-
-  {
-    'rebelot/kanagawa.nvim',
-    enabled = false,
-    config = function()
-      require('kanagawa').setup {
-        -- overrides = function(color) end,
-        colors = {
-          theme = {
-            all = {
-              syn = {
-                -- variable = '#e0e0e0',
-                -- constant = '#e0e0e0',
-              },
-            },
-          },
-        },
-      }
-
-      -- vim.cmd([[colorscheme kanagawa]])
-    end,
-  },
-
-  {
-    'bluz71/vim-nightfly-guicolors',
-    enabled = false,
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
-  },
-
-  {
-
-    'EdenEast/nightfox.nvim',
-    enabled = false,
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme carbonfox]]) end,
   },
 }

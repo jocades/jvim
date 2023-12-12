@@ -1,6 +1,6 @@
 return {
   'nvim-treesitter/nvim-treesitter',
-  event = 'BufReadPost',
+  event = 'BufReadPre',
   build = function() -- auto install languages
     pcall(require('nvim-treesitter.install').update { with_sync = true })
   end,

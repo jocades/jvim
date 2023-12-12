@@ -33,8 +33,6 @@ local K = {
     ['<leader>ss'] = { cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { cmd.split, { desc = 'Horizontal split' } },
     ['<leader>re'] = { cmd.ZenMode, { desc = 'Toggle Zen mode' } },
-    -- do ctrl + shift + arrow to resize
-    -- add shift
     ['<C-S-Up>'] = { '<cmd>resize +2<cr>' },
     ['<C-S-Down>'] = { '<cmd>resize -2<cr>' },
     ['<C-S-Left>'] = { '<cmd>vertical resize -2<cr>' },

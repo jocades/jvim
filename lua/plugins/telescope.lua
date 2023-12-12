@@ -11,9 +11,6 @@ return {
         build = 'make',
         cond = vim.fn.executable('make') == 1,
       },
-      'nvim-lua/popup.nvim',
-      'nvim-telescope/telescope-file-browser.nvim',
-      'nvim-telescope/telescope-media-files.nvim',
     },
     config = function()
       local actions = require('telescope.actions')
@@ -79,9 +76,7 @@ return {
         },
       }
       pcall(telescope.load_extension, 'fzf')
-      telescope.load_extension('file_browser')
       telescope.load_extension('harpoon')
-      telescope.load_extension('media_files')
 
       local b = require('telescope.builtin')
       -- KEYMAPS

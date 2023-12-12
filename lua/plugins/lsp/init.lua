@@ -32,10 +32,14 @@ return {
             analysis = {
               autoSearchPaths = true,
               useLibraryCodeForTypes = true,
-              typeCheckingMode = 'off',
+              typeCheckingMode = 'basic',
             },
           },
         },
+        -- Fast but missing a lof of features, like hover, etc.
+        --[[ ruff_lsp = { 
+          init_options = {},
+        }, ]]
         -- Lua
         lua_ls = {
           settings = {
@@ -110,7 +114,12 @@ return {
           local setup = {
             capabilities = capabilities,
             on_attach = require('plugins.lsp.mappings').on_attach,
-            settings = opts.servers[server_name].settings,
+            -- cmd = opts.servers[server_name].cmd or {},
+            settings = opts.servers[server_name].settings or {},
+            -- init_options = opts.servers[server_name].init_options or {},
+            -- on_new_config = opts.servers[server_name].on_new_config or function()
+            -- do nothing
+            -- end,
           }
 
           if server_name == 'denols' then
@@ -139,7 +148,7 @@ return {
       }
 
       local root_dir = vim.fn.getcwd()
-      local prettier_files = { '.prettierrc', 'prettier.config.js' }
+      local prettier_files = { '.prettierrc', 'prettier.config.js', 'main.py' }
 
       for _, file in ipairs(prettier_files) do
         local prettier_config = root_dir .. '/' .. file
@@ -157,6 +166,7 @@ return {
         -- b.formatting.deno_fmt,
         -- b.formatting.prettierd,
         b.formatting.autopep8.with { extra_args = { '--max-line-length', '120', '--experimental' } },
+        -- b.formatting.ruff.with { extra_args = { '--config', vim.fn.stdpath('config') .. '/.ruff.toml' } },
         b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
         b.formatting.shfmt.with { extra_args = { '-i', '4' } },
         b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
@@ -179,7 +189,8 @@ return {
     opts = {
       ensure_installed = {
         'prettierd',
-        'autopep8',
+        -- 'autopep8',
+        'ruff',
         'stylua',
         'shellcheck',
         'shfmt',
@@ -210,6 +221,7 @@ return {
   -- Lsp symbol outline
   {
     'SmiteshP/nvim-navic',
+    enabled = false,
     lazy = true,
     init = function()
       vim.g.navic_silence = true

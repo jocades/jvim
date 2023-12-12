@@ -1,6 +1,7 @@
 return {
   'lukas-reineke/indent-blankline.nvim', -- add indentation guides even on blank lines
   event = 'BufReadPost',
+  version = '2.20.8', -- v.3.0 breaking changes
   opts = {
     char = '▏', -- "┊",
     show_trailing_blankline_indent = false,
