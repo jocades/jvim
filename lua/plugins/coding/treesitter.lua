@@ -25,19 +25,19 @@ return {
         'json',
         'json5',
         'jsonc',
+        'jsdoc',
         'yaml',
         'toml',
         'css',
         'html',
         'go',
         'rust',
+        'c',
+        'cpp',
+        'diff',
       },
       highlight = { enable = true },
-      indent = { enable = true, disable = { 'python' } },
-      context_commentstring = {
-        enable = true,
-        enable_autocmd = false,
-      },
+      indent = { enable = true },
       incremental_selection = {
         enable = true,
         keymaps = {
@@ -65,31 +65,31 @@ return {
           enable = true,
           set_jumps = true, -- whether to set jumps in the jumplist
           goto_next_start = {
-            [']m'] = '@function.outer',
-            [']]'] = '@class.outer',
+            [']f'] = '@function.outer',
+            [']c'] = '@class.outer',
           },
           goto_next_end = {
-            [']M'] = '@function.outer',
-            [']['] = '@class.outer',
+            [']F'] = '@function.outer',
+            [']C'] = '@class.outer',
           },
           goto_previous_start = {
-            ['[m'] = '@function.outer',
-            ['[['] = '@class.outer',
+            ['[f'] = '@function.outer',
+            ['[c'] = '@class.outer',
           },
           goto_previous_end = {
-            ['[M'] = '@function.outer',
-            ['[]'] = '@class.outer',
+            ['[F'] = '@function.outer',
+            ['[C'] = '@class.outer',
           },
         },
-        swap = {
-          enable = true,
-          swap_next = {
-            ['<leader>sp'] = '@parameter.inner',
-          },
-          swap_previous = {
-            ['<leader>sP'] = '@parameter.inner',
-          },
-        },
+        -- swap = {
+        --   enable = true,
+        --   swap_next = {
+        --     ['<leader>sp'] = '@parameter.inner',
+        --   },
+        --   swap_previous = {
+        --     ['<leader>sP'] = '@parameter.inner',
+        --   },
+        -- },
       },
     }
   end,

@@ -29,6 +29,9 @@ return {
               -- Set results loclist with troble
               ['<C-l>'] = trouble.open_with_trouble,
             },
+            n = {
+              ['q'] = actions.close,
+            },
           },
           prompt_prefix = ' ', --  ',
           selection_caret = ' ', --' ',

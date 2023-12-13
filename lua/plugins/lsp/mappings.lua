@@ -51,6 +51,18 @@ function M.on_attach(client, bufnr)
     mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File (ts)' }
   end
 
+  if client.name == 'ruff_lsp' then
+    client.server_capabilities.hoverProvider = false
+    mappings['<leader>tO'] =
+      { function() vim.lsp.buf.execute_command { command = 'organizeImports' } end, 'Organize Imports (ruff)' }
+    mappings['<leader>tM'] =
+      { function() vim.lsp.buf.execute_command { command = 'addMissingImports' } end, 'Add Missing Imports (ruff)' }
+    mappings['<leader>tU'] =
+      { function() vim.lsp.buf.execute_command { command = 'removeUnused' } end, 'Remove Unused Imports (ruff)' }
+    mappings['<leader>tR'] =
+      { function() vim.lsp.buf.execute_command { command = 'renameFile' } end, 'Rename File (ruff)' }
+  end
+
   for k, v in pairs(mappings) do
     require('utils').map('n', k, v[1], { buffer = bufnr, desc = 'LSP: ' .. v[2] })
   end

@@ -36,10 +36,7 @@ return {
             },
           },
         },
-        -- Fast but missing a lof of features, like hover, etc.
-        --[[ ruff_lsp = { 
-          init_options = {},
-        }, ]]
+        ruff_lsp = {}, -- fast but missing a lof of features, like hover, etc.
         -- Lua
         lua_ls = {
           settings = {
@@ -114,13 +111,23 @@ return {
           local setup = {
             capabilities = capabilities,
             on_attach = require('plugins.lsp.mappings').on_attach,
-            -- cmd = opts.servers[server_name].cmd or {},
-            settings = opts.servers[server_name].settings or {},
-            -- init_options = opts.servers[server_name].init_options or {},
-            -- on_new_config = opts.servers[server_name].on_new_config or function()
-            -- do nothing
-            -- end,
           }
+
+          if opts.servers[server_name].cmd then
+            setup.cmd = opts.servers[server_name].cmd
+          end
+
+          if opts.servers[server_name].settings then
+            setup.settings = opts.servers[server_name].settings
+          end
+
+          if opts.servers[server_name].init_options then
+            setup.init_options = opts.servers[server_name].init_options
+          end
+
+          if opts.servers[server_name].on_new_config then
+            setup.on_new_config = opts.servers[server_name].on_new_config
+          end
 
           if server_name == 'denols' then
             setup.root_dir = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
@@ -154,10 +161,7 @@ return {
         local prettier_config = root_dir .. '/' .. file
         if require('utils').file_exists(prettier_config) then
           ts_formatter = b.formatting.prettierd
-          print('Using ' .. file .. ' for formatting')
           break
-        else
-          print('Using deno fmt for formatting')
         end
       end
 
@@ -189,8 +193,8 @@ return {
     opts = {
       ensure_installed = {
         'prettierd',
-        -- 'autopep8',
-        'ruff',
+        'autopep8',
+        -- 'ruff',
         'stylua',
         'shellcheck',
         'shfmt',
