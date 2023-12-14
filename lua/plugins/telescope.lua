@@ -112,7 +112,6 @@ return {
         ['<leader>fh'] = { b.help_tags, 'Find Help' },
         ['<leader>fc'] = { b.grep_string, 'Find Current word' },
         ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
-        ['<leader>fb'] = { ':Telescope file_browser<cr>', 'Open File Browser' },
         ['<leader>fo'] = { ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
       }
       for k, v in pairs(K) do

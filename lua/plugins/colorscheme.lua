@@ -1,15 +1,15 @@
 return {
   {
-    'navarasu/onedark.nvim',
-    enabled = false,
-    -- lazy = true,
-    name = 'onedark',
-  },
-  {
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
     config = function() vim.cmd([[colorscheme catppuccin]]) end,
+  },
+  {
+    'navarasu/onedark.nvim',
+    enabled = false,
+    -- lazy = true,
+    name = 'onedark',
   },
   {
     'rebelot/kanagawa.nvim',

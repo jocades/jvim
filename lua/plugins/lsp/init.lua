@@ -113,7 +113,7 @@ return {
             on_attach = require('plugins.lsp.mappings').on_attach,
           }
 
-          if opts.servers[server_name].cmd then
+          if opts.servers[server_name].cmd ~= nil then
             setup.cmd = opts.servers[server_name].cmd
           end
 
