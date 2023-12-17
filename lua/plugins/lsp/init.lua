@@ -36,7 +36,7 @@ return {
             },
           },
         },
-        ruff_lsp = {}, -- fast but missing a lof of features, like hover, etc.
+        -- ruff_lsp = {}, -- fast but missing a lof of features, like hover, etc.
         -- Lua
         lua_ls = {
           settings = {

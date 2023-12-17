@@ -78,6 +78,18 @@ end
 ---@return boolean
 function M.file_exists(path) return vim.fn.filereadable(path) == 1 end
 
+-- Execute shell command
+---@param exec string | table { string }
+function M.sys(exec, debug)
+  if type(exec) == 'table' then
+    exec = table.concat(exec, ' && ')
+  end
+  if debug then
+    print(exec)
+  end
+  vim.fn.system(exec)
+end
+
 -- Reduce function for lua tables
 ---@param arr table
 ---@param fn function

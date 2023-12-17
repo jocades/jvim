@@ -63,6 +63,12 @@ local K = {
       end,
       { desc = 'Git pull' },
     },
+
+    -- Misc
+    ['<leader>hr'] = {
+      function() require('utils.commands').hacky_reload() end,
+      { desc = 'Hacky realod process (use with caution)' },
+    },
   },
 
   -- INSERT
