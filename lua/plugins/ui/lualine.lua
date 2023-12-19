@@ -8,24 +8,24 @@ return {
         globalstatus = true,
         icons_enabled = true,
         disabled_filetypes = { statusline = { 'dashboard', 'lazy', 'alpha' } },
+        section_separators = { left = '', right = '' },
         component_separators = '|',
-        section_separators = '',
-        --component_separators = { left = '', right = '' },
-        --section_separators = '', --{ left = '', right = '' },
       },
       sections = {
         lualine_b = { 'branch' },
         lualine_c = {
           { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
           'filename',
+          'diagnostics',
+
           --[[ {
             function() return require('nvim-navic').get_location() end,
             cond = function() return package.loaded['nvim-navic'] and require('nvim-navic').is_available() end,
           }, ]]
         },
-        lualine_x = { 'diff', 'diagnostics' },
+        lualine_x = { 'diff' },
         lualine_y = { 'filetype' },
-        lualine_z = { 'location' },
+        lualine_z = { 'location', 'progress' },
       },
     }
   end,

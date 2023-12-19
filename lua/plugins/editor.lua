@@ -121,7 +121,4 @@ return {
 
   -- Distraction free coding
   { 'folke/zen-mode.nvim', cmd = 'ZenMode', config = true },
-
-  -- Markdown preview
-  { 'iamcco/markdown-preview.nvim', build = 'cd app && npm install', cmd = 'MarkdownPreview' },
 }
