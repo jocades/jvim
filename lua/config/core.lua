@@ -25,4 +25,4 @@ require('lazy').setup(imports, {
 require('config.autocmds')
 require('config.options')
 require('config.mappings')
-require('utils.lib')
+require('lib.globals')

@@ -1,3 +1,5 @@
+local sys = require('utils').sys
+
 local M = {}
 
 local tmux = {
@@ -15,14 +17,20 @@ local tmux = {
   end,
 }
 
-function M.hacky_reload()
-  require('utils').sys {
+function M.run_last()
+  sys({
     tmux.select_pane('-D'),
-    tmux.send_keys { 'C-c', '!!', 'Enter' },
+    tmux.send_keys({ '!!', 'Enter' }),
     tmux.select_pane('-U'),
-  }
-  -- OR
-  -- sys('tmux send-keys -t 1 C-c "!!" Enter')
+  })
+end
+
+function M.hacky_reload()
+  sys({
+    tmux.select_pane('-D'),
+    tmux.send_keys({ 'C-c', '!!', 'Enter' }),
+    tmux.select_pane('-U'),
+  })
   vim.notify('Service reloaded...', vim.log.levels.DEBUG, { title = 'Reload' })
 end
 
