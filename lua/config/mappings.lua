@@ -18,8 +18,8 @@ local K = {
     ['<leader>X'] = { '<cmd>Bdelete!<cr>', { desc = 'Close buffer without saving' } },
     ['<leader>bd'] = { require('utils').close_saved, { desc = 'Close all saved buffers' } },
     ['<leader>nf'] = { new_buf, { desc = 'Create new file in current dir' } },
-    ['<leader>ns'] = { function() new_buf { type = 'v' } end, { desc = 'Create new vertical split' } },
-    ['<leader>nh'] = { function() new_buf { type = 'h' } end, { desc = 'Create new horizontal split' } },
+    ['<leader>ns'] = { function() new_buf({ type = 'v' }) end, { desc = 'Create new vertical split' } },
+    ['<leader>nh'] = { function() new_buf({ type = 'h' }) end, { desc = 'Create new horizontal split' } },
     ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' } },
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
@@ -66,8 +66,16 @@ local K = {
 
     -- Misc
     ['<leader>hr'] = {
-      function() require('utils.commands').hacky_reload() end,
+      function() require('lib.commands').hacky_reload() end,
       { desc = 'Hacky realod process (use with caution)' },
+    },
+    ['<leader>rr'] = {
+      function() require('lib.commands').run_last() end,
+      { desc = 'Run last command' },
+    },
+    ['<leader>rc'] = {
+      function() require('lib.plugins.autorun').attach() end,
+      { desc = 'Attach autorun' },
     },
   },
 

@@ -11,9 +11,9 @@ local augroup = api.nvim_create_augroup('AutoRun', { clear = true })
 ---@class State
 ---@field file File | nil
 ---@field output_buf number | nil
----@field command string[] | nil
+---@field command nil | string[] | fun(): string[]
 ---@field autocmds AutoCmd[]
----@field commands table<string, string[]>
+---@field commands table<string, string[] | fun(): string[]>
 local State = {
   ---@param o State
   new = function(self, o)
@@ -47,8 +47,6 @@ function State:clear_autocmds()
 end
 
 function State:reset()
-  self:clear_autocmds()
-
   self.file = nil
   self.output_buf = nil
   self.command = nil
@@ -64,10 +62,29 @@ local function append_data(_, data)
   end
 end
 
-local function write_header()
+function State:get_command()
+  local command
+
+  if type(self.command) == 'function' then
+    command = self.command()
+  elseif type(self.command) == 'table' then
+    ---@type string[]
+    command = self.command
+  else
+    error('Invalid command type')
+  end
+
+  command = vim.deepcopy(command)
+  table.insert(command, self.file.path)
+
+  return command
+end
+
+---@param command string[]
+local function write_header(command)
   h.write_to_buf(state.output_buf, {
     '---',
-    'CMD: ' .. table.concat(state.command, ' '),
+    'CMD: ' .. table.concat(command, ' '),
     'TIME: ' .. os.date('%c'),
     '---',
     '',
@@ -75,9 +92,11 @@ local function write_header()
 end
 
 local function execute()
-  write_header()
+  local command = state:get_command()
 
-  vim.fn.jobstart(state.command, {
+  write_header(command)
+
+  vim.fn.jobstart(command, {
     stdout_buffered = true, -- send ouput one line at a time
     on_stdout = append_data,
     on_stderr = append_data,
@@ -92,39 +111,28 @@ function M.attach()
     return
   end
 
-  state:clear_autocmds()
-
   state.file = file
   state.command = state.commands[file.ext]
-  table.insert(state.command, state.file.path)
 
   if not state.output_buf then
-    state.output_buf = h.new_scratch_buf({ name = 'autorun', direction = 'horizontal' })
+    state.output_buf = h.new_scratch_buf({ name = 'autorun', direction = 'vertical' })
   end
 
-  write_header()
   execute()
 
-  state:create_autocmd('BufDelete', 'autorun', function()
-    M.detach()
-    print('BUF:' .. state.output_buf .. ' DELETED')
-  end)
-
-  state:create_autocmd('BufWritePost', state.file.path, function()
-    execute()
-    print(state)
-  end)
+  state:create_autocmd('BufWritePost', state.file.path, execute)
   state:create_autocmd('BufDelete', state.file.path, M.detach)
+  state:create_autocmd('BufDelete', 'autorun', M.detach)
 end
 
 function M.detach()
+  state:clear_autocmds()
+
   if state.output_buf then
     api.nvim_buf_delete(state.output_buf, { force = true })
   end
 
   state:reset()
-
-  print('<<DETACHED>>')
 end
 
 ---@type State
@@ -134,22 +142,26 @@ local initial_state = {
   command = nil,
   autocmds = {},
   commands = {
-    py = { 'python' },
-    ts = { 'bun', 'run' },
-    js = { 'bun', 'run' },
-    -- lua = { 'luajit' },
+    py = function() return { 'python' } end,
+    --[[ c = function()
+      -- compile and run with debug symbols
+      return { 'gcc', '-Wall', '-Wextra', '-Werror', '-pedantic', '-std=c99', '-o', 'a.out', '&&', './a.out' }
+    end, ]]
   },
 }
 
----@param config? { commands: table<string, string[]> }
+---@param config? { commands: table<string, string[] | fun(): string[]> }
 function M.setup(config)
   state = State:new(initial_state)
 
-  if config ~= nil then
+  if config ~= nil and config.commands ~= nil then
     state.commands = require('utils').merge(state.commands, config.commands)
   end
 
-  api.nvim_create_user_command('Run', M.attach, {})
+  api.nvim_create_user_command('Run', function()
+    state:clear_autocmds()
+    M.attach()
+  end, {})
 end
 
 return M

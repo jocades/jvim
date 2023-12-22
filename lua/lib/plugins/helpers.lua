@@ -43,6 +43,8 @@ function M.new_scratch_buf(opts)
   vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
 
+  vim.cmd.wincmd('p')
+
   return buf
 end
 
