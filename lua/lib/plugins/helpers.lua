@@ -29,16 +29,17 @@ function M.write_to_buf(buf, data, opts)
   end
 end
 
-function M.new_scratch_buf(horizontal)
-  if not horizontal then
-    vim.cmd('vnew')
+---@param opts { name: string, direction?: 'horizontal' | 'vertical' }
+function M.new_scratch_buf(opts)
+  if opts.direction == 'horizontal' then
+    vim.cmd.new()
   else
-    vim.cmd('new')
+    vim.cmd.vnew()
   end
 
   local buf = vim.api.nvim_get_current_buf()
 
-  vim.api.nvim_buf_set_name(buf, 'autorun')
+  vim.api.nvim_buf_set_name(buf, opts.name)
   vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
 

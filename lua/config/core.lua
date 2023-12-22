@@ -20,9 +20,15 @@ require('lazy').setup(imports, {
   change_detection = {
     notify = false,
   },
+  dev = {
+    path = '~/dev/plugins',
+    patterns = {},
+    fallback = false,
+  },
 })
 
 require('config.autocmds')
 require('config.options')
 require('config.mappings')
 require('lib.globals')
+require('lib.plugins')
