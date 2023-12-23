@@ -2,17 +2,18 @@ local api = vim.api
 
 local M = {}
 
----@param msg string
-function M.print_err(msg) vim.notify(msg, vim.log.levels.ERROR) end
+---@alias File { path: string, dir: string,  name: string, stem: string, ext: string, type: string }
 
 function M.get_curr_buf() return api.nvim_get_current_buf() end
 
----@return { path: string, name: string, ext: string, type: string }
+---@return File
 function M.get_curr_file()
   local path = vim.api.nvim_buf_get_name(0)
   return {
     path = path,
+    dir = vim.fn.fnamemodify(path, ':h'),
     name = vim.fn.fnamemodify(path, ':t'),
+    stem = vim.fn.fnamemodify(path, ':t:r'),
     ext = vim.fn.fnamemodify(path, ':e'),
     type = vim.api.nvim_buf_get_option(0, 'filetype'),
   }
@@ -29,7 +30,7 @@ function M.write_to_buf(buf, data, opts)
   end
 end
 
----@param opts { name: string, direction?: 'horizontal' | 'vertical' }
+---@param opts { name: string, direction?: 'horizontal' | 'vertical', size?: number }
 function M.new_scratch_buf(opts)
   if opts.direction == 'horizontal' then
     vim.cmd.new()
@@ -42,6 +43,16 @@ function M.new_scratch_buf(opts)
   vim.api.nvim_buf_set_name(buf, opts.name)
   vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
   vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
+
+  if opts.size and opts.direction == 'horizontal' then
+    local height = math.ceil(vim.api.nvim_get_option('lines') * opts.size)
+    vim.api.nvim_win_set_height(0, height)
+  else
+    if opts.size and opts.direction == 'vertical' then
+      local width = math.ceil(vim.api.nvim_get_option('columns') * opts.size)
+      vim.api.nvim_win_set_width(0, width)
+    end
+  end
 
   vim.cmd.wincmd('p')
 
