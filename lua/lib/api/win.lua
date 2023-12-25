@@ -19,21 +19,19 @@ local function open_window()
   local row = math.ceil((height - win_height) / 2 - 1)
   local col = math.ceil((width - win_width) / 2)
 
-  -- set some options
-  local opts = {
+  -- create the window attached to the buffer
+  win = api.nvim_open_win(buf, true, {
     style = 'minimal',
     relative = 'editor',
     width = win_width,
     height = win_height,
     row = row,
     col = col,
-  }
-
-  -- create the window attached to the buffer
-  win = api.nvim_open_win(buf, true, opts)
+    border = 'rounded',
+  })
 end
 
--- open_window()
+open_window()
 
 --- open new buffer as horizontal split
 local function open_split()
@@ -48,4 +46,4 @@ local function open_split()
   api.nvim_win_set_height(0, height)
 end
 
-open_split()
+-- open_split()

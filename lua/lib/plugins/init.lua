@@ -4,4 +4,5 @@ require('lib.plugins.autorun').setup({
     ts = { 'bun', 'run' },
     js = { 'bun', 'run' },
   },
+  output = { name = 'output' },
 })

@@ -11,4 +11,18 @@ function M.split(str, separator)
   return chunks
 end
 
+---@param str string
+---@return string, integer
+function M.trim(str) return str:gsub('^%s*(.-)%s*$', '%1') end
+
+---@param data string[]
+---@param separator? string
+function M.join(data, separator)
+  local sep, str = separator or ' ', ''
+  for _, v in ipairs(data) do
+    str = str .. v .. sep
+  end
+  return str:sub(1, #str - 1)
+end
+
 return M
