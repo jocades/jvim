@@ -38,12 +38,6 @@ local K = {
     ['<C-S-Left>'] = { '<cmd>vertical resize -2<cr>' },
     ['<C-S-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
-    -- Window navigation
-    ['<C-h>'] = { '<C-w>h' },
-    ['<C-l>'] = { '<C-w>l' },
-    ['<C-j>'] = { '<C-w>j' },
-    ['<C-k>'] = { '<C-w>k' },
-
     -- Insert blank line
     ['<C-cr>'] = { 'o<ESC>' },
     ['<S-cr>'] = { 'O<ESC>' },
