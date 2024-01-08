@@ -9,7 +9,7 @@ local augroup = api.nvim_create_augroup('AutoRun', { clear = true })
 
 ---@alias AutoCmd { id: number, event: string, pattern: string }
 ---@alias RunCommand string[] | fun(file: File): string[]
----@alias RunConfig { commands: table<string, string[] | fun(): string[]>, output: { name: string } }
+---@alias RunConfig { commands: table<string, RunCommand>, output: { name: string } }
 
 ---@class State
 ---@field file File | nil
@@ -184,6 +184,7 @@ end
 function M.show_info()
   local buf, _ = h.new_floating_win()
   h.write_to_buf(buf, str.split(vim.inspect(state), '\n'))
+  api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>q<cr>', { noremap = true })
 end
 
 ---@param config RunConfig
