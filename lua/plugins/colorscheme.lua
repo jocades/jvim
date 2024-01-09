@@ -5,7 +5,7 @@ return {
     priority = 1000,
     config = function()
       vim.cmd([[colorscheme catppuccin]])
-      vim.cmd([[highlight Normal guibg=none ctermbg=none]])
+      -- vim.cmd([[highlight Normal guibg=none ctermbg=none]])
     end,
   },
   {
