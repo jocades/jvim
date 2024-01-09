@@ -3,7 +3,10 @@ return {
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
-    config = function() vim.cmd([[colorscheme catppuccin]]) end,
+    config = function()
+      vim.cmd([[colorscheme catppuccin]])
+      vim.cmd([[highlight Normal guibg=none ctermbg=none]])
+    end,
   },
   {
     'navarasu/onedark.nvim',
@@ -15,7 +18,7 @@ return {
     'rebelot/kanagawa.nvim',
     enabled = false,
     config = function()
-      require('kanagawa').setup {
+      require('kanagawa').setup({
         -- overrides = function(color) end,
         colors = {
           theme = {
@@ -27,7 +30,7 @@ return {
             },
           },
         },
-      }
+      })
 
       -- vim.cmd([[colorscheme kanagawa]])
     end,
