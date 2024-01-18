@@ -190,9 +190,9 @@ end
 ---@param config RunConfig
 function M.setup(config)
   state:setup(config)
-  api.nvim_create_user_command('Run', function() M.attach() end, {})
-  api.nvim_create_user_command('Stop', function() M.detach() end, {})
-  api.nvim_create_user_command('RunInfo', function() M.show_info() end, {})
+  api.nvim_create_user_command('Run', M.attach, {})
+  api.nvim_create_user_command('Stop', M.detach, {})
+  api.nvim_create_user_command('RunInfo', M.show_info, {})
 end
 
 return M

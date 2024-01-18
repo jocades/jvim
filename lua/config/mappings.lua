@@ -23,6 +23,7 @@ local K = {
     ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' } },
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
+    ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
     ['<C-]>'] = { cmd.bnext },

@@ -1,7 +1,7 @@
 local M = {}
 
 ---@param str string
----@param separator string
+---@param separator? string
 ---@return string[]
 function M.split(str, separator)
   local sep, chunks = separator or ' ', {}

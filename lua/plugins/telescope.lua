@@ -16,7 +16,7 @@ return {
       local actions = require('telescope.actions')
       local telescope = require('telescope')
       local trouble = require('trouble.providers.telescope')
-      telescope.setup {
+      telescope.setup({
         defaults = {
           mappings = {
             i = {
@@ -77,13 +77,13 @@ return {
             find_cmd = 'rg', -- find command (defaults to `fd`)
           },
         },
-      }
+      })
       pcall(telescope.load_extension, 'fzf')
       telescope.load_extension('harpoon')
 
       local b = require('telescope.builtin')
       -- KEYMAPS
-      local K = {
+      for k, v in pairs({
         -- Fuzzy find
         ['<C-p>'] = { b.find_files, 'Find Files' },
         ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
@@ -91,10 +91,10 @@ return {
         ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },
         ['<leader>.'] = {
           function() -- pass additional configuration to telescope to change theme, layout, etc.
-            b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+            b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
               winblend = 10,
               previewer = false,
-            })
+            }))
           end,
           'Fuzzily search in current buffer]',
         },
@@ -113,8 +113,7 @@ return {
         ['<leader>fc'] = { b.grep_string, 'Find Current word' },
         ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
         ['<leader>fo'] = { ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
-      }
-      for k, v in pairs(K) do
+      }) do
         map('n', k, v[1], { desc = v[2] })
       end
     end,
@@ -127,16 +126,14 @@ return {
       local mark = require('harpoon.mark')
       local ui = require('harpoon.ui')
 
-      local K = {
+      for k, v in pairs({
         ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
         ['<M-h>'] = { ui.toggle_quick_menu },
         ['<M-j>'] = { function() ui.nav_file(1) end },
         ['<M-k>'] = { function() ui.nav_file(2) end },
         ['<M-l>'] = { function() ui.nav_file(3) end },
         ['<M-;>'] = { function() ui.nav_file(4) end },
-      }
-
-      for k, v in pairs(K) do
+      }) do
         map('n', k, v[1], v[2])
       end
     end,

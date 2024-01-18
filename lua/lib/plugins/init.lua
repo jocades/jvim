@@ -6,3 +6,5 @@ require('lib.plugins.autorun').setup({
   },
   output = { name = 'output' },
 })
+
+require('lib.plugins.next').setup()
