@@ -2,6 +2,7 @@ local api = vim.api
 local h = require('utils.api')
 local str = require('utils.str')
 local log = require('utils.log')
+local Path = require('lib.path')
 
 local M = {}
 
@@ -144,7 +145,7 @@ local function execute()
 end
 
 function M.attach()
-  local file = h.File()
+  local file = Path:new()
 
   if not state.commands[file.ext] then
     log.error(string.format('No command found for: %s (%s)', file.ext, file.type))

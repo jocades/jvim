@@ -2,7 +2,7 @@ local str = require('utils.str')
 
 local Path = {}
 
-local function iterdir(path)
+local function _iterdir(path)
   for file in io.popen('ls -a "' .. path .. '"'):lines() do
     if file ~= '.' and file ~= '..' and file ~= '.git' then
       coroutine.yield(file)
@@ -10,6 +10,7 @@ local function iterdir(path)
   end
 end
 
+---@param path string
 function Path:new(path)
   local o = {}
   setmetatable(o, self)
@@ -23,10 +24,11 @@ function Path:new(path)
   o.name = vim.fn.fnamemodify(path, ':t')
   o.stem = vim.fn.fnamemodify(path, ':t:r')
   o.ext = vim.fn.fnamemodify(path, ':e')
-  -- o.type = vim.api.nvim_buf_get_option(0, 'filetype')
+
+  o.parent = function() return Path:new(vim.fn.fnamemodify(path, ':h')) end
 
   o.split = function() return str.split(path, '/') end
-  o.parent = function() return Path:new(vim.fn.fnamemodify(path, ':h')) end
+  o.join = function(...) return Path:new(table.concat({ path, ... }, '/')) end
 
   o.is_dir = function() return vim.fn.isdirectory(path) == 1 end
   o.is_file = function() return vim.fn.filereadable(path) == 1 end
@@ -37,11 +39,50 @@ function Path:new(path)
       error('Cannot iterate a file: ' .. path)
     end
 
-    local co = coroutine.create(function() iterdir(path) end)
+    local files = {}
+    for file in io.popen('ls -a "' .. path .. '"'):lines() do
+      if file ~= '.' and file ~= '..' and file ~= '.git' then
+        table.insert(files, file)
+      end
+    end
+
+    local i = 0
+    local n = #files
+
     return function()
-      local _, value = coroutine.resume(co)
-      if value ~= nil then
-        return Path:new(path .. '/' .. value)
+      i = i + 1
+      if i <= n then
+        return Path:new(path .. '/' .. files[i])
+      end
+    end
+  end
+
+  o.touch = function()
+    if o.is_dir() then
+      error('Cannot touch a directory: ' .. path)
+    end
+
+    if not o.is_file() then
+      local file, err = io.open(path, 'w')
+
+      if not file then
+        error('Could not open file: ' .. path .. ' - ' .. err)
+      end
+
+      file:close()
+    end
+  end
+
+  o.mkdir = function()
+    if o.is_file() then
+      error('Cannot mkdir a file: ' .. path)
+    end
+
+    if not o.is_dir() then
+      local ok, err = os.execute('mkdir -p ' .. path)
+
+      if not ok then
+        error('Could not mkdir: ' .. path .. ' - ' .. err)
       end
     end
   end
@@ -53,9 +94,11 @@ function Path:new(path)
     end
 
     local file, err = io.open(path, mode or 'r')
+
     if not file then
       error('Could not open file: ' .. path .. ' - ' .. err)
     end
+
     local content, error = file:read('*a')
     file:close()
 
@@ -64,6 +107,17 @@ function Path:new(path)
     end
 
     return str.split(content, '\n')
+  end
+
+  o.readlines = function()
+    local lines = o.read()
+
+    return function()
+      local line = table.remove(lines, 1)
+      if line ~= nil then
+        return line
+      end
+    end
   end
 
   ---@param data string | string[]
@@ -93,13 +147,29 @@ function Path:new(path)
   return o
 end
 
-local d = Path:new('/Users/j0rdi/.config/nvim')
+function Path:__tostring() return self.path end
 
--- iter dir
-for n in d.iterdir() do
-  P(n)
+---@param other string | Path
+function Path:__div(other)
+  if type(other) == 'string' then
+    return Path:new(self.path .. '/' .. other)
+  end
+
+  return Path:new(self.path .. '/' .. other.path)
 end
---
-local f = Path:new('/Users/j0rdi/.config/nvim/test.lua')
+
+-- TEST
+local p = Path:new('/Users/j0rdi/.config/nvim')
+
+local x = p / 'lua' / 'path.lua'
+P(x.path)
+
+local y = p / 'lua'
+local z = p / y / 'path.lua'
+P(z.path)
+
+for f in (p / 'lua').iterdir() do
+  print(f.path)
+end
 
 return Path

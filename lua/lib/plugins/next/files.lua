@@ -28,3 +28,7 @@ print(read_content)
 
 -- close the opened file
 -- f:close()
+
+for line in io.lines('test.txt') do
+  print(line)
+end
