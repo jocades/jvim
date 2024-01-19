@@ -2,6 +2,7 @@ local h = require('utils.api')
 local str = require('utils.str')
 local ls = require('luasnip')
 local log = require('utils.log')
+local Path = require('lib.path')
 
 local M = {}
 
@@ -63,12 +64,34 @@ function M.setup()
       log.error('Invalid file type <' .. file_type .. '>')
     end
 
-    -- how to get the currernt path?
-    local path = vim.fn.getcwd()
+    local p = Path:new(vim.fn.getcwd())
+
+    for x in p.iterdir() do
+      if x.is_dir() and x.name == 'lua' then
+        print(x)
+        for y in x.iterdir() do
+          if y.is_dir() and y.name == 'lib' then
+            print('FOUND LIB');
+            (y / 'pages').mkdir()
+            local file = y / 'pages' / file_name
+            file.touch()
+            file.write({
+              'export function ' .. file_name:sub(1, 1):upper() .. file_name:sub(2) .. 'Page() {',
+              '\treturn <div>' .. file_name .. '</div>',
+              '}',
+            })
+
+            break
+          end
+        end
+      end
+    end
   end, {
     nargs = '?',
   })
 end
+
+M.setup()
 
 return M
 
