@@ -14,20 +14,9 @@ function M.File(path)
     path = vim.api.nvim_buf_get_name(0)
   end
 
-  return {
-    path = path,
-    dir = vim.fn.fnamemodify(path, ':h'),
-    name = vim.fn.fnamemodify(path, ':t'),
-    stem = vim.fn.fnamemodify(path, ':t:r'),
-    ext = vim.fn.fnamemodify(path, ':e'),
-    type = vim.api.nvim_buf_get_option(0, 'filetype'),
-    split = function() return str.split(path, '/') end,
-  }
-end
+  -- i want to have an api similiar to pythons pathlib
+  -- so that i can do File(path).parent.parent.name
 
----@return File
-function M.get_curr_file()
-  local path = vim.api.nvim_buf_get_name(0)
   return {
     path = path,
     dir = vim.fn.fnamemodify(path, ':h'),

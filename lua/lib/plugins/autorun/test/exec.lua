@@ -25,3 +25,9 @@ print(user)
 user:dec_age()
 user:dec_age()
 print(user)
+
+-- lua falsy values: false and nil
+-- 0 is truthy
+if not true then
+  print('0 is falsy')
+end

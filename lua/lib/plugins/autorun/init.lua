@@ -144,7 +144,7 @@ local function execute()
 end
 
 function M.attach()
-  local file = h.get_curr_file()
+  local file = h.File()
 
   if not state.commands[file.ext] then
     log.error(string.format('No command found for: %s (%s)', file.ext, file.type))
@@ -185,6 +185,8 @@ function M.show_info()
   local buf, _ = h.new_floating_win()
   h.write_to_buf(buf, str.split(vim.inspect(state), '\n'))
   api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>q<cr>', { noremap = true })
+  -- no not allow insert mode
+  api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
 ---@param config RunConfig
