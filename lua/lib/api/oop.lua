@@ -16,3 +16,5 @@ end
 
 -- now define the __index metamethod
 Window.mt.__index = function(table, key) return Window.prototype[key] end
+
+-- create a new window
