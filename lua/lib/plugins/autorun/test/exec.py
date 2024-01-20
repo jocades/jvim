@@ -1,5 +1,8 @@
 from rich import print
 from time import sleep
+from pathlib import Path
+
+p = Path("exec.py")
 
 
 def main():

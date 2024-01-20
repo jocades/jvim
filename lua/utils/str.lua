@@ -25,4 +25,8 @@ function M.join(data, separator)
   return str:sub(1, #str - 1)
 end
 
+---@param str string
+---@return string
+function M.capitalize(str) return str:sub(1, 1):upper() .. str:sub(2) end
+
 return M

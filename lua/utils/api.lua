@@ -3,30 +3,9 @@ local str = require('utils.str')
 
 local M = {}
 
----@alias File { path: string, dir: string,  name: string, stem: string, ext: string, type: string, split: fun(): string[] }
-
 function M.get_curr_buf() return api.nvim_get_current_buf() end
 
----@param path? string
----@return File
-function M.File(path)
-  if path == nil then
-    path = vim.api.nvim_buf_get_name(0)
-  end
-
-  -- i want to have an api similiar to pythons pathlib
-  -- so that i can do File(path).parent.parent.name
-
-  return {
-    path = path,
-    dir = vim.fn.fnamemodify(path, ':h'),
-    name = vim.fn.fnamemodify(path, ':t'),
-    stem = vim.fn.fnamemodify(path, ':t:r'),
-    ext = vim.fn.fnamemodify(path, ':e'),
-    type = vim.api.nvim_buf_get_option(0, 'filetype'),
-    split = function() return str.split(path, '/') end,
-  }
-end
+function M.get_curr_pathname() return api.nvim_buf_get_name(0) end
 
 ---@param buf number
 ---@param data string[]

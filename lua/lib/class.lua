@@ -1,32 +1,23 @@
--- GOAL:
--- local Person = class()
--- function Person:new(name) self.name = name end
--- function Persion:greet() print('Hello, my name is ' .. self.name) end
---
--- local Student = class(Person)
--- local s = Student('Jordi')
--- s:greet()
-
 local function class(...)
   local cls, bases = {}, { ... }
-  -- copy base class contents into the new class
+
   for _, base in ipairs(bases) do
     for k, v in pairs(base) do
       cls[k] = v
     end
   end
 
-  -- set the class's __index, and start filling an "is_a" table that contains this class and all of its bases
-  -- so you can do an "instance of" check using my_instance.is[MyClass]
-  cls.__index, cls.is = cls, { [cls] = true }
+  cls.__index, cls.lookup = cls, { [cls] = true }
+
   for _, base in ipairs(bases) do
-    for c in pairs(base.is) do
-      cls.is[c] = true
+    for c in pairs(base.lookup) do
+      cls.lookup[c] = true
     end
-    cls.is[base] = true
+    cls.lookup[base] = true
   end
 
-  -- the class's __call metamethod
+  cls.is = function(self, other) return not not self.lookup[other] end
+
   setmetatable(cls, {
     __call = function(c, ...)
       local self = setmetatable({}, c)
@@ -38,30 +29,28 @@ local function class(...)
   return cls
 end
 
+--[[ ---@class Person
+---@field name string
+---@field age number
+---@field greet fun(): nil
+---@overload fun(init: { name: string, age: number }): Person
 local Person = class()
 
-function Person:new(name) self.name = name end
+function Person:new(init)
+  self.name = init.name
+  self.age = init.age
+end
 
-function Person:greet() print('Hello, my name is ' .. self.name) end
+function Person:greet() print(string.format('Hello, my name is %s and I am %d years old', self.name, self.age)) end
 
 local Student = class(Person)
 
-local p = Person('Jordi')
+local p = Person({ name = 'Jordi', age = 30 })
 
-p:greet()
+-- p:greet()
 
-local s = Student('Maria')
+local s = Student({ name = 'Maria', age = 10 })
 
---[[ local function class(base)
-  local c = {}
-  c.__index = c
-  c._base = base
-  setmetatable(c, {
-    __call = function(_, ...)
-      local self = setmetatable({}, c)
-      self:new(...)
-      return self
-    end,
-  })
-  return c
-end ]]
+-- s:greet() ]]
+
+return class

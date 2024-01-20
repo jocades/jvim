@@ -1,4 +1,5 @@
 local str = require('utils.str')
+local class = require('lib.class')
 
 local SEP = '/'
 
@@ -24,137 +25,193 @@ local function clean(pathname)
   return pathname
 end
 
-local Path = {}
-
----@param path? string
-function Path:new(path)
-  local o = {}
-  setmetatable(o, self)
-  self.__index = self
-
-  if path == nil then
-    path = vim.api.nvim_buf_get_name(0)
+---@generic T, R
+---@param ls T[]
+---@param callback fun(i: number): R
+---@return fun(): R
+local function iterator(ls, callback)
+  local i = 0
+  local n = #ls
+  return function()
+    i = i + 1
+    if i <= n then
+      return callback(i)
+    end
   end
+end
 
-  o.path = (function()
-    if is_uri(path) then
-      return path
+---@class P
+---@overload fun(pathname: string): P
+---@field path string
+---@field name string
+---@field stem string
+---@field ext string
+---@field parent fun(): P
+---@field split fun(): string[]
+---@field join fun(...): P
+---@field is_dir fun(): boolean
+---@field is_file fun(): boolean
+---@field exists fun(): boolean
+---@field iterdir fun(): fun(): P
+---@field touch fun(): nil
+---@field unlink fun(): nil
+---@field mkdir fun(opts?: { parents?: boolean}): nil
+---@field rmdir fun(opts?: { force?: boolean}): nil
+---@field read fun(mode?: 'r' | 'rb' | 'w' | 'wb' | 'a' | 'ab'): string[]
+---@field readlines fun(): fun(): string
+---@field write fun(data: string | string[], mode?: 'w' | 'a' | 'wb' | 'ab'): nil
+local Path = class()
+
+function Path:new(pathname)
+  self.path = (function()
+    if is_uri(pathname) then
+      return pathname
     end
 
-    if is_absolute(path) then
-      return clean(path)
+    if is_absolute(pathname) then
+      return clean(pathname)
     end
 
-    return clean(vim.fn.fnameescape(vim.fn.fnamemodify(path, ':p')))
+    return clean(vim.fn.fnameescape(vim.fn.fnamemodify(pathname, ':p')))
   end)()
 
-  o.name = vim.fn.fnamemodify(o.path, ':t')
-  o.stem = vim.fn.fnamemodify(o.path, ':t:r')
-  o.ext = vim.fn.fnamemodify(o.path, ':e')
-  o.parent = function() return Path:new(vim.fn.fnamemodify(o.path, ':h')) end
+  self.name = vim.fn.fnamemodify(self.path, ':t')
+  self.stem = vim.fn.fnamemodify(self.path, ':t:r')
+  self.ext = vim.fn.fnamemodify(self.path, ':e')
+  self.parts = str.split(self.path, SEP)
 
-  o.split = function() return str.split(o.path, SEP) end
-  o.join = function(...) return Path:new(table.concat({ o.path, ... }, SEP)) end
+  self.is_dir = function() return vim.fn.isdirectory(self.path) == 1 end
+  self.is_file = function() return vim.fn.filereadable(self.path) == 1 end
+  self.exists = function() return self.is_dir() or self.is_file() end
 
-  o.is_dir = function() return vim.fn.isdirectory(o.path) == 1 end
-  o.is_file = function() return vim.fn.filereadable(o.path) == 1 end
-  o.exists = function() return o.is_dir() or o.is_file() end
+  self.parent = function() return Path(vim.fn.fnamemodify(self.path, ':h')) end
 
-  o.iterdir = function()
-    if not o.is_dir() then
-      error('Cannot iterate a file: ' .. o.path)
+  self.join = function(...)
+    assert(Path.is_path(self))
+
+    local args = { ... }
+    for i, v in ipairs(args) do
+      assert(Path.is_path(v) or type(v) == 'string')
+      args[i] = tostring(v)
+    end
+
+    return Path(self.path .. '/' .. table.concat(args, '/'))
+  end
+
+  self.iterdir = function()
+    if not self.is_dir() then
+      error('Cannot iterate a file: ' .. self.path)
     end
 
     local files = {}
-    for file in io.popen('ls -a "' .. o.path .. '"'):lines() do
+    for file in io.popen('ls -a "' .. self.path .. '"'):lines() do
       if file ~= '.' and file ~= '..' and file ~= '.git' then
         table.insert(files, file)
       end
     end
 
-    local i = 0
-    local n = #files
-    return function()
-      i = i + 1
-      if i <= n then
-        return Path:new(o.path .. SEP .. files[i])
-      end
-    end
+    return iterator(files, function(i) return Path(self.path .. SEP .. files[i]) end)
   end
 
-  o.touch = function()
-    if o.is_dir() then
-      error('Cannot touch a directory: ' .. o.path)
+  self.touch = function()
+    if self.is_dir() then
+      error('Cannot touch a directory: ' .. self.path)
     end
 
-    if not o.is_file() then
-      local file, err = io.open(o.path, 'w')
+    if not self.is_file() then
+      local file, err = io.open(self.path, 'w')
 
       if not file then
-        error('Could not open file: ' .. o.path .. ' - ' .. err)
+        error('Could not open file: ' .. self.path .. ' - ' .. err)
       end
 
       file:close()
     end
   end
 
-  o.mkdir = function()
-    if o.is_file() then
-      error('Cannot mkdir a file: ' .. o.path)
+  self.unlink = function()
+    if self.is_dir() then
+      error('Cannot unlink a directory: ' .. self.path)
     end
 
-    if not o.is_dir() then
-      local ok, err = os.execute('mkdir -p ' .. o.path)
+    if self.is_file() then
+      local ok, err = os.remove(self.path)
 
       if not ok then
-        error('Could not mkdir: ' .. o.path .. ' - ' .. err)
+        error('Could not unlink file: ' .. self.path .. ' - ' .. err)
       end
     end
   end
 
-  ---@param mode? 'r' | 'rb' | 'w' | 'wb' | 'a' | 'ab'
-  o.read = function(mode)
-    if o.is_dir() then
-      error('Cannot read a directory: ' .. o.path)
+  self.mkdir = function(opts)
+    if self.is_file() then
+      error('Cannot mkdir a file: ' .. self.path)
     end
 
-    local file, err = io.open(o.path, mode or 'r')
+    local parents = opts and opts.parents
+    local cmd = parents and 'mkdir -p ' or 'mkdir '
+
+    if not self.is_dir() then
+      local ok, err = os.execute(cmd .. self.path)
+
+      if not ok then
+        error('Could not mkdir: ' .. self.path .. ' - ' .. err)
+      end
+    end
+  end
+
+  self.rmdir = function(opts)
+    if self.is_file() then
+      error('Cannot rmdir a file: ' .. self.path)
+    end
+
+    local force = opts and opts.force
+    local cmd = force and 'rm -rf ' or 'rmdir '
+
+    if self.is_dir() then
+      local ok, err = os.execute(cmd .. self.path)
+
+      if not ok then
+        error('Could not rmdir: ' .. self.path .. ' - ' .. err)
+      end
+    end
+  end
+
+  self.read = function(mode)
+    if self.is_dir() then
+      error('Cannot read a directory: ' .. self.path)
+    end
+
+    local file, err = io.open(self.path, mode or 'r')
 
     if not file then
-      error('Could not open file: ' .. o.path .. ' - ' .. err)
+      error('Could not open file: ' .. self.path .. ' - ' .. err)
     end
 
     local content, error = file:read('*a')
     file:close()
 
     if not content then
-      error('Could not read file: ' .. o.path .. ' - ' .. error)
+      error('Could not read file: ' .. self.path .. ' - ' .. error)
     end
 
     return str.split(content, '\n')
   end
 
-  o.readlines = function()
-    local lines = o.read()
-    return function()
-      local line = table.remove(lines, 1)
-      if line ~= nil then
-        return line
-      end
-    end
+  self.readlines = function()
+    local lines = self.read()
+    return iterator(lines, function(i) return lines[i] end)
   end
 
-  ---@param data string | string[]
-  ---@param mode? 'w' | 'a' | 'wb' | 'ab
-  o.write = function(data, mode)
-    if o.is_dir() then
-      error('Cannot write to a directory: ' .. o.path)
+  self.write = function(data, mode)
+    if self.is_dir() then
+      error('Cannot write to a directory: ' .. self.path)
     end
 
-    local file, err = io.open(o.path, mode or 'w')
+    local file, err = io.open(self.path, mode or 'w')
 
     if not file then
-      error('Could not open file: ' .. o.path .. ' - ' .. err)
+      error('Could not open file: ' .. self.path .. ' - ' .. err)
     end
 
     if type(data) == 'table' then
@@ -167,47 +224,28 @@ function Path:new(path)
 
     file:close()
   end
-
-  return o
 end
 
 function Path.is_path(o) return getmetatable(o) == Path end
 
 function Path.__tostring(self) return self.path end
 
-function Path.__div(self, other)
-  assert(Path.is_path(self))
-  assert(Path.is_path(other) or type(other) == 'string')
+function Path.__div(self, other) return self.join(other) end
 
-  return self.join(other)
+-- TEST
+local p = Path('~/.config/nvim/lua/lib')
+
+-- (p / 'test' / 't1').mkdir({ parents = true })
+local t1 = p.join('test', 't1')
+
+t1.mkdir({ parents = true })
+
+t1.join('test.txt').write('hello world')
+
+if t1.join('test.txt').exists() then
+  t1.join('test.txt').unlink()
 end
 
--- TESTS
-
-local tests = {
-  -- absolute paths
-  '/Users/j0rdi/.config/nvim',
-  -- relative paths
-  'lua/config/core.lua',
-  '../',
-  '.',
-}
-
---[[ local p = Path:new('../')
-print(p)
-print(p.name)
-
-local x = p / 'lua' ]]
-
--- local p = Path:new('/Users/j0rdi/.config/nvim')
-
--- local x = p / 'lua' / '/path.lua'
--- print(x.path)
---
--- for f in (p / 'lua').iterdir() do
---   print(f.path)
--- end
-
--- P(Path:new('../').absolute())
+print(t1.join('test.txt').exists())
 
 return Path

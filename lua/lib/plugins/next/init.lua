@@ -1,6 +1,5 @@
 local h = require('utils.api')
 local str = require('utils.str')
-local ls = require('luasnip')
 local log = require('utils.log')
 local Path = require('lib.path')
 
@@ -47,9 +46,22 @@ function M.run()
   end
 end
 
+-- hello -> Hello
+-- hello-world -> HelloWorld
+local function to_camel_case(s)
+  local parts = str.split(s, '-')
+
+  local result = ''
+
+  for _, v in ipairs(parts) do
+    result = result .. str.capitalize(v)
+  end
+
+  return result
+end
+
 function M.setup()
   vim.api.nvim_create_user_command('Nx', function(opts)
-    P(opts)
     local args = str.split(opts.args)
 
     if #args ~= 2 then
@@ -64,20 +76,29 @@ function M.setup()
       log.error('Invalid file type <' .. file_type .. '>')
     end
 
-    local p = Path:new(vim.fn.getcwd())
+    print('file_name', file_name)
+
+    local p = Path:new('lua/lib')
 
     for x in p.iterdir() do
-      if x.is_dir() and x.name == 'lua' then
+      if x.is_dir() and x.name == 'src' then
         print(x)
         for y in x.iterdir() do
-          if y.is_dir() and y.name == 'lib' then
-            print('FOUND LIB');
-            (y / 'pages').mkdir()
-            local file = y / 'pages' / file_name
-            file.touch()
+          if y.is_dir() and y.name == 'app' then
+            print('FOUND APP')
+
+            local file = y.join(file_name .. '.tsx')
+
+            if file.exists() then
+              log.error('File already exists')
+              break
+            end
+
+            local component_name = to_camel_case(file_name)
+
             file.write({
-              'export function ' .. file_name:sub(1, 1):upper() .. file_name:sub(2) .. 'Page() {',
-              '\treturn <div>' .. file_name .. '</div>',
+              'export default function ' .. component_name .. 'Page() {',
+              '  return <div>' .. component_name .. '</div>',
               '}',
             })
 

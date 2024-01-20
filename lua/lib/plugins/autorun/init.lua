@@ -9,11 +9,11 @@ local M = {}
 local augroup = api.nvim_create_augroup('AutoRun', { clear = true })
 
 ---@alias AutoCmd { id: number, event: string, pattern: string }
----@alias RunCommand string[] | fun(file: File): string[]
+---@alias RunCommand string[] | fun(file: P): string[]
 ---@alias RunConfig { commands: table<string, RunCommand>, output: { name: string } }
 
 ---@class State
----@field file File | nil
+---@field file P | nil
 ---@field output_buf { id: number, name: string } | nil
 ---@field autocmds AutoCmd[]
 ---@field command RunCommand | nil
@@ -36,10 +36,6 @@ local State = {
   command = nil,
   commands = {
     py = function(file) return { 'python', file.path } end,
-    c = function(file)
-      local out = str.join({ file.dir, file.stem }, '/')
-      return { 'gcc', file.path, '-o', out, '&&', 'echo', 'HELLO' }
-    end,
   },
 }
 
@@ -145,10 +141,10 @@ local function execute()
 end
 
 function M.attach()
-  local file = Path:new()
+  local file = Path:new(h.get_curr_pathname())
 
   if not state.commands[file.ext] then
-    log.error(string.format('No command found for: %s (%s)', file.ext, file.type))
+    log.error(string.format('No command found for: %s', file.ext))
     return
   end
 
