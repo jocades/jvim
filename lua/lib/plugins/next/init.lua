@@ -76,9 +76,23 @@ function M.setup()
       log.error('Invalid file type <' .. file_type .. '>')
     end
 
-    print('file_name', file_name)
+    local f = Path(file_name)
 
-    local p = Path:new('lua/lib')
+    if #f.parts > 1 then
+      local dir = f.parent()
+
+      if not dir.exists() then
+        dir.mkdir({ parents = true })
+      end
+    end
+
+    if not f.ext then
+      f = Path(file_name .. '.tsx')
+    end
+
+    --[[ print('file_name', file_name)
+
+    local p = Path('lua/lib')
 
     for x in p.iterdir() do
       if x.is_dir() and x.name == 'src' then
@@ -106,7 +120,7 @@ function M.setup()
           end
         end
       end
-    end
+    end ]]
   end, {
     nargs = '?',
   })

@@ -35,7 +35,7 @@ local State = {
   autocmds = {},
   command = nil,
   commands = {
-    py = function(file) return { 'python', file.path } end,
+    py = function(file) return { 'python', file.abs } end,
   },
 }
 
@@ -93,7 +93,7 @@ function State:get_command()
   elseif type(self.command) == 'table' then
     ---@type string[]
     command = self.command
-    table.insert(command, self.file.path)
+    table.insert(command, self.file.abs)
   else
     error('Invalid command type')
   end
@@ -141,7 +141,7 @@ local function execute()
 end
 
 function M.attach()
-  local file = Path:new(h.get_curr_pathname())
+  local file = Path(h.get_curr_pathname())
 
   if not state.commands[file.ext] then
     log.error(string.format('No command found for: %s', file.ext))
@@ -161,8 +161,8 @@ function M.attach()
 
   execute()
 
-  state:create_autocmd('BufWritePost', state.file.path, execute)
-  state:create_autocmd('BufDelete', state.file.path, M.detach)
+  state:create_autocmd('BufWritePost', state.file.abs, execute)
+  state:create_autocmd('BufDelete', state.file.abs, M.detach)
   state:create_autocmd('BufDelete', state.output_buf.name, function()
     state:clear_autocmds()
     state.output_buf.id = nil
