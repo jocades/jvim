@@ -76,6 +76,7 @@ function M.setup()
       log.error('Invalid file type <' .. file_type .. '>')
     end
 
+    local r = Path('lua/lib/src/app')
     local f = Path(file_name)
 
     if #f.parts > 1 then
@@ -89,6 +90,8 @@ function M.setup()
     if not f.ext then
       f = Path(file_name .. '.tsx')
     end
+
+    P(f)
 
     --[[ print('file_name', file_name)
 

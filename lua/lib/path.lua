@@ -27,14 +27,18 @@ end
 
 ---@generic T, R
 ---@param ls T[]
----@param callback fun(i: number): R
----@return fun(): R
-local function iterator(ls, callback)
+---@param callback fun(i: integer): R
+---@param opts? { enumerate?: boolean }
+---@return (fun(): i: integer, R) | (fun(): R)
+local function iterator(ls, callback, opts)
   local i = 0
   local n = #ls
   return function()
     i = i + 1
     if i <= n then
+      if opts and opts.enumerate then
+        return i, callback(i)
+      end
       return callback(i)
     end
   end
@@ -107,7 +111,7 @@ function Path:new(pathname)
       args[i] = tostring(v)
     end
 
-    return Path(self.abs .. '/' .. table.concat(args, '/'))
+    return Path(self.abs .. SEP .. table.concat(args, SEP))
   end
 
   ---Iterate over the directory
@@ -116,14 +120,14 @@ function Path:new(pathname)
       error('Cannot iterate a file: ' .. self.abs)
     end
 
-    local files = {}
-    for file in io.popen('ls -a "' .. self.abs .. '"'):lines() do
-      if file ~= '.' and file ~= '..' and file ~= '.git' then
-        table.insert(files, file)
+    local nodes = {}
+    for node in io.popen('ls -a "' .. self.abs .. '"'):lines() do
+      if node ~= '.' and node ~= '..' and node ~= '.git' then
+        table.insert(nodes, node)
       end
     end
 
-    return iterator(files, function(i) return Path(self.abs .. SEP .. files[i]) end)
+    return iterator(nodes, function(i) return Path(self.abs .. SEP .. nodes[i]) end)
   end
 
   ---Create the file if it does not exist
@@ -224,7 +228,7 @@ function Path:new(pathname)
   ---Iterate over the lines of the file
   self.iterlines = function()
     local lines = self.readlines()
-    return iterator(lines, function(i) return lines[i] end)
+    return iterator(lines, function(i) return lines[i] end, { enumerate = true })
   end
 
   ---Read the file as bytes
@@ -239,7 +243,7 @@ function Path:new(pathname)
     file:close()
 
     if not content then
-      err('Could not read file: ' .. self.abs .. ' - ' .. err)
+      error('Could not read file: ' .. self.abs .. ' - ' .. err)
     end
 
     return content
@@ -266,10 +270,16 @@ function Path:new(pathname)
     file:close()
   end
 
+  ---Write to the file as bytes
+  ---@param data string | string[]
   self.writebytes = function(data) self.write(data, 'wb') end
 
+  ---Append to the file
+  ---@param data string | string[]
   self.append = function(data) self.write(data, 'a') end
 
+  ---Append to the file as bytes
+  ---@param data string | string[]
   self.appendbytes = function(data) self.write(data, 'ab') end
 
   ---Execute the file and capture the output
