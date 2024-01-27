@@ -17,7 +17,7 @@ local function set_state_name(args_, _, _)
 end
 
 local component_with_state = s({
-  trig = 'fcs',
+  trig = 'rfcs',
   name = 'React Functional Component with State',
 }, {
   t({
@@ -75,7 +75,7 @@ local react_server_component = s({
 })
 
 local react_context_provider_with_helper = s({
-  trig = 'rch',
+  trig = 'rcp',
   name = 'React Context Provider with Helper',
 }, {
   t({ "import { createContext, useContext } from 'react'", '', '' }),

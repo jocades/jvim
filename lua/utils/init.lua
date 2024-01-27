@@ -61,12 +61,12 @@ function M.sys(exec, debug)
 end
 
 -- Reduce function for lua tables
----@param arr table
+---@param tbl table
 ---@param fn function
 ---@param initial unknown
-function M.reduce(arr, fn, initial)
+function M.reduce(tbl, fn, initial)
   local acc = initial
-  for _, value in ipairs(arr) do
+  for _, value in ipairs(tbl) do
     acc = fn(acc, value)
   end
   return acc

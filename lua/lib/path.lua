@@ -77,7 +77,7 @@ function Path:new(pathname)
 
   self.abs = clean(vim.fn.fnamemodify(self._path, ':p'))
 
-  self.parts = str.split(self.abs, SEP)
+  self.parts = str.split(self._path, SEP)
   self.name = vim.fn.fnamemodify(self.abs, ':t')
   self.stem = vim.fn.fnamemodify(self.abs, ':t:r')
   self.ext = (function()
@@ -106,12 +106,16 @@ function Path:new(pathname)
     assert(Path.is_path(self))
 
     local args = { ... }
+
     for i, v in ipairs(args) do
       assert(Path.is_path(v) or type(v) == 'string')
-      args[i] = tostring(v)
+
+      if Path.is_path(v) then
+        args[i] = v._path
+      end
     end
 
-    return Path(self.abs .. SEP .. table.concat(args, SEP))
+    return Path(self._path .. SEP .. table.concat(args, SEP))
   end
 
   ---Iterate over the directory
@@ -137,13 +141,7 @@ function Path:new(pathname)
     end
 
     if not self.is_file() then
-      local file, err = io.open(self.abs, 'w')
-
-      if not file then
-        error('Could not open file: ' .. self.abs .. ' - ' .. err)
-      end
-
-      file:close()
+      open(self.abs, 'w'):close()
     end
   end
 
@@ -174,7 +172,6 @@ function Path:new(pathname)
 
     if not self.is_dir() then
       local ok, err = os.execute(cmd .. self.abs)
-
       if not ok then
         error('Could not mkdir: ' .. self.abs .. ' - ' .. err)
       end
@@ -212,7 +209,7 @@ function Path:new(pathname)
     file:close()
 
     if not content then
-      err('Could not read file: ' .. self.abs .. ' - ' .. err)
+      error('Could not read file: ' .. self.abs .. ' - ' .. err)
     end
 
     return content
@@ -226,7 +223,7 @@ function Path:new(pathname)
   end
 
   ---Iterate over the lines of the file
-  self.iterlines = function()
+  self.lines = function()
     local lines = self.readlines()
     return iterator(lines, function(i) return lines[i] end, { enumerate = true })
   end

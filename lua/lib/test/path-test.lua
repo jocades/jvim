@@ -13,24 +13,13 @@ if not f.exists() then
 end
 
 for node in p.iterdir() do
-  if node.is_file() and node.ext == '.py' then
-    print(node.abs)
+  if node.is_file() and node.ext == 'py' then
+    print(node)
   end
 end
 
---[[ f.append({
-  'print("Hello, world!")',
-  'print("Hello, world2!")',
-})
+for i, line in f.lines() do
+  print(i, line)
+end
 
-for i, line in f.iterlines() do
-  print(i + 1, line)
-end ]]
-
---[[ print('READ', f.read())
-
-print(f.exec('python3')) ]]
-
---[[ if f.exists() then
-  f.unlink()
-end ]]
+f.unlink()
