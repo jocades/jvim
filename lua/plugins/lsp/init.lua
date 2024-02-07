@@ -94,6 +94,8 @@ return {
         },
         -- Tailwind CSS
         tailwindcss = {},
+        -- Astro Framework
+        astro = {},
       },
     },
     config = function(_, opts)
@@ -104,9 +106,9 @@ return {
 
       local lsp_config = require('mason-lspconfig')
 
-      lsp_config.setup { ensure_installed = vim.tbl_keys(opts.servers) }
+      lsp_config.setup({ ensure_installed = vim.tbl_keys(opts.servers) })
 
-      lsp_config.setup_handlers {
+      lsp_config.setup_handlers({
         function(server_name)
           local setup = {
             capabilities = capabilities,
@@ -139,7 +141,21 @@ return {
 
           require('lspconfig')[server_name].setup(setup)
         end,
-      }
+      })
+
+      -- astro filetype (maybe use ftdetect dir?)
+      vim.filetype.add({
+        extension = {
+          astro = 'astro',
+        },
+      })
+      -- mdx filetype
+      vim.filetype.add({
+        extension = {
+          mdx = 'mdx',
+        },
+      })
+      vim.treesitter.language.register('markdown', 'mdx')
     end,
   },
 
@@ -150,9 +166,9 @@ return {
     config = function()
       local b = require('null-ls').builtins
 
-      local ts_formatter = b.formatting.deno_fmt.with {
+      local ts_formatter = b.formatting.deno_fmt.with({
         extra_args = { '--no-semicolons', '--single-quote' },
-      }
+      })
 
       local root_dir = vim.fn.getcwd()
       local prettier_files = { '.prettierrc', 'prettier.config.js', 'main.py' }
@@ -169,20 +185,20 @@ return {
         ts_formatter,
         -- b.formatting.deno_fmt,
         -- b.formatting.prettierd,
-        b.formatting.autopep8.with { extra_args = { '--max-line-length', '120', '--experimental' } },
+        b.formatting.autopep8.with({ extra_args = { '--max-line-length', '120', '--experimental' } }),
         -- b.formatting.ruff.with { extra_args = { '--config', vim.fn.stdpath('config') .. '/.ruff.toml' } },
-        b.formatting.stylua.with { extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } },
-        b.formatting.shfmt.with { extra_args = { '-i', '4' } },
-        b.diagnostics.shellcheck.with { diagnostics_format = '#{m} [#{c}]' },
-        b.formatting.clang_format.with { extra_args = { '-style=file' } },
-        b.formatting.gofmt.with { extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } },
+        b.formatting.stylua.with({ extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } }),
+        b.formatting.shfmt.with({ extra_args = { '-i', '4' } }),
+        b.diagnostics.shellcheck.with({ diagnostics_format = '#{m} [#{c}]' }),
+        b.formatting.clang_format.with({ extra_args = { '-style=file' } }),
+        b.formatting.gofmt.with({ extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } }),
       }
 
-      require('null-ls').setup {
+      require('null-ls').setup({
         debug = true,
         sources = sources,
         on_attach = require('plugins.lsp.formatting').on_attach,
-      }
+      })
     end,
   },
 

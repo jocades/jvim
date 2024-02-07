@@ -18,6 +18,8 @@ for node in p.iterdir() do
   end
 end
 
+(p / 'touch.txt').touch()
+
 for i, line in f.lines() do
   print(i, line)
 end

@@ -2,7 +2,7 @@ return {
   'nvim-treesitter/nvim-treesitter',
   event = 'BufReadPre',
   build = function() -- auto install languages
-    pcall(require('nvim-treesitter.install').update { with_sync = true })
+    pcall(require('nvim-treesitter.install').update({ with_sync = true }))
   end,
   dependencies = {
     'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
@@ -11,7 +11,7 @@ return {
   },
   config = function()
     -- See `:help nvim-treesitter`
-    require('nvim-treesitter.configs').setup {
+    require('nvim-treesitter.configs').setup({
       ensure_installed = {
         'python',
         'typescript',
@@ -35,6 +35,7 @@ return {
         'c',
         'cpp',
         'diff',
+        'astro',
       },
       highlight = { enable = true },
       indent = { enable = true, disable = { 'python' } },
@@ -91,6 +92,6 @@ return {
         --   },
         -- },
       },
-    }
+    })
   end,
 }

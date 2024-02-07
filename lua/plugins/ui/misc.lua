@@ -1,5 +1,20 @@
 return {
-  { 'kyazdani42/nvim-web-devicons', lazy = true },
+  {
+    'kyazdani42/nvim-web-devicons',
+    lazy = true,
+    config = function()
+      require('nvim-web-devicons').setup({
+        strict = true,
+        override_by_extension = {
+          astro = {
+            icon = '',
+            color = '#EF8547',
+            name = 'astro',
+          },
+        },
+      })
+    end,
+  },
   {
     'NvChad/nvim-colorizer.lua',
     event = 'BufReadPre',
