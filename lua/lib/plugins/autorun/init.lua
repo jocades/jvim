@@ -3,6 +3,7 @@ local h = require('utils.api')
 local str = require('utils.str')
 local log = require('utils.log')
 local Path = require('lib.path')
+local merge = require('utils').merge
 
 local M = {}
 
@@ -10,7 +11,9 @@ local augroup = api.nvim_create_augroup('AutoRun', { clear = true })
 
 ---@alias AutoCmd { id: number, event: string, pattern: string }
 ---@alias RunCommand string[] | fun(file: P): string[]
----@alias RunConfig { commands: table<string, RunCommand>, output: { name: string } }
+---@alias OutputConfig { name: string }
+---@alias HeaderConfig { command: boolean, date: boolean, execution_time: boolean }
+---@alias RunConfig { commands: table<string, RunCommand>, output: OutputConfig, header: HeaderConfig }
 
 ---@class State
 ---@field file P | nil
@@ -37,6 +40,12 @@ local State = {
   commands = {
     py = function(file) return { 'python', file.abs } end,
   },
+  header = {
+    command = true,
+    date = true,
+    execution_time = true,
+    execution_time_ln = 3,
+  },
 }
 
 ---@type State
@@ -51,10 +60,13 @@ function State:setup(config)
   self.config = config
 
   if config.commands ~= nil then
-    self.commands = require('utils').merge(self.commands, config.commands)
+    self.commands = merge(self.commands, config.commands)
   end
   if config.output ~= nil then
     self.output_buf.name = config.output.name
+  end
+  if config.header ~= nil then
+    self.header = merge(self.header, config.header)
   end
 end
 
@@ -103,14 +115,32 @@ end
 
 ---@param command string[]
 local function write_header(command)
-  h.write_to_buf(state.output_buf.id, {
-    '---',
-    'CMD: ' .. table.concat(command, ' '),
-    'TIME: ' .. os.date('%c'),
-    'EXIT: ...',
-    '---',
-    '',
-  })
+  local lines = { '---' }
+  if state.header.command then
+    table.insert(lines, 'CMD: ' .. table.concat(command, ' '))
+  end
+  if state.header.date then
+    table.insert(lines, 'TIME: ' .. os.date('%c'))
+  end
+  if state.header.execution_time then
+    table.insert(lines, 'EXIT: ...')
+    state.header.execution_time_ln = #lines - 1
+  end
+
+  if #lines > 1 then
+    table.insert(lines, '---')
+    table.insert(lines, '')
+    h.write_to_buf(state.output_buf.id, lines)
+  end
+
+  -- h.write_to_buf(state.output_buf.id, {
+  --   '---',
+  --   'CMD: ' .. table.concat(command, ' '),
+  --   'TIME: ' .. os.date('%c'),
+  --   'EXIT: ...',
+  --   '---',
+  --   '',
+  -- })
 end
 
 local function append_data(_, data)
@@ -133,9 +163,18 @@ local function execute()
     on_exit = function(_, code)
       ---@diagnostic disable-next-line
       local elapsed = vim.fn.reltimefloat(vim.fn.reltime(start))
-      api.nvim_buf_set_lines(state.output_buf.id, 3, 4, false, {
-        string.format('EXIT: %s (%.3fs)', code, elapsed),
-      })
+      if state.header.execution_time then
+        api.nvim_buf_set_lines(
+          state.output_buf.id,
+          state.header.execution_time_ln,
+          state.header.execution_time_ln + 1,
+          false,
+          { string.format('EXIT: %s (%.3fs)', code, elapsed) }
+        )
+      end
+      -- api.nvim_buf_set_lines(state.output_buf.id, 3, 4, false, {
+      --   string.format('EXIT: %s (%.3fs)', code, elapsed),
+      -- })
     end,
   })
 end

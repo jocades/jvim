@@ -5,6 +5,7 @@ require('lib.plugins.autorun').setup({
     js = function(file) return { 'node', file.abs } end,
   },
   output = { name = 'output' },
+  header = { date = false },
 })
 
 require('lib.plugins.next').setup()
