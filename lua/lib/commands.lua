@@ -3,7 +3,6 @@ local sys = require('utils').sys
 local M = {}
 
 local tmux = {
-
   ---@param pane string
   select_pane = function(pane) return 'tmux select-pane ' .. pane end,
 

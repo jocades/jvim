@@ -1,15 +1,13 @@
 from rich import print
 from time import sleep
-from pathlib import Path
-
-p = Path("exec.py")
 
 
 def main():
-    print("Hello from main()")
+    print(f'Hello from {__name__}')
     sleep(1)
-    print(1+2)
+    print(f'File: {__file__}')
 
+    # ERROR OUT
     # print(1/0)
 
 

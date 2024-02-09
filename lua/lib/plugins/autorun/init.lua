@@ -38,7 +38,7 @@ local State = {
   autocmds = {},
   command = nil,
   commands = {
-    py = function(file) return { 'python', file.abs } end,
+    py = function(file) return { 'python' } end,
   },
   header = {
     command = true,
@@ -99,17 +99,15 @@ end
 
 function State:get_command()
   local command
-
   if type(self.command) == 'function' then
-    command = self.command(state.file)
+    command = self.command(self.file)
   elseif type(self.command) == 'table' then
-    ---@type string[]
-    command = self.command
-    table.insert(command, self.file.abs)
+    ---@diagnostic disable-next-line
+    command = table.copy(self.command)
   else
     error('Invalid command type')
   end
-
+  table.insert(command, self.file.abs)
   return command
 end
 
@@ -132,15 +130,6 @@ local function write_header(command)
     table.insert(lines, '')
     h.write_to_buf(state.output_buf.id, lines)
   end
-
-  -- h.write_to_buf(state.output_buf.id, {
-  --   '---',
-  --   'CMD: ' .. table.concat(command, ' '),
-  --   'TIME: ' .. os.date('%c'),
-  --   'EXIT: ...',
-  --   '---',
-  --   '',
-  -- })
 end
 
 local function append_data(_, data)
@@ -157,6 +146,7 @@ local function execute()
   ---@diagnostic disable-next-line
   local start = vim.fn.reltime()
 
+  -- joini the command and the file path
   vim.fn.jobstart(command, {
     on_stdout = append_data,
     on_stderr = append_data,
@@ -172,9 +162,6 @@ local function execute()
           { string.format('EXIT: %s (%.3fs)', code, elapsed) }
         )
       end
-      -- api.nvim_buf_set_lines(state.output_buf.id, 3, 4, false, {
-      --   string.format('EXIT: %s (%.3fs)', code, elapsed),
-      -- })
     end,
   })
 end
@@ -221,7 +208,6 @@ function M.show_info()
   local buf, _ = h.new_floating_win()
   h.write_to_buf(buf, str.split(vim.inspect(state), '\n'))
   api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>q<cr>', { noremap = true })
-  -- no not allow insert mode
   api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 
@@ -232,5 +218,11 @@ function M.setup(config)
   api.nvim_create_user_command('Stop', M.detach, {})
   api.nvim_create_user_command('RunInfo', M.show_info, {})
 end
+
+local f = 'test.ts'
+local t = { 'bun', 'run' }
+
+local n = vim.list_extend(t, { f })
+P(n)
 
 return M

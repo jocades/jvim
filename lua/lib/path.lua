@@ -100,6 +100,22 @@ function Path:new(pathname)
   ---Get the parent directory
   self.parent = function() return Path(vim.fn.fnamemodify(self.abs, ':h')) end
 
+  ---Get the size of the file in bytes
+  self.size = (function()
+    if self.is_file() then
+      return vim.fn.getfsize(self.abs)
+    end
+    return 0
+  end)()
+
+  ---Get file information such as size, access time, modification time, etc.
+  self.stat = (function()
+    if self.exists() then
+      return vim.loop.fs_stat(self.abs)
+    end
+    return nil
+  end)()
+
   ---Join the path with other paths
   ---@vararg string | P
   self.join = function(...)
@@ -223,9 +239,10 @@ function Path:new(pathname)
   end
 
   ---Iterate over the lines of the file
-  self.lines = function()
+  ---@param opts? { enumerate?: boolean }
+  self.lines = function(opts)
     local lines = self.readlines()
-    return iterator(lines, function(i) return lines[i] end, { enumerate = true })
+    return iterator(lines, function(i) return lines[i] end, opts)
   end
 
   ---Read the file as bytes

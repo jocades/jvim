@@ -1,8 +1,8 @@
 local Path = require('lib.path')
 
-local p = Path.cwd()
+local cwd = Path.cwd()
 
-local f = p / 'test.py'
+local f = cwd / 'test.py'
 
 if not f.exists() then
   f.write({
@@ -12,16 +12,23 @@ if not f.exists() then
   })
 end
 
-for node in p.iterdir() do
+for node in cwd.iterdir() do
   if node.is_file() and node.ext == 'py' then
     print(node)
+    P(node.stat)
   end
 end
 
-(p / 'touch.txt').touch()
-
-for i, line in f.lines() do
+for i, line in f.lines({ enumerate = true }) do
   print(i, line)
 end
 
-f.unlink()
+f.unlink();
+
+(cwd / 'touch.txt').touch()
+
+if (cwd / 'touch.txt').exists() then
+  local dir = (cwd / 'touch.txt').parent()
+  P(dir.parts);
+  (cwd / 'touch.txt').unlink()
+end
