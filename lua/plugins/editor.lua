@@ -2,6 +2,8 @@ return {
   { -- File explorer
     'nvim-neo-tree/neo-tree.nvim',
     cmd = 'Neotree',
+    -- branch = 'main',
+    -- commit = '230ff118613fa07138ba579b89d13ec2201530b9',
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
       if vim.fn.argc() == 1 then
@@ -24,7 +26,9 @@ return {
       },
       filesystem = {
         bind_to_cwd = false,
-        follow_current_file = true,
+        follow_current_file = {
+          enabled = true,
+        },
         window = {
           mappings = {
             ['gd'] = function(state)

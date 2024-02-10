@@ -14,10 +14,12 @@ end
 
 for node in cwd.iterdir() do
   if node.is_file() and node.ext == 'py' then
+    -- P(node)
     print(node)
-    P(node.stat)
   end
 end
+
+print(f.exec('python3'))
 
 for i, line in f.lines({ enumerate = true }) do
   print(i, line)

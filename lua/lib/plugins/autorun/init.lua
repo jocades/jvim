@@ -146,7 +146,6 @@ local function execute()
   ---@diagnostic disable-next-line
   local start = vim.fn.reltime()
 
-  -- joini the command and the file path
   vim.fn.jobstart(command, {
     on_stdout = append_data,
     on_stderr = append_data,
@@ -218,11 +217,5 @@ function M.setup(config)
   api.nvim_create_user_command('Stop', M.detach, {})
   api.nvim_create_user_command('RunInfo', M.show_info, {})
 end
-
-local f = 'test.ts'
-local t = { 'bun', 'run' }
-
-local n = vim.list_extend(t, { f })
-P(n)
 
 return M

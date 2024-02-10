@@ -2,10 +2,14 @@ require('lib.plugins.autorun').setup({
   commands = {
     lua = { 'luajit' },
     ts = { 'bun', 'run' },
-    js = function(file) return { 'node', file.abs } end,
+    js = function(file) return { 'node' } end,
   },
-  output = { name = 'output' },
-  header = { date = false },
+  -- output = { name = 'output' },
+  header = {
+    command = true,
+    date = false,
+    execution_time = true,
+  },
 })
 
 require('lib.plugins.next').setup()

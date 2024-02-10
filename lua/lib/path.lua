@@ -101,19 +101,12 @@ function Path:new(pathname)
   self.parent = function() return Path(vim.fn.fnamemodify(self.abs, ':h')) end
 
   ---Get the size of the file in bytes
+  ---@return integer
   self.size = (function()
     if self.is_file() then
       return vim.fn.getfsize(self.abs)
     end
     return 0
-  end)()
-
-  ---Get file information such as size, access time, modification time, etc.
-  self.stat = (function()
-    if self.exists() then
-      return vim.loop.fs_stat(self.abs)
-    end
-    return nil
   end)()
 
   ---Join the path with other paths
@@ -297,11 +290,15 @@ function Path:new(pathname)
   self.appendbytes = function(data) self.write(data, 'ab') end
 
   ---Execute the file and capture the output
-  ---@param command string
+  ---@param command string | string[]
   ---@param opts? { split?: boolean }
   ---@return string | string[]
   self.exec = function(command, opts)
     opts = opts or {}
+
+    if type(command) == 'table' then
+      command = table.concat(command, ' ')
+    end
 
     local output = vim.fn.systemlist(command .. ' ' .. self.abs)
 
