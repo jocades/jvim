@@ -51,3 +51,15 @@ table.inspect = function(tbl)
     end
   end
 end
+
+---@param tbl table
+---@param value unknown
+---@return boolean
+table.includes = function(tbl, value)
+  for _, v in ipairs(tbl) do
+    if v == value then
+      return true
+    end
+  end
+  return false
+end

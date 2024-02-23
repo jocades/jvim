@@ -3,6 +3,7 @@ require('lib.plugins.autorun').setup({
     lua = { 'luajit' },
     ts = { 'bun', 'run' },
     js = function(file) return { 'node' } end,
+    go = { 'go', 'run' },
   },
   -- output = { name = 'output' },
   header = {
@@ -13,3 +14,5 @@ require('lib.plugins.autorun').setup({
 })
 
 require('lib.plugins.next').setup()
+
+-- require('lib.plugins.notes').setup()

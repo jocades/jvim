@@ -132,3 +132,42 @@ ls.add_snippets('typescriptreact', {
   react_server_component,
   react_context_provider_with_helper,
 })
+
+local python_main = s({
+  trig = 'main',
+  name = 'Python Main Function',
+}, {
+  t({
+    'def main() -> None:',
+    '\t',
+  }),
+  i(0, 'pass'),
+  t({
+    '',
+    '',
+    '',
+    'if __name__ == "__main__":',
+    '\tmain()',
+  }),
+})
+
+ls.add_snippets('python', {
+  python_main,
+})
+
+-- mardkwon helpers like ```pyhthon and ```typescript
+local function md_code_block(lang)
+  return s({
+    trig = lang,
+    name = 'Markdown ' .. lang:sub(1, 1):upper() .. lang:sub(2),
+  }, {
+    t({ '```' .. lang, '' }),
+    i(0),
+    t({ '', '```' }),
+  })
+end
+
+ls.add_snippets('markdown', {
+  md_code_block('py'),
+  md_code_block('ts'),
+})

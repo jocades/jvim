@@ -15,7 +15,13 @@ return {
         lualine_b = { 'branch' },
         lualine_c = {
           { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
-          'filename',
+          -- 'filename',
+          {
+            function()
+              local path = vim.fn.expand('%:p')
+              return path:gsub(vim.fn.getcwd() .. '/', '')
+            end,
+          },
           'diagnostics',
 
           --[[ {
