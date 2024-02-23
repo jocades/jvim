@@ -4,6 +4,7 @@ local event = require('nui.utils.autocmd').event
 local Input = require('lib.plugins.ui.input')
 local Menu = require('lib.plugins.ui.menu')
 local Picker = require('lib.plugins.ui.picker')
+local ts_utils = require('nvim-treesitter.ts_utils')
 
 local DATA_PATH = '~/.local/data/notes'
 local TEST = true
@@ -77,14 +78,14 @@ local function open_note(path, opts)
   -- escape the '$' char
   local cmd = string.format('%s/\\%s', path.parent().abs, path.name)
   vim.cmd.e(cmd)
-  -- vim.api.nvim_buf_add_highlight(0, -1, 'Todo', 1, 0, -1)
-  -- set the cursor to the last char of the last line and enter insert mode
+
   if opts.start_insert then
     vim.cmd('normal G$')
     vim.cmd('startinsert')
   end
-  -- check for links when we save the file
-  --[[ local id = vim.api.nvim_create_autocmd(event.BufWritePost, {
+
+  --[[ -- check for links when we save the file
+  local id = vim.api.nvim_create_autocmd(event.BufWritePost, {
     group = augroup,
     pattern = path.abs,
     callback = function()
@@ -100,6 +101,46 @@ local function open_note(path, opts)
     pattern = path.abs,
     callback = function() vim.api.nvim_del_autocmd(id) end,
   }) ]]
+
+  local buf = vim.api.nvim_get_current_buf()
+
+  vim.keymap.set('n', '<leader>l', function()
+    local node = ts_utils.get_node_at_cursor()
+
+    if not node then
+      print('No node found')
+      return
+    end
+
+    print('type:', node:type())
+
+    if node:type() == 'link_text' then
+      node = node:parent()
+      print('parent:', node:type())
+    end
+
+    if node:type() ~= 'shortcut_link' then
+      print('Not a shortcut_link')
+      return
+    end
+
+    local link = ts_utils.get_node_text(node)[1]
+
+    print('link:', link)
+
+    -- reomve the brackets
+    link = link:gsub('%[', ''):gsub('%]', '') .. '.md'
+    print('link:', link)
+
+    local p = Path(calendar / now().date / link)
+    print('path:', p)
+    print('exists:', p.exists())
+    open_note(p)
+
+    -- ts_utils.update_selection(buf, node)
+    -- local links = find_links(path)
+    -- P(links)
+  end, { buffer = buf })
 end
 
 --[[ local links = find_links(test)

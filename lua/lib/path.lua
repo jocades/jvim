@@ -7,7 +7,9 @@ local function is_root(pathname) return pathname == SEP end
 
 local function is_absolute(pathname) return string.sub(pathname, 1, 1) == SEP end
 
-local is_uri = function(filename) return string.match(filename, '^%a[%w+-.]*://') ~= nil end
+local is_uri = function(filename)
+  return string.match(filename, '^%a[%w+-.]*://') ~= nil
+end
 
 local function clean(pathname)
   if is_uri(pathname) then
@@ -57,7 +59,7 @@ local function open(path, mode)
 end
 
 ---@class P
----@overload fun(pathname: string): P
+---@overload fun(pathname: string | P): P
 ---@operator div(string | P): P
 ---@field private _path string The initial path
 ---@field abs string The absolute path
@@ -68,6 +70,10 @@ local Path = class()
 
 function Path:new(pathname)
   self._path = (function()
+    if Path.is_path(pathname) then
+      return pathname.abs
+    end
+
     if is_uri(pathname) then
       return pathname
     end
@@ -140,7 +146,10 @@ function Path:new(pathname)
       end
     end
 
-    return iterator(nodes, function(i) return Path(self.abs .. SEP .. nodes[i]) end)
+    return iterator(
+      nodes,
+      function(i) return Path(self.abs .. SEP .. nodes[i]) end
+    )
   end
 
   ---Create the file if it does not exist
