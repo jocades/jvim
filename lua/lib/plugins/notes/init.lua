@@ -208,8 +208,13 @@ end
 
 function M.open_today_notes()
   Picker({
+    title = "Today's notes",
     items = table.map(get_today_notes(), function(note) return note.name end),
     on_select = function(value) open_note(calendar / now().date / value) end,
+    keymaps = {
+      { 'n', 'n', function() M.create_note_today() end },
+      { 'n', 'q', function() vim.cmd('q') end },
+    },
   })
 
   -- local items = note_items(get_today_notes())
