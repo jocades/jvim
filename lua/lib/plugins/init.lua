@@ -13,6 +13,4 @@ require('lib.plugins.autorun').setup({
   },
 })
 
-require('lib.plugins.next').setup()
-
--- require('lib.plugins.notes').setup()
+require('lib.plugins.notes').setup()

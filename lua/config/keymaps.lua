@@ -72,6 +72,14 @@ local K = {
       function() require('lib.plugins.autorun').attach() end,
       { desc = 'Attach autorun' },
     },
+    ['<leader>nn'] = {
+      function() require('lib.plugins.notes').create_note_today() end,
+      { desc = "Today's note" },
+    },
+    ['<leader>nt'] = {
+      function() require('lib.plugins.notes').open_today_notes() end,
+      { desc = "List today's notes" },
+    },
   },
 
   -- INSERT
@@ -96,8 +104,8 @@ local K = {
   },
 }
 
-for mode, mappings in pairs(K) do
-  for k, t in pairs(mappings) do
+for mode, keymaps in pairs(K) do
+  for k, t in pairs(keymaps) do
     require('utils').map(mode, k, t[1], t[2])
   end
 end

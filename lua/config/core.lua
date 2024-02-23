@@ -1,3 +1,5 @@
+require('lib.globals')
+
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -8,7 +10,7 @@ local modules = {
 }
 
 require('lazy').setup(
-  require('utils').reduce(modules, function(acc, mod)
+  table.reduce(modules, function(acc, mod)
     table.insert(acc, { import = mod })
     return acc
   end, {}),
@@ -30,7 +32,6 @@ require('lazy').setup(
 
 require('config.autocmds')
 require('config.options')
-require('config.mappings')
-require('lib.globals')
+require('config.keymaps')
 require('lib.plugins')
 require('lib.snippets')

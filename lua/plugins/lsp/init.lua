@@ -112,7 +112,7 @@ return {
         function(server_name)
           local setup = {
             capabilities = capabilities,
-            on_attach = require('plugins.lsp.mappings').on_attach,
+            on_attach = require('plugins.lsp.keymaps').on_attach,
           }
 
           if opts.servers[server_name].cmd ~= nil then

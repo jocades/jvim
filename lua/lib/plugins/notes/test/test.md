@@ -4,4 +4,4 @@ y: meta
 z: what about this sheeeeiht???
 ---
 
-Hello this is a link [[link-1]] or another [[link-2]]
+Hello this is a link [[link]] or another [[link]]

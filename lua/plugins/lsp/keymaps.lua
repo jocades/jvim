@@ -6,10 +6,10 @@ local M = {}
 local function diagnostic_goto(next, severity)
   local go_to = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
   severity = severity and vim.diagnostic.severity[severity] or nil
-  return function() go_to { severity = severity } end
+  return function() go_to({ severity = severity }) end
 end
 
-local mappings = {
+local KEYMAPS = {
   -- Movement
   ['gd'] = { lsp.definition, 'Goto Definition' },
   ['gr'] = { telescope.lsp_references, 'Goto References' },
@@ -45,17 +45,17 @@ local mappings = {
 function M.on_attach(client, bufnr)
   if client.name == 'tsserver' then
     local ts = require('typescript')
-    mappings['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports (ts)' }
-    mappings['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports (ts)' }
-    mappings['<leader>tU'] = { ts.actions.removeUnused, 'Remove Unused Imports (ts)' }
-    mappings['<leader>tR'] = { function() ts.renameFile() end, 'Rename File (ts)' }
+    KEYMAPS['<leader>tO'] = { ts.actions.organizeImports, 'Organize Imports (ts)' }
+    KEYMAPS['<leader>tM'] = { ts.actions.addMissingImports, 'Add Missing Imports (ts)' }
+    KEYMAPS['<leader>tU'] = { ts.actions.removeUnused, 'Remove Unused Imports (ts)' }
+    KEYMAPS['<leader>tR'] = { function() ts.renameFile() end, 'Rename File (ts)' }
   end
 
   if client.name == 'ruff_lsp' then
     client.server_capabilities.hoverProvider = false
   end
 
-  for k, v in pairs(mappings) do
+  for k, v in pairs(KEYMAPS) do
     require('utils').map('n', k, v[1], { buffer = bufnr, desc = 'LSP: ' .. v[2] })
   end
 end

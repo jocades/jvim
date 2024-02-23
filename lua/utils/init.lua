@@ -60,16 +60,4 @@ function M.sys(exec, debug)
   vim.fn.system(exec)
 end
 
--- Reduce function for lua tables
----@param tbl table
----@param fn function
----@param initial unknown
-function M.reduce(tbl, fn, initial)
-  local acc = initial
-  for _, value in ipairs(tbl) do
-    acc = fn(acc, value)
-  end
-  return acc
-end
-
 return M

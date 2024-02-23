@@ -1,10 +1,13 @@
 local Path = require('lib.path')
 local str = require('utils.str')
-local u = require('utils')
+local event = require('nui.utils.autocmd').event
+local Input = require('lib.plugins.ui.input')
+local Menu = require('lib.plugins.ui.menu')
+local Picker = require('lib.plugins.ui.picker')
 
 local M = {}
 
-local root = Path('lua/lib/plugins/notes')
+local root = Path('lua/lib/plugins/notes/test')
 local test = root / 'test.md'
 local calendar = root / 'calendar'
 
@@ -50,27 +53,34 @@ end
 local function find_links(file)
   -- find all the text inside [[other_file_name]]
   -- find all the files that are linked to the current file
-
   local links = {}
-  for line in file.lines() do
-    for link in line:gmatch('%[%[(.-)%]%]') do
-      table.insert(links, link)
-    end
+  for link in file.read():gmatch('%[%[(.-)%]%]') do
+    table.insert(links, link)
   end
 
   return links
 end
 
-local function open_note(path)
+---@param path P | string
+---@param opts? { start_insert: boolean }
+local function open_note(path, opts)
+  opts = opts or {}
+
+  if type(path) == 'string' then
+    path = Path(path)
+  end
+
   -- escape the '$' char
   local cmd = string.format('%s/\\%s', path.parent().abs, path.name)
   vim.cmd.e(cmd)
   -- vim.api.nvim_buf_add_highlight(0, -1, 'Todo', 1, 0, -1)
   -- set the cursor to the last char of the last line and enter insert mode
-  vim.cmd('normal G$')
-  -- vim.cmd('startinsert')
-  -- check for links when we exit the insert mode
-  vim.api.nvim_create_autocmd('InsertLeave', {
+  if opts.start_insert then
+    vim.cmd('normal G$')
+    vim.cmd('startinsert')
+  end
+  -- check for links when we save the file
+  --[[ local id = vim.api.nvim_create_autocmd(event.BufWritePost, {
     group = augroup,
     pattern = path.abs,
     callback = function()
@@ -79,32 +89,61 @@ local function open_note(path)
       P(links)
     end,
   })
+
+  -- remove the autocmd when the buffer is closed
+  vim.api.nvim_create_autocmd(event.BufDelete, {
+    group = augroup,
+    pattern = path.abs,
+    callback = function() vim.api.nvim_del_autocmd(id) end,
+  }) ]]
 end
 
-local links = find_links(test)
-P(links)
+--[[ local links = find_links(test)
+P(links) ]]
 
-local function generate_notename(number, title) return string.format('$%02d_%s.md', number, title or 'note') end
+local function generate_notename(number, title)
+  return string.format('$%02d_%s.md', number, title)
+end
 
-local function is_note(pathname) return pathname:match('^%$%d+_.+%.md$') and true or false end
+local function is_note(pathname)
+  return pathname:match('^%$%d+_.+%.md$') and true or false
+end
 
-local function createNote(title, opts)
+local templates = {
+  ---@param opts { name: string, ts: { date: string, time: string } }
+  header = function(opts)
+    return {
+      '---',
+      'title: ' .. opts.name,
+      'date: ' .. opts.ts.date .. ' ' .. opts.ts.time,
+      '---',
+      '',
+    }
+  end,
+  todo = {
+    '# TODO:',
+    '',
+    '- [ ] Task',
+  },
+}
+
+---@param title? string
+---@param opts? { template: 'blank' | 'todo' }
+local function create_note(title, opts)
+  title = title or 'new note'
+  opts = opts or {}
+
+  local template = opts.template or 'blank'
+
   local ts = now()
   local today = calendar / ts.date
 
-  local text = {
-    '---',
-    'title: ' .. (title or ''),
-    'date: ' .. ts.date .. ' ' .. ts.time,
-    '---',
-  }
+  local text = templates.header({ name = title, ts = ts })
 
-  local is_todo = table.includes(opts, '-t')
-
-  if is_todo then
-    for _, line in ipairs({ '', '# TODO:', '', '- [ ] Task' }) do
-      table.insert(text, line)
-    end
+  if template == 'todo' then
+    table.extend(text, templates.todo)
+  else
+    table.insert(text, '')
   end
 
   -- if not exists then create the file with the first note
@@ -112,7 +151,7 @@ local function createNote(title, opts)
     today.mkdir()
     local file = today / generate_notename(1, title)
     file.write(text)
-    open_note(file)
+    open_note(file, { start_insert = true })
     return
   end
 
@@ -126,47 +165,104 @@ local function createNote(title, opts)
   local last_n = tonumber(last.name:match('(%d+)'))
   local file = today / generate_notename(last_n + 1, title)
   file.write(text)
-  open_note(file)
+  open_note(file, { start_insert = true })
 end
 
--- createNote()
+---@return P[]
+local function get_today_notes()
+  local ts = now()
+  local today = calendar / ts.date
+  if not today.exists() then
+    return {}
+  end
+
+  local notes = {}
+  for node in today.iterdir() do
+    if is_note(node.name) then
+      table.insert(notes, node)
+    end
+  end
+
+  return notes
+end
+
+---@param notes P[]
+local function note_items(notes)
+  local items = {}
+  for _, note in ipairs(notes) do
+    table.insert(items, { text = note.name, data = { path = note.abs } })
+  end
+  return items
+end
+
+---@param opts? { template: 'blank' | 'todo' }
+function M.create_note_today(opts)
+  opts = opts or {}
+  local input = Input({
+    title = 'Today',
+    on_submit = function(value) create_note(value, opts) end,
+  })
+  input:mount()
+  input:on(event.BufLeave, function() input:unmount() end)
+end
+
+function M.open_today_notes()
+  Picker({
+    items = table.map(get_today_notes(), function(note) return note.name end),
+    on_select = function(value) open_note(calendar / now().date / value) end,
+  })
+
+  -- local items = note_items(get_today_notes())
+  --[[ local menu = Menu({
+    title = 'Today ("n": new note)',
+    items = items,
+    on_submit = function(item)
+      -- local path = calendar / now().date / item.text
+      open_note(item.path)
+    end,
+  })
+  menu:map('n', 'n', function()
+    menu:unmount()
+    M.create_note_today()
+  end)
+  menu:mount()
+  menu:on(event.BufLeave, function() menu:unmount() end) ]]
+end
 
 function M.setup()
-  print('Setting up the plugin NOTES')
   vim.api.nvim_create_user_command('Today', function(opts)
-    local command = opts.args == '' and nil or str.split(opts.args)
+    local command = (function()
+      if opts.args == '' then
+        return nil
+      end
+      return str.split(opts.args)
+    end)()
 
     if not command then
-      createNote()
+      M.create_note_today()
       return
     end
 
-    P(command)
-
-    -- -t = todos template
-
-    local args = u.reduce(command, function(acc, v)
+    local args = table.reduce(command, function(acc, v)
       if v:sub(1, 1) ~= '-' then
         table.insert(acc, v)
       end
       return acc
     end, {})
-    P(args)
 
-    local options = u.reduce(command, function(acc, v)
+    local options = table.reduce(command, function(acc, v)
       if v:sub(1, 1) == '-' then
         table.insert(acc, v)
       end
       return acc
     end, {})
-    P(options)
 
     local title = #args == 0 and nil or args[1]
-    createNote(title, options)
 
-    -- local title = #opts.fargs == 0 and nil or opts.fargs[1]
-    -- print('Creating a new note with title:', title)
-    -- createNote(title)
+    create_note(title, {
+      -- -t = todos template
+      template = table.includes(options, '-t') and 'todo' or 'blank',
+    })
   end, {
     nargs = '?',
   })
