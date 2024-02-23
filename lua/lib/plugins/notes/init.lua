@@ -5,9 +5,13 @@ local Input = require('lib.plugins.ui.input')
 local Menu = require('lib.plugins.ui.menu')
 local Picker = require('lib.plugins.ui.picker')
 
+local DATA_PATH = '~/.local/data/notes'
+local TEST = true
+
 local M = {}
 
-local root = Path('lua/lib/plugins/notes/test')
+local root = TEST and Path('lua/lib/plugins/notes/test') or Path(DATA_PATH)
+
 local test = root / 'test.md'
 local calendar = root / 'calendar'
 
@@ -148,7 +152,7 @@ local function create_note(title, opts)
 
   -- if not exists then create the file with the first note
   if not today.exists() then
-    today.mkdir()
+    today.mkdir({ parents = true })
     local file = today / generate_notename(1, title)
     file.write(text)
     open_note(file, { start_insert = true })
@@ -235,6 +239,10 @@ function M.open_today_notes()
 end
 
 function M.setup()
+  if not root.exists() then
+    root.mkdir({ parents = true })
+  end
+
   vim.api.nvim_create_user_command('Today', function(opts)
     local command = (function()
       if opts.args == '' then
