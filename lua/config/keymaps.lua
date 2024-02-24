@@ -15,12 +15,27 @@ local K = {
 
     -- Buffer actions
     ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = { '<cmd>Bdelete!<cr>', { desc = 'Close buffer without saving' } },
+    ['<leader>X'] = {
+      '<cmd>Bdelete!<cr>',
+      { desc = 'Close buffer without saving' },
+    },
     ['<leader>bd'] = { exec.close_saved, { desc = 'Close all saved buffers' } },
-    ['<leader>nf'] = { exec.new_buf, { desc = 'Create new file in current dir' } },
-    ['<leader>ns'] = { function() exec.new_buf({ type = 'v' }) end, { desc = 'Create new vertical split' } },
-    ['<leader>nh'] = { function() exec.new_buf({ type = 'h' }) end, { desc = 'Create new horizontal split' } },
-    ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' } },
+    ['<leader>nf'] = {
+      exec.new_buf,
+      { desc = 'Create new file in current dir' },
+    },
+    ['<leader>ns'] = {
+      function() exec.new_buf({ type = 'v' }) end,
+      { desc = 'Create new vertical split' },
+    },
+    ['<leader>nh'] = {
+      function() exec.new_buf({ type = 'h' }) end,
+      { desc = 'Create new horizontal split' },
+    },
+    ['<leader>so'] = {
+      '<cmd>w | so %<cr>',
+      { desc = 'Save, source & run current config file' },
+    },
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
     ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
@@ -73,12 +88,23 @@ local K = {
       { desc = 'Attach autorun' },
     },
     ['<leader>nn'] = {
-      function() require('lib.plugins.notes').create_note_today() end,
+      function()
+        require('lib.plugins.notes').create_note({ type = 'calendar' })
+      end,
       { desc = "Today's note" },
     },
+
+    ['<leader>ni'] = {
+      function() require('lib.plugins.notes').create_note({ type = 'idea' }) end,
+      { desc = "Idea's note" },
+    },
     ['<leader>nt'] = {
-      function() require('lib.plugins.notes').open_today_notes() end,
+      function() require('lib.plugins.notes').list_notes({ type = 'calendar' }) end,
       { desc = "List today's notes" },
+    },
+    ['<leader>np'] = {
+      function() require('lib.plugins.notes').list_notes({ type = 'idea' }) end,
+      { desc = 'List idea notes' },
     },
   },
 

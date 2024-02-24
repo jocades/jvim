@@ -102,6 +102,16 @@ table.filter = function(tbl, fn)
   return new
 end
 
+---Iterate over the values of a list
+---@generic T
+---@param tbl T[]
+---@param fn fun(value: T)
+table.for_each = function(tbl, fn)
+  for _, v in ipairs(tbl) do
+    fn(v)
+  end
+end
+
 -- xd
 Reload = function(...)
   local modules = { ... }

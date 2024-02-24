@@ -5,65 +5,122 @@ local Input = require('lib.plugins.ui.input')
 local Menu = require('lib.plugins.ui.menu')
 local Picker = require('lib.plugins.ui.picker')
 local ts_utils = require('nvim-treesitter.ts_utils')
+local class = require('lib.class')
+local Popup = require('lib.plugins.ui.popup')
+local h = require('utils.api')
+
+local M = {}
 
 local DATA_PATH = '~/.local/data/notes'
 local TEST = true
 
-local M = {}
+local root_dir = TEST and Path('~/.config/nvim/lua/lib/plugins/notes/test')
+  or Path(DATA_PATH)
 
-local root = TEST and Path('lua/lib/plugins/notes/test') or Path(DATA_PATH)
-
-local test = root / 'test.md'
-local calendar = root / 'calendar'
+local test_file = root_dir / 'test.md'
+local calendar_dir = root_dir / 'calendar'
+local idea_dir = root_dir / 'idea'
 
 local augroup = vim.api.nvim_create_augroup('Notes', { clear = true })
 
--- ---
--- x: project name
--- y: meta
--- ---
-
----@param file P
-local function get_metadata(file)
-  local lines = file.readlines() -- -> { '---', 'x: project name', 'y: meta', '---' }
-  local metadata = {}
-  for i = 2, #lines - 1 do
-    local line = lines[i]
-    local key, value = line:match('(%w+):%s*(.+)')
-    metadata[key] = value
-  end
-  return metadata
-end
-
--- local metadata = getMetadata(root / 'test.md')
-
--- local dir = root / table.concat(str.split(metadata.x), '_')
---
--- if not dir.exists() then
---   dir.mkdir()
--- end
-
--- CALENDAR
--- add command like: :Today, to insert a new note with the current date
+---@alias Timestamp { date: string, time: string, day: string, month: string }
 
 local function now()
   local date = os.date('*t')
   return {
     date = string.format('%d-%02d-%02d', date.year, date.month, date.day),
     time = string.format('%02d:%02d:%02d', date.hour, date.min, date.sec),
+    day = os.date('%A'),
+    month = os.date('%B'),
   }
 end
 
+---@class NState
+---@overload fun(): NState
+local State = class()
+
+function State:new() self.dir = calendar_dir end
+
+---@param opts { type: 'calendar' | 'idea' }
+function State:set_dir(opts)
+  if opts.type == 'calendar' then
+    self.dir = calendar_dir / now().date
+  elseif opts.type == 'idea' then
+    self.dir = idea_dir
+  end
+end
+
+local state = State()
+
 ---@param file P
+---@return string[]
 local function find_links(file)
-  -- find all the text inside [[other_file_name]]
+  -- find all the text inside [other_file_name]
   -- find all the files that are linked to the current file
   local links = {}
-  for link in file.read():gmatch('%[%[(.-)%]%]') do
+  for link in file.read():gmatch('%[([^%]]+)%]') do
     table.insert(links, link)
   end
 
   return links
+end
+
+local function show_links(file, buf)
+  local links = find_links(file)
+  h.write_to_buf(
+    buf,
+    table.map(links, function(link)
+      local p = state.dir / (link .. '.md')
+      if p.exists() then
+        return link .. ' [exists]'
+      end
+      return link .. ' [not found]'
+    end)
+  )
+end
+
+---@param path P
+---@param popup NuiPopup
+local function attach_listeners(path, popup)
+  local autocmds = {}
+
+  -- check for links when we save the file
+  table.insert(
+    autocmds,
+    vim.api.nvim_create_autocmd(event.BufWritePost, {
+      group = augroup,
+      pattern = path.abs,
+      callback = function() show_links(path, popup.bufnr) end,
+    })
+  )
+
+  table.insert(
+    autocmds,
+    vim.api.nvim_create_autocmd(event.BufLeave, {
+      pattern = path.abs,
+      callback = function() popup:hide() end,
+    })
+  )
+
+  table.insert(
+    autocmds,
+    vim.api.nvim_create_autocmd(event.BufEnter, {
+      pattern = path.abs,
+      callback = function()
+        print('buf enter')
+        popup:show()
+      end,
+    })
+  )
+
+  -- remove the autocmd when the buffer is closed
+  vim.api.nvim_create_autocmd(event.BufDelete, {
+    group = augroup,
+    pattern = path.abs,
+    callback = function()
+      table.for_each(autocmds, function(id) vim.api.nvim_del_autocmd(id) end)
+    end,
+  })
 end
 
 ---@param path P | string
@@ -75,8 +132,6 @@ local function open_note(path, opts)
     path = Path(path)
   end
 
-  -- escape the '$' char
-  -- local cmd = string.format('%s/\\%s', path.parent().abs, path.name)
   vim.cmd.e(path.abs)
 
   if opts.start_insert then
@@ -84,26 +139,18 @@ local function open_note(path, opts)
     vim.cmd('startinsert')
   end
 
-  --[[ -- check for links when we save the file
-  local id = vim.api.nvim_create_autocmd(event.BufWritePost, {
-    group = augroup,
-    pattern = path.abs,
-    callback = function()
-      -- find all the links in the current file
-      local links = find_links(path)
-      P(links)
-    end,
-  })
-
-  -- remove the autocmd when the buffer is closed
-  vim.api.nvim_create_autocmd(event.BufDelete, {
-    group = augroup,
-    pattern = path.abs,
-    callback = function() vim.api.nvim_del_autocmd(id) end,
-  }) ]]
-
   local buf = vim.api.nvim_get_current_buf()
 
+  M.set_keymaps(buf)
+
+  local popup = Popup.bottom_right()
+  popup:mount()
+
+  show_links(path, popup.bufnr)
+  attach_listeners(path, popup)
+end
+
+M.set_keymaps = function(buf)
   vim.keymap.set('n', '<leader>l', function()
     local node = ts_utils.get_node_at_cursor()
 
@@ -129,17 +176,17 @@ local function open_note(path, opts)
     print('link:', link)
 
     -- reomve the brackets
-    link = link:gsub('%[', ''):gsub('%]', '') .. '.md'
+    link = link:gsub('%[', ''):gsub('%]', '')
     print('link:', link)
 
-    local p = Path(calendar / now().date / link)
+    local p = Path(state.dir / (link .. '.md'))
     print('path:', p)
-    print('exists:', p.exists())
-    open_note(p)
 
-    -- ts_utils.update_selection(buf, node)
-    -- local links = find_links(path)
-    -- P(links)
+    if not p.exists() then
+      M.create_note_file(link, { type = 'idea' })
+    end
+
+    open_note(p)
   end, { buffer = buf })
 end
 
@@ -155,12 +202,17 @@ local function is_note(pathname)
 end
 
 local templates = {
-  ---@param opts { name: string, ts: { date: string, time: string } }
+  ---@param opts { name: string, ts: Timestamp }
   header = function(opts)
     return {
       '---',
       'title: ' .. opts.name,
-      'date: ' .. opts.ts.date .. ' ' .. opts.ts.time,
+      'date: ' .. string.format(
+        '%s | %s | %s',
+        opts.ts.date,
+        opts.ts.time,
+        opts.ts.day
+      ),
       '---',
       '',
     }
@@ -172,18 +224,14 @@ local templates = {
   },
 }
 
----@param title? string
----@param opts? { template: 'blank' | 'todo' }
-local function create_note(title, opts)
-  title = title or 'new note'
-  opts = opts or {}
+---@param title string
+---@param opts { type: 'calendar' | 'idea', template?: 'blank' | 'todo' }
+M.create_note_file = function(title, opts)
+  state:set_dir(opts)
 
   local template = opts.template or 'blank'
 
-  local ts = now()
-  local today = calendar / ts.date
-
-  local text = templates.header({ name = title, ts = ts })
+  local text = templates.header({ name = title, ts = now() })
 
   if template == 'todo' then
     table.extend(text, templates.todo)
@@ -191,46 +239,47 @@ local function create_note(title, opts)
     table.insert(text, '')
   end
 
-  if not today.exists() then
-    today.mkdir({ parents = true })
+  if not state.dir.exists() then
+    state.dir.mkdir({ parents = true })
   end
 
-  local file = today / generate_notename(1, title)
+  local file = state.dir / generate_notename(1, title)
   file.write(text)
   open_note(file, { start_insert = true })
 end
 
----@return P[]
-local function get_today_notes()
-  local ts = now()
-  local today = calendar / ts.date
+---@param opts { type: 'calendar' | 'idea', template?: 'blank' | 'todo' }
+function M.create_note(opts)
+  state:set_dir(opts)
 
-  if not today.exists() then
-    return {}
-  end
-
-  return today.children()
-end
-
----@param opts? { template: 'blank' | 'todo' }
-function M.create_note_today(opts)
-  opts = opts or {}
   local input = Input({
-    title = 'Today',
-    on_submit = function(value) create_note(value, opts) end,
+    title = str.capitalize(opts.type),
+    on_submit = function(title) M.create_note_file(title, opts) end,
   })
   input:mount()
   input:on(event.BufLeave, function() input:unmount() end)
 end
 
-function M.open_today_notes()
+---@param opts { type: 'calendar' | 'idea' }
+function M.list_notes(opts)
+  state:set_dir(opts)
+
   Picker({
-    title = "Today's notes",
-    items = table.map(get_today_notes(), function(note) return note.name end),
-    on_select = function(value) open_note(calendar / now().date / value) end,
+    title = (function()
+      if opts.type == 'calendar' then
+        return 'Calendar'
+      end
+      return 'Ideas'
+    end)(),
+    items = table.map(
+      state.dir.children(),
+      function(note) return note.stem end
+    ),
+    on_select = function(value) open_note(state.dir / (value .. '.md')) end,
     keymaps = {
-      { 'n', 'n', function() M.create_note_today() end },
+      { 'n', 'n', function() M.create_note({ type = 'calendar' }) end },
       { 'n', 'q', function() vim.cmd('q') end },
+      { 'i', '<C-n>', function() M.create_note({ type = 'calendar' }) end },
     },
   })
 
@@ -251,10 +300,6 @@ function M.open_today_notes()
 end
 
 function M.setup()
-  if not root.exists() then
-    root.mkdir({ parents = true })
-  end
-
   vim.api.nvim_create_user_command('Today', function(opts)
     local command = (function()
       if opts.args == '' then
@@ -284,7 +329,7 @@ function M.setup()
 
     local title = #args == 0 and nil or args[1]
 
-    create_note(title, {
+    create_note_file(title, {
       template = table.includes(options, '-t') and 'todo' or 'blank',
     })
   end, {
@@ -292,6 +337,35 @@ function M.setup()
   })
 end
 
-M.setup()
+-- M.setup()
+
+-- yaml frontmatter
+-- ---
+-- x: project name
+-- y: meta
+-- ---
+
+---@param file P
+local function get_metadata(file)
+  local lines = file.readlines() -- -> { '---', 'x: project name', 'y: meta', '---' }
+  local metadata = {}
+  for i = 2, #lines - 1 do
+    local line = lines[i]
+    local key, value = line:match('(%w+):%s*(.+)')
+    metadata[key] = value
+  end
+  return metadata
+end
+
+-- local metadata = getMetadata(root / 'test.md')
+
+-- local dir = root / table.concat(str.split(metadata.x), '_')
+--
+-- if not dir.exists() then
+--   dir.mkdir()
+-- end
+
+-- CALENDAR
+-- add command like: :Today, to insert a new note with the current date
 
 return M
