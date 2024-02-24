@@ -24,7 +24,7 @@ local augroup = vim.api.nvim_create_augroup('Notes', { clear = true })
 -- ---
 
 ---@param file P
-local function getMetadata(file)
+local function get_metadata(file)
   local lines = file.readlines() -- -> { '---', 'x: project name', 'y: meta', '---' }
   local metadata = {}
   for i = 2, #lines - 1 do
@@ -76,8 +76,8 @@ local function open_note(path, opts)
   end
 
   -- escape the '$' char
-  local cmd = string.format('%s/\\%s', path.parent().abs, path.name)
-  vim.cmd.e(cmd)
+  -- local cmd = string.format('%s/\\%s', path.parent().abs, path.name)
+  vim.cmd.e(path.abs)
 
   if opts.start_insert then
     vim.cmd('normal G$')
@@ -147,11 +147,21 @@ end
 P(links) ]]
 
 local function generate_notename(number, title)
-  return string.format('$%02d_%s.md', number, title)
+  -- return string.format('$%02d_%s.md', number, title)
+  -- return string.format(
+  --   '%s_%02d.md',
+  --   table.concat(str.split(title), '-'),
+  --   number
+  -- )
+  return table.concat(str.split(title), '-') .. '.md'
 end
 
 local function is_note(pathname)
-  return pathname:match('^%$%d+_.+%.md$') and true or false
+  -- starts with $ and ends with .md
+  -- return pathname:match('^%$%d+_.+%.md$') and true or false
+  -- contains the $ char and ends with .md
+  -- return pathname:match('%$.+%.md$') and true or false
+  return pathname:match('%.md$') and true or false
 end
 
 local templates = {
@@ -191,24 +201,11 @@ local function create_note(title, opts)
     table.insert(text, '')
   end
 
-  -- if not exists then create the file with the first note
   if not today.exists() then
     today.mkdir({ parents = true })
-    local file = today / generate_notename(1, title)
-    file.write(text)
-    open_note(file, { start_insert = true })
-    return
   end
 
-  local last
-  for node in today.iterdir() do
-    if is_note(node.name) then
-      last = node
-    end
-  end
-
-  local last_n = tonumber(last.name:match('(%d+)'))
-  local file = today / generate_notename(last_n + 1, title)
+  local file = today / generate_notename(1, title)
   file.write(text)
   open_note(file, { start_insert = true })
 end
@@ -217,18 +214,12 @@ end
 local function get_today_notes()
   local ts = now()
   local today = calendar / ts.date
+
   if not today.exists() then
     return {}
   end
 
-  local notes = {}
-  for node in today.iterdir() do
-    if is_note(node.name) then
-      table.insert(notes, node)
-    end
-  end
-
-  return notes
+  return today.children()
 end
 
 ---@param notes P[]
@@ -252,7 +243,7 @@ function M.create_note_today(opts)
 end
 
 function M.open_today_notes()
-  Picker({
+  --[[ Picker({
     title = "Today's notes",
     items = table.map(get_today_notes(), function(note) return note.name end),
     on_select = function(value) open_note(calendar / now().date / value) end,
@@ -260,23 +251,23 @@ function M.open_today_notes()
       { 'n', 'n', function() M.create_note_today() end },
       { 'n', 'q', function() vim.cmd('q') end },
     },
-  })
+  }) ]]
 
   -- local items = note_items(get_today_notes())
-  --[[ local menu = Menu({
+  local menu = Menu({
     title = 'Today ("n": new note)',
-    items = items,
-    on_submit = function(item)
-      -- local path = calendar / now().date / item.text
-      open_note(item.path)
-    end,
+    items = table.map(
+      get_today_notes(),
+      function(note) return { text = note.name, data = { path = note.abs } } end
+    ),
+    on_submit = function(item) open_note(item.path) end,
   })
   menu:map('n', 'n', function()
     menu:unmount()
     M.create_note_today()
   end)
   menu:mount()
-  menu:on(event.BufLeave, function() menu:unmount() end) ]]
+  menu:on(event.BufLeave, function() menu:unmount() end)
 end
 
 function M.setup()

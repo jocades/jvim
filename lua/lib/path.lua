@@ -27,6 +27,24 @@ local function clean(pathname)
   return pathname
 end
 
+---@generic T
+---@param pathname string
+---@param callback? fun(node: string): T
+---@return T[]
+local function list(pathname, callback)
+  local nodes = {}
+  for node in io.popen('ls -a "' .. pathname .. '"'):lines() do
+    if node ~= '.' and node ~= '..' then
+      if callback then
+        table.insert(nodes, callback(node))
+      else
+        table.insert(nodes, node)
+      end
+    end
+  end
+  return nodes
+end
+
 ---@generic T, R
 ---@param ls T[]
 ---@param callback fun(i: integer): R
@@ -139,16 +157,23 @@ function Path:new(pathname)
       error('Cannot iterate a file: ' .. self.abs)
     end
 
-    local nodes = {}
-    for node in io.popen('ls -a "' .. self.abs .. '"'):lines() do
-      if node ~= '.' and node ~= '..' and node ~= '.git' then
-        table.insert(nodes, node)
-      end
-    end
+    local nodes = list(self.abs)
 
     return iterator(
       nodes,
       function(i) return Path(self.abs .. SEP .. nodes[i]) end
+    )
+  end
+
+  ---Get the children of the directory
+  self.children = function()
+    if not self.is_dir() then
+      error('Cannot get children of a file: ' .. self.abs)
+    end
+
+    return list(
+      self.abs,
+      function(node) return Path(self.abs .. SEP .. node) end
     )
   end
 

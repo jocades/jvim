@@ -1,7 +1,8 @@
 local BaseMenu = require('nui.menu')
 local event = require('nui.utils.autocmd').event
 
----@param props { title?: string, on_submit?: fun(value: { text: string }), items: { text: string, data?: table }[] }
+---@generic T
+---@param props { title?: string, items: { text: string, data?: T }[], on_submit?: fun(item: { text: string, data: T }) }
 local function Menu(props)
   props = props or {}
 
@@ -22,7 +23,10 @@ local function Menu(props)
       winhighlight = 'Normal:Normal,FloatBorder:Normal',
     },
   }, {
-    lines = table.map(props.items or {}, function(item) return BaseMenu.item(item.text, item.data or {}) end),
+    lines = table.map(
+      props.items or {},
+      function(item) return BaseMenu.item(item.text, item.data or {}) end
+    ),
     max_width = 20,
     keymap = {
       focus_next = { 'j', '<Down>', '<Tab>' },
@@ -31,7 +35,8 @@ local function Menu(props)
       submit = { '<CR>', '<Space>' },
     },
     on_close = function() print('Menu Closed!') end,
-    on_submit = props.on_submit or function(item) print('Menu Submitted: ', item.text) end,
+    on_submit = props.on_submit
+      or function(item) print('Menu Submitted: ', item.text) end,
   })
 end
 

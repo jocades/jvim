@@ -51,19 +51,21 @@ end
 table.is_empty = function(tbl) return next(tbl) == nil end
 
 ---Append the values of a list into another list
----@param list table
----@param other table
-table.extend = function(list, other)
+---@generic T
+---@param list T[]
+---@param other T[]
+table.extend = function(list, other, opts)
   for _, value in ipairs(other) do
     table.insert(list, value)
   end
 end
 
--- Reduce function for lua tables
----@param tbl table
----@param fn function
----@param initial unknown
----@return table<unknown>
+---Reduce a table to a single value
+---@generic T, R
+---@param tbl T[]
+---@param fn fun(acc: R, value: T): R
+---@param initial R
+---@return R
 table.reduce = function(tbl, fn, initial)
   local acc = initial
   for _, value in ipairs(tbl) do
@@ -72,10 +74,11 @@ table.reduce = function(tbl, fn, initial)
   return acc
 end
 
----Map function for lua tables
----@param tbl table
----@param fn function
----@return table<unknown>
+---Create a new list, mapping the values of another table
+---@generic T, R
+---@param tbl T[]
+---@param fn fun(value: T): R
+---@return R[]
 table.map = function(tbl, fn)
   local new = {}
   for k, v in pairs(tbl) do
@@ -84,10 +87,11 @@ table.map = function(tbl, fn)
   return new
 end
 
----Filter function for lua tables
----@param tbl table
----@param fn function
----@return table<unknown>
+---Filter the values of a list
+---@generic T
+---@param tbl T[]
+---@param fn fun(value: T): boolean
+---@return T[]
 table.filter = function(tbl, fn)
   local new = {}
   for k, v in pairs(tbl) do
@@ -111,6 +115,9 @@ end
 Flex = function()
   local friend_name = vim.fn.input('Who are we flexing on?: ')
   friend_name = friend_name:gsub('^%l', string.upper)
-  local msg = string.format(" %s... Jordi's config is on another level! He wrote it in Lua! ", friend_name)
+  local msg = string.format(
+    " %s... Jordi's config is on another level! He wrote it in Lua! ",
+    friend_name
+  )
   vim.notify(msg, vim.log.levels.WARN, { title = 'Flex' })
 end
