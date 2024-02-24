@@ -1,6 +1,8 @@
 from rich import print
 from time import sleep
 
+ts = 0.5
+
 
 def main():
     print(f'Hello from {__name__}')

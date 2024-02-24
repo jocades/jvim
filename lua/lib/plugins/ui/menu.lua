@@ -2,7 +2,7 @@ local BaseMenu = require('nui.menu')
 local event = require('nui.utils.autocmd').event
 
 ---@generic T
----@param props { title?: string, items: { text: string, data?: T }[], on_submit?: fun(item: { text: string, data: T }) }
+---@param props { title?: string, items: { text: string, data?: T }[], on_submit?: fun(item: { text: string }) }
 local function Menu(props)
   props = props or {}
 

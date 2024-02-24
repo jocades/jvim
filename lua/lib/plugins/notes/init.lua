@@ -147,20 +147,10 @@ end
 P(links) ]]
 
 local function generate_notename(number, title)
-  -- return string.format('$%02d_%s.md', number, title)
-  -- return string.format(
-  --   '%s_%02d.md',
-  --   table.concat(str.split(title), '-'),
-  --   number
-  -- )
   return table.concat(str.split(title), '-') .. '.md'
 end
 
 local function is_note(pathname)
-  -- starts with $ and ends with .md
-  -- return pathname:match('^%$%d+_.+%.md$') and true or false
-  -- contains the $ char and ends with .md
-  -- return pathname:match('%$.+%.md$') and true or false
   return pathname:match('%.md$') and true or false
 end
 
@@ -222,15 +212,6 @@ local function get_today_notes()
   return today.children()
 end
 
----@param notes P[]
-local function note_items(notes)
-  local items = {}
-  for _, note in ipairs(notes) do
-    table.insert(items, { text = note.name, data = { path = note.abs } })
-  end
-  return items
-end
-
 ---@param opts? { template: 'blank' | 'todo' }
 function M.create_note_today(opts)
   opts = opts or {}
@@ -243,7 +224,7 @@ function M.create_note_today(opts)
 end
 
 function M.open_today_notes()
-  --[[ Picker({
+  Picker({
     title = "Today's notes",
     items = table.map(get_today_notes(), function(note) return note.name end),
     on_select = function(value) open_note(calendar / now().date / value) end,
@@ -251,10 +232,9 @@ function M.open_today_notes()
       { 'n', 'n', function() M.create_note_today() end },
       { 'n', 'q', function() vim.cmd('q') end },
     },
-  }) ]]
+  })
 
-  -- local items = note_items(get_today_notes())
-  local menu = Menu({
+  --[[ local menu = Menu({
     title = 'Today ("n": new note)',
     items = table.map(
       get_today_notes(),
@@ -267,7 +247,7 @@ function M.open_today_notes()
     M.create_note_today()
   end)
   menu:mount()
-  menu:on(event.BufLeave, function() menu:unmount() end)
+  menu:on(event.BufLeave, function() menu:unmount() end) ]]
 end
 
 function M.setup()
@@ -305,7 +285,6 @@ function M.setup()
     local title = #args == 0 and nil or args[1]
 
     create_note(title, {
-      -- -t = todos template
       template = table.includes(options, '-t') and 'todo' or 'blank',
     })
   end, {

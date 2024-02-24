@@ -1,0 +1,84 @@
+local tsu = require('nvim-treesitter.ts_utils')
+local event = require('nui.utils.autocmd').event
+
+local M = {}
+
+-- get the nodes text and the cursor position
+-- capture the current node text and log it to the console
+-- after the current 'parent node' insert a new line and log the parent node
+-- i.e:
+-- local loggers = {
+--  typescript = 'console.log',
+--  python = 'print',
+-- }
+-- if the cursros is in 'loggers':
+-- then go to the end of the variable declaration and insert a new line so it looks like:
+-- local loggers = {
+-- typescript = 'console.log',
+-- python = 'print',
+-- }
+-- print('loggers:', loggers)
+
+local function test() print('test') end
+
+function M.test() print('test') end
+
+---@param node TSNode
+local function is_definition(node)
+  return table.includes(
+    { 'variable_declaration', 'function_declaration', 'assignment_statement' },
+    node:type()
+  )
+end
+
+M.log = function()
+  local ft = vim.bo.filetype
+  print('Logging', ft, loggers[ft])
+
+  local node = tsu.get_node_at_cursor()
+
+  if not node then
+    print('No node found')
+    return
+  end
+
+  print(node:type())
+
+  local text = tsu.get_node_text(node)[1]
+  local line = vim.api.nvim_win_get_cursor(0)[1]
+
+  local logger = loggers[ft]
+
+  if not logger then
+    print('No logger found for', ft)
+    return
+  end
+
+  local log = string.format("%s('%s:', %s)", logger, text, text)
+
+  while node and not is_definition(node) do
+    print('Node:', node:type())
+    node = node:parent()
+  end
+
+  print('Parent:', node:type())
+
+  local buf = vim.api.nvim_get_current_buf()
+
+  -- tsu.update_selection(buf, node)
+  -- tsu.goto_node(node, true)
+
+  -- get line and column of the end of the node and insert a new line
+  local end_line, end_col = node:end_()
+  vim.api.nvim_buf_set_lines(buf, end_line + 1, end_line + 1, false, { log })
+  -- move the cursor to the end of the line
+  -- vim.api.nvim_win_set_cursor(0, { end_line, end_col })
+end
+vim.keymap.set(
+  'n',
+  '<leader>cl',
+  function() M.log() end,
+  { noremap = true, silent = true }
+)
+
+return M
