@@ -133,11 +133,18 @@ function Path:new(pathname)
     return 0
   end)()
 
+  ---Get the last modified time of the file
+  ---@return integer
+  self.mtime = (function()
+    if self.exists() then
+      return vim.fn.getftime(self.abs)
+    end
+    return 0
+  end)()
+
   ---Join the path with other paths
   ---@vararg string | P
   self.join = function(...)
-    assert(Path.is_path(self))
-
     local args = { ... }
 
     for i, v in ipairs(args) do
@@ -168,7 +175,7 @@ function Path:new(pathname)
   ---Get the children of the directory
   self.children = function()
     if not self.is_dir() then
-      error('Cannot get children of a file: ' .. self.abs)
+      error('Cannot get children, not a directory: ' .. self.abs)
     end
 
     return list(

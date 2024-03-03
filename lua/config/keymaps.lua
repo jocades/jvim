@@ -87,10 +87,14 @@ local K = {
       function() require('lib.plugins.autorun').attach() end,
       { desc = 'Attach autorun' },
     },
-    ['<leader>nn'] = {
+    ['<leader>nt'] = {
       function()
         require('lib.plugins.notes').create_note({ type = 'calendar' })
       end,
+      { desc = "Today's note" },
+    },
+    ['<leader>nn'] = {
+      function() require('lib.plugins.notes').open_today_todo() end,
       { desc = "Today's note" },
     },
 
@@ -98,7 +102,7 @@ local K = {
       function() require('lib.plugins.notes').create_note({ type = 'idea' }) end,
       { desc = "Idea's note" },
     },
-    ['<leader>nt'] = {
+    ['<leader>nl'] = {
       function() require('lib.plugins.notes').list_notes({ type = 'calendar' }) end,
       { desc = "List today's notes" },
     },

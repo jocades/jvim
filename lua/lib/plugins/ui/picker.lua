@@ -1,4 +1,4 @@
----@param opts { title?: string, items: string[], on_select: fun(value: string), keymaps: (string | function)[][] } }
+---@param opts { title?: string, items: string[], on_select: fun(value: string), keymaps: (string | fun(buf: integer))[][] } }
 local function Picker(opts)
   local actions = require('telescope.actions')
   local actions_state = require('telescope.actions.state')
@@ -10,7 +10,8 @@ local function Picker(opts)
   local function enter(buf)
     local selected = actions_state.get_selected_entry()
     actions.close(buf)
-    opts.on_select(selected[1])
+    if selected ~= nil then selected = selected[1] end
+    opts.on_select(selected)
   end
 
   local function next(buf) actions.move_selection_next(buf) end

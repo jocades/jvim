@@ -1,39 +1,16 @@
 P = function(v) print(vim.inspect(v)) end
 
----Copy a table
----@param tbl table
-table.copy = function(tbl)
-  local new = {}
-  for k, v in pairs(tbl) do
-    new[k] = v
-  end
-  return new
-end
-
----Deep copy a table
----@param tbl table
-table.deepcopy = function(tbl)
-  local new = {}
-  for k, v in pairs(tbl) do
-    if type(v) == 'table' then
-      new[k] = table.deepcopy(v)
-    else
-      new[k] = v
+-- Merge 2 or more dictionaries
+---@param ... table[]
+---@return table
+table.merge = function(...)
+  local result = {}
+  for _, t in ipairs({ ... }) do
+    for k, v in pairs(t) do
+      result[k] = v
     end
   end
-  return new
-end
-
----Inspect a table
----@param tbl table
-table.inspect = function(tbl)
-  for k, v in pairs(tbl) do
-    if type(v) == 'table' then
-      table.inspect(v)
-    else
-      print(k, v)
-    end
-  end
+  return result
 end
 
 ---@param tbl table
@@ -48,19 +25,22 @@ table.includes = function(tbl, value)
   return false
 end
 
+---Check if a table is empty
+---@param tbl table
+---@return boolean
 table.is_empty = function(tbl) return next(tbl) == nil end
 
 ---Append the values of a list into another list
 ---@generic T
 ---@param list T[]
 ---@param other T[]
-table.extend = function(list, other, opts)
+table.extend = function(list, other)
   for _, value in ipairs(other) do
     table.insert(list, value)
   end
 end
 
----Reduce a table to a single value
+---Reduce a list to a single value
 ---@generic T, R
 ---@param tbl T[]
 ---@param fn fun(acc: R, value: T): R
@@ -109,6 +89,42 @@ end
 table.for_each = function(tbl, fn)
   for _, v in ipairs(tbl) do
     fn(v)
+  end
+end
+
+---Copy a table
+---@param tbl table
+table.copy = function(tbl)
+  local new = {}
+  for k, v in pairs(tbl) do
+    new[k] = v
+  end
+  return new
+end
+
+---Deep copy a table
+---@param tbl table
+table.deepcopy = function(tbl)
+  local new = {}
+  for k, v in pairs(tbl) do
+    if type(v) == 'table' then
+      new[k] = table.deepcopy(v)
+    else
+      new[k] = v
+    end
+  end
+  return new
+end
+
+---Inspect a table
+---@param tbl table
+table.inspect = function(tbl)
+  for k, v in pairs(tbl) do
+    if type(v) == 'table' then
+      table.inspect(v)
+    else
+      print(k, v)
+    end
   end
 end
 

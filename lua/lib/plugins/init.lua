@@ -5,7 +5,6 @@ require('lib.plugins.autorun').setup({
     js = function(file) return { 'node' } end,
     go = { 'go', 'run' },
   },
-  -- output = { name = 'output' },
   header = {
     command = true,
     date = false,
@@ -13,4 +12,10 @@ require('lib.plugins.autorun').setup({
   },
 })
 
-require('lib.plugins.notes').setup()
+require('lib.plugins.notes').setup({
+  data_path = '~/.local/data/notes',
+})
+
+require('lib.plugins.typo').setup({
+  trigger = '<leader>ft',
+})

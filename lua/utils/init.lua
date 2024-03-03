@@ -2,21 +2,8 @@ local api = vim.api
 
 local M = {}
 
--- Merge 2 or more dictionaries
----@param ... table[]
----@return table
-function M.merge(...)
-  local result = {}
-  for _, t in ipairs({ ... }) do
-    for k, v in pairs(t) do
-      result[k] = v
-    end
-  end
-  return result
-end
-
 -- Set keymaps with default options
----@param mode string
+---@param mode string | string[]
 ---@param keys string
 ---@param exec string | function
 ---@param opts? table
@@ -25,7 +12,7 @@ function M.map(mode, keys, exec, opts)
   if not opts then
     opts = common
   else
-    M.merge(common, opts)
+    table.merge(common, opts)
   end
 
   vim.keymap.set(mode, keys, exec, opts)
@@ -51,12 +38,8 @@ function M.file_exists(path) return vim.fn.filereadable(path) == 1 end
 -- Execute shell command
 ---@param exec string | table { string }
 function M.sys(exec, debug)
-  if type(exec) == 'table' then
-    exec = table.concat(exec, ' && ')
-  end
-  if debug then
-    print(exec)
-  end
+  if type(exec) == 'table' then exec = table.concat(exec, ' && ') end
+  if debug then print(exec) end
   vim.fn.system(exec)
 end
 

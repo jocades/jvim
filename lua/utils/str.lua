@@ -1,5 +1,6 @@
 local M = {}
 
+--- Split a string into a table of strings
 ---@param str string
 ---@param separator? string
 ---@return string[]
@@ -11,20 +12,12 @@ function M.split(str, separator)
   return chunks
 end
 
+--- Remove leading and trailing whitespaces
 ---@param str string
 ---@return string, integer
 function M.trim(str) return str:gsub('^%s*(.-)%s*$', '%1') end
 
----@param data string[]
----@param separator? string
-function M.join(data, separator)
-  local sep, str = separator or ' ', ''
-  for _, v in ipairs(data) do
-    str = str .. v .. sep
-  end
-  return str:sub(1, #str - 1)
-end
-
+--- Capitalize the first letter of a string
 ---@param str string
 ---@return string
 function M.capitalize(str) return str:sub(1, 1):upper() .. str:sub(2) end

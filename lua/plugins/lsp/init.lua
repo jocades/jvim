@@ -49,8 +49,12 @@ return {
         -- JSON
         jsonls = {
           on_new_config = function(new_config)
-            new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-            vim.list_extend(new_config.settings.json.schemas, require('schemastore').json.schemas())
+            new_config.settings.json.schemas = new_config.settings.json.schemas
+              or {}
+            vim.list_extend(
+              new_config.settings.json.schemas,
+              require('schemastore').json.schemas()
+            )
           end,
           settings = {
             json = {
@@ -100,7 +104,9 @@ return {
     },
     config = function(_, opts)
       vim.diagnostic.config(opts.diagnostics)
-      local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = require('cmp_nvim_lsp').default_capabilities(
+        vim.lsp.protocol.make_client_capabilities()
+      )
       -- Fix clang formatter warnings
       capabilities.offsetEncoding = { 'utf-16' }
 
@@ -132,10 +138,12 @@ return {
           end
 
           if server_name == 'denols' then
-            setup.root_dir = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
+            setup.root_dir =
+              require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
             setup.init_options = { enable = true, unstable = true }
           elseif server_name == 'tsserver' then
-            setup.root_dir = require('lspconfig.util').root_pattern('package.json')
+            setup.root_dir =
+              require('lspconfig.util').root_pattern('package.json')
             setup.single_file_support = false
           end
 
@@ -183,15 +191,26 @@ return {
 
       local sources = {
         ts_formatter,
-        -- b.formatting.deno_fmt,
-        -- b.formatting.prettierd,
-        b.formatting.autopep8.with({ extra_args = { '--max-line-length', '120', '--experimental' } }),
+        b.formatting.autopep8.with({
+          extra_args = {
+            '--max-line-length',
+            '80',
+            '--experimental',
+          },
+        }),
         -- b.formatting.ruff.with { extra_args = { '--config', vim.fn.stdpath('config') .. '/.ruff.toml' } },
-        b.formatting.stylua.with({ extra_args = { '--config-path', vim.fn.stdpath('config') .. '/stylua.toml' } }),
+        b.formatting.stylua.with({
+          extra_args = {
+            '--config-path',
+            vim.fn.stdpath('config') .. '/stylua.toml',
+          },
+        }),
         b.formatting.shfmt.with({ extra_args = { '-i', '4' } }),
         b.diagnostics.shellcheck.with({ diagnostics_format = '#{m} [#{c}]' }),
         b.formatting.clang_format.with({ extra_args = { '-style=file' } }),
-        b.formatting.gofmt.with({ extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } }),
+        b.formatting.gofmt.with({
+          extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' },
+        }),
       }
 
       require('null-ls').setup({
@@ -223,9 +242,7 @@ return {
       local mr = require('mason-registry')
       for _, tool in ipairs(opts.ensure_installed) do
         local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
-        end
+        if not p:is_installed() then p:install() end
       end
     end,
   },

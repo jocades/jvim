@@ -3,7 +3,6 @@ local h = require('utils.api')
 local str = require('utils.str')
 local log = require('utils.log')
 local Path = require('lib.path')
-local merge = require('utils').merge
 
 local M = {}
 
@@ -60,13 +59,13 @@ function State:setup(config)
   self.config = config
 
   if config.commands ~= nil then
-    self.commands = merge(self.commands, config.commands)
+    self.commands = table.merge(self.commands, config.commands)
   end
   if config.output ~= nil then
     self.output_buf.name = config.output.name
   end
   if config.header ~= nil then
-    self.header = merge(self.header, config.header)
+    self.header = table.merge(self.header, config.header)
   end
 end
 

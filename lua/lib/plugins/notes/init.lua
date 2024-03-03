@@ -4,133 +4,92 @@ local event = require('nui.utils.autocmd').event
 local Input = require('lib.plugins.ui.input')
 local Menu = require('lib.plugins.ui.menu')
 local Picker = require('lib.plugins.ui.picker')
-local ts_utils = require('nvim-treesitter.ts_utils')
+local tsu = require('nvim-treesitter.ts_utils')
 local class = require('lib.class')
 local Popup = require('lib.plugins.ui.popup')
 local h = require('utils.api')
+local templates = require('lib.plugins.notes.templates')
 
 local M = {}
 
-local DATA_PATH = '~/.local/data/notes'
-local TEST = true
-
-local root_dir = TEST and Path('~/.config/nvim/lua/lib/plugins/notes/test')
-  or Path(DATA_PATH)
-
-local test_file = root_dir / 'test.md'
-local calendar_dir = root_dir / 'calendar'
-local idea_dir = root_dir / 'idea'
+local DATA_PATH = Path('~/.local/data/notes')
+local TEST_PATH = Path('~/.config/nvim/lua/lib/plugins/notes/test')
+local TEST = false
 
 local augroup = vim.api.nvim_create_augroup('Notes', { clear = true })
 
 ---@alias Timestamp { date: string, time: string, day: string, month: string }
 
+local function format_date(date)
+  return string.format('%d-%02d-%02d', date.year, date.month, date.day)
+end
+
+local function format_time(date)
+  return string.format('%02d:%02d:%02d', date.hour, date.min, date.sec)
+end
+
 local function now()
   local date = os.date('*t')
   return {
-    date = string.format('%d-%02d-%02d', date.year, date.month, date.day),
-    time = string.format('%02d:%02d:%02d', date.hour, date.min, date.sec),
+    date = format_date(date),
+    time = format_time(date),
     day = os.date('%A'),
     month = os.date('%B'),
   }
 end
 
+local function ms_to_date(ms)
+  local date = os.date('*t', ms)
+  return string.format('%s | %s', format_date(date), format_time(date))
+end
+
+---@param filename string
+local function md(filename) return filename .. '.md' end
+
 ---@class NState
 ---@overload fun(): NState
+---@field popup NuiPopup
 local State = class()
 
-function State:new() self.dir = calendar_dir end
+function State:new()
+  self.data_path = TEST and TEST_PATH or DATA_PATH
+  self.dir = nil
+  self.mounted = false
+  self.popup = nil
+end
+
+---@param opts? { data_path: string }
+function State:setup(opts)
+  opts = opts or {}
+
+  if opts.data_path ~= nil then self.data_path = Path(opts.data_path) end
+end
 
 ---@param opts { type: 'calendar' | 'idea' }
 function State:set_dir(opts)
   if opts.type == 'calendar' then
-    self.dir = calendar_dir / now().date
+    self.dir = self.data_path / 'calendar' / now().date
   elseif opts.type == 'idea' then
-    self.dir = idea_dir
+    self.dir = self.data_path / 'idea'
   end
 end
 
 local state = State()
 
----@param file P
----@return string[]
-local function find_links(file)
-  -- find all the text inside [other_file_name]
-  -- find all the files that are linked to the current file
-  local links = {}
-  for link in file.read():gmatch('%[([^%]]+)%]') do
-    table.insert(links, link)
-  end
-
-  return links
+local function generate_notename(title)
+  return md(table.concat(str.split(title), '-'))
 end
 
-local function show_links(file, buf)
-  local links = find_links(file)
-  h.write_to_buf(
-    buf,
-    table.map(links, function(link)
-      local p = state.dir / (link .. '.md')
-      if p.exists() then
-        return link .. ' [exists]'
-      end
-      return link .. ' [not found]'
-    end)
-  )
-end
-
----@param path P
----@param popup NuiPopup
-local function attach_listeners(path, popup)
-  local autocmds = {}
-
-  -- check for links when we save the file
-  table.insert(
-    autocmds,
-    vim.api.nvim_create_autocmd(event.BufWritePost, {
-      group = augroup,
-      pattern = path.abs,
-      callback = function() show_links(path, popup.bufnr) end,
-    })
-  )
-
-  table.insert(
-    autocmds,
-    vim.api.nvim_create_autocmd(event.BufLeave, {
-      pattern = path.abs,
-      callback = function() popup:hide() end,
-    })
-  )
-
-  table.insert(
-    autocmds,
-    vim.api.nvim_create_autocmd(event.BufEnter, {
-      pattern = path.abs,
-      callback = function()
-        print('buf enter')
-        popup:show()
-      end,
-    })
-  )
-
-  -- remove the autocmd when the buffer is closed
-  vim.api.nvim_create_autocmd(event.BufDelete, {
-    group = augroup,
-    pattern = path.abs,
-    callback = function()
-      table.for_each(autocmds, function(id) vim.api.nvim_del_autocmd(id) end)
-    end,
-  })
+local function is_note(pathname)
+  return pathname:match('%.md$') and true or false
 end
 
 ---@param path P | string
 ---@param opts? { start_insert: boolean }
-local function open_note(path, opts)
+M.open_note = function(path, opts)
   opts = opts or {}
 
-  if type(path) == 'string' then
-    path = Path(path)
-  end
+  if type(path) == 'string' then path = Path(path) end
 
   vim.cmd.e(path.abs)
 
@@ -138,96 +97,14 @@ local function open_note(path, opts)
     vim.cmd('normal G$')
     vim.cmd('startinsert')
   end
-
-  local buf = vim.api.nvim_get_current_buf()
-
-  M.set_keymaps(buf)
-
-  local popup = Popup.bottom_right()
-  popup:mount()
-
-  show_links(path, popup.bufnr)
-  attach_listeners(path, popup)
 end
-
-M.set_keymaps = function(buf)
-  vim.keymap.set('n', '<leader>l', function()
-    local node = ts_utils.get_node_at_cursor()
-
-    if not node then
-      print('No node found')
-      return
-    end
-
-    print('type:', node:type())
-
-    if node:type() == 'link_text' then
-      node = node:parent()
-      print('parent:', node:type())
-    end
-
-    if node:type() ~= 'shortcut_link' then
-      print('Not a shortcut_link')
-      return
-    end
-
-    local link = ts_utils.get_node_text(node)[1]
-
-    print('link:', link)
-
-    -- reomve the brackets
-    link = link:gsub('%[', ''):gsub('%]', '')
-    print('link:', link)
-
-    local p = Path(state.dir / (link .. '.md'))
-    print('path:', p)
-
-    if not p.exists() then
-      M.create_note_file(link, { type = 'idea' })
-    end
-
-    open_note(p)
-  end, { buffer = buf })
-end
-
---[[ local links = find_links(test)
-P(links) ]]
-
-local function generate_notename(number, title)
-  return table.concat(str.split(title), '-') .. '.md'
-end
-
-local function is_note(pathname)
-  return pathname:match('%.md$') and true or false
-end
-
-local templates = {
-  ---@param opts { name: string, ts: Timestamp }
-  header = function(opts)
-    return {
-      '---',
-      'title: ' .. opts.name,
-      'date: ' .. string.format(
-        '%s | %s | %s',
-        opts.ts.date,
-        opts.ts.time,
-        opts.ts.day
-      ),
-      '---',
-      '',
-    }
-  end,
-  todo = {
-    '# TODO:',
-    '',
-    '- [ ] Task',
-  },
-}
 
 ---@param title string
----@param opts { type: 'calendar' | 'idea', template?: 'blank' | 'todo' }
+---@param opts? { type: 'calendar' | 'idea', template?: 'blank' | 'todo' }
 M.create_note_file = function(title, opts)
-  state:set_dir(opts)
+  opts = opts or {}
+
+  if opts.type ~= nil then state:set_dir(opts) end
 
   local template = opts.template or 'blank'
 
@@ -239,17 +116,15 @@ M.create_note_file = function(title, opts)
     table.insert(text, '')
   end
 
-  if not state.dir.exists() then
-    state.dir.mkdir({ parents = true })
-  end
+  if not state.dir.exists() then state.dir.mkdir({ parents = true }) end
 
-  local file = state.dir / generate_notename(1, title)
+  local file = state.dir / generate_notename(title)
   file.write(text)
-  open_note(file, { start_insert = true })
+  M.open_note(file, { start_insert = true })
 end
 
 ---@param opts { type: 'calendar' | 'idea', template?: 'blank' | 'todo' }
-function M.create_note(opts)
+M.create_note = function(opts)
   state:set_dir(opts)
 
   local input = Input({
@@ -260,51 +135,177 @@ function M.create_note(opts)
   input:on(event.BufLeave, function() input:unmount() end)
 end
 
+---@param paths P[]
+local function sort_by_last_modified(paths)
+  table.sort(paths, function(x, y) return x.mtime > y.mtime end)
+end
+
+---@param value string | nil
+local function on_select(value)
+  if not value then return end
+  local filename = md(str.trim(str.split(value, '|')[1]))
+  M.open_note(state.dir / filename)
+end
+
 ---@param opts { type: 'calendar' | 'idea' }
 function M.list_notes(opts)
   state:set_dir(opts)
 
+  if not state.dir.is_dir() then return end
+
+  local notes = state.dir.children()
+  sort_by_last_modified(notes)
+
+  local items = table.map(
+    notes,
+    function(note)
+      return string.format('%s | %s', note.stem, ms_to_date(note.mtime))
+    end
+  )
+
   Picker({
     title = (function()
-      if opts.type == 'calendar' then
-        return 'Calendar'
-      end
+      if opts.type == 'calendar' then return 'Calendar' end
       return 'Ideas'
     end)(),
-    items = table.map(
-      state.dir.children(),
-      function(note) return note.stem end
-    ),
-    on_select = function(value) open_note(state.dir / (value .. '.md')) end,
+    items = items,
+    on_select = on_select,
     keymaps = {
       { 'n', 'n', function() M.create_note({ type = 'calendar' }) end },
       { 'n', 'q', function() vim.cmd('q') end },
       { 'i', '<C-n>', function() M.create_note({ type = 'calendar' }) end },
     },
   })
-
-  --[[ local menu = Menu({
-    title = 'Today ("n": new note)',
-    items = table.map(
-      get_today_notes(),
-      function(note) return { text = note.name, data = { path = note.abs } } end
-    ),
-    on_submit = function(item) open_note(item.path) end,
-  })
-  menu:map('n', 'n', function()
-    menu:unmount()
-    M.create_note_today()
-  end)
-  menu:mount()
-  menu:on(event.BufLeave, function() menu:unmount() end) ]]
 end
 
-function M.setup()
+---@param file P
+---@return string[]
+local function find_links(file)
+  local links = {}
+  for link in file.read():gmatch('%[([^%]]+)%]') do
+    table.insert(links, link)
+  end
+  return links
+end
+
+---@param file P
+local function show_links(file)
+  local links = find_links(file)
+  h.write_to_buf(
+    state.popup.bufnr,
+    table.map(links, function(link)
+      local p = state.dir / md(link)
+      if p.exists() then return link .. ' [exists]' end
+      return link .. ' [not found]'
+    end)
+  )
+end
+
+---@param path P
+local function attach_listeners(path)
+  local autocmds = {}
+
+  -- check for links when we save the file
+  table.insert(
+    autocmds,
+    vim.api.nvim_create_autocmd(event.BufWritePost, {
+      group = augroup,
+      pattern = path.abs,
+      callback = function()
+        state.popup:show()
+        show_links(path)
+      end,
+    })
+  )
+
+  table.insert(
+    autocmds,
+    vim.api.nvim_create_autocmd({ event.BufDelete, event.BufLeave }, {
+      group = augroup,
+      pattern = path.abs,
+      callback = function()
+        print('BufDelete')
+        state.popup:unmount()
+        state.mounted = false
+      end,
+    })
+  )
+
+  -- remove the autocmd when the buffer is closed
+  --[[ vim.api.nvim_create_autocmd({ event.BufDelete, event.BufLeave }, {
+    group = augroup,
+    pattern = path.abs,
+    callback = function()
+      table.for_each(autocmds, function(id) vim.api.nvim_del_autocmd(id) end)
+    end,
+  }) ]]
+end
+
+local function set_keymaps(buf)
+  vim.keymap.set('n', '<leader>l', function()
+    local node = tsu.get_node_at_cursor()
+
+    if not node then return end
+    if node:type() == 'link_text' then node = node:parent() end
+    if node:type() ~= 'shortcut_link' then return end
+
+    local link = tsu.get_node_text(node)[1]
+    link = link:gsub('%[', ''):gsub('%]', '')
+
+    local path = Path(state.dir / md(link))
+
+    if not path.exists() then
+      M.create_note_file(link)
+    else
+      M.open_note(path)
+    end
+  end, { buffer = buf })
+end
+
+M.open_today_todo = function()
+  state:set_dir({ type = 'calendar' })
+  local file = state.dir / generate_notename('todo')
+  if not file.exists() then
+    M.create_note_file('todo', { type = 'calendar', template = 'todo' })
+  end
+  M.open_note(file, { start_insert = true })
+end
+
+---@param opts? { data_path: string }
+M.setup = function(opts)
+  state:setup(opts)
+
+  vim.api.nvim_create_autocmd(event.BufEnter, {
+    group = augroup,
+    pattern = state.data_path.abs .. '/**/*.md',
+    callback = function()
+      local path = Path(vim.api.nvim_buf_get_name(0))
+      local buf = vim.api.nvim_get_current_buf()
+
+      state.dir = path:parent()
+
+      if not state.mounted then
+        state.popup = Popup.bottom_right()
+        state.popup:mount()
+        state.mounted = true
+      end
+
+      set_keymaps(buf)
+      show_links(path)
+      attach_listeners(path)
+    end,
+  })
+
+  vim.api.nvim_create_user_command('NotesInfo', function()
+    local buf = h.new_floating_win()
+    h.write_to_buf(buf, str.split(vim.inspect(state), '\n'))
+    vim.api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>q<cr>', { noremap = true })
+    vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  end, {})
+
   vim.api.nvim_create_user_command('Today', function(opts)
     local command = (function()
-      if opts.args == '' then
-        return nil
-      end
+      if opts.args == '' then return nil end
       return str.split(opts.args)
     end)()
 
@@ -314,30 +315,24 @@ function M.setup()
     end
 
     local args = table.reduce(command, function(acc, v)
-      if v:sub(1, 1) ~= '-' then
-        table.insert(acc, v)
-      end
+      if v:sub(1, 1) ~= '-' then table.insert(acc, v) end
       return acc
     end, {})
 
     local options = table.reduce(command, function(acc, v)
-      if v:sub(1, 1) == '-' then
-        table.insert(acc, v)
-      end
+      if v:sub(1, 1) == '-' then table.insert(acc, v) end
       return acc
     end, {})
 
     local title = #args == 0 and nil or args[1]
 
-    create_note_file(title, {
+    M.create_note_file(title, {
       template = table.includes(options, '-t') and 'todo' or 'blank',
     })
   end, {
     nargs = '?',
   })
 end
-
--- M.setup()
 
 -- yaml frontmatter
 -- ---
