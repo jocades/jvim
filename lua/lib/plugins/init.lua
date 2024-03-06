@@ -2,7 +2,8 @@ require('lib.plugins.autorun').setup({
   commands = {
     lua = { 'luajit' },
     ts = { 'bun', 'run' },
-    js = function(file) return { 'node' } end,
+    js = function(file) return { 'node', file.abs } end,
+    py = { 'python' },
     go = { 'go', 'run' },
   },
   header = {
@@ -19,3 +20,6 @@ require('lib.plugins.notes').setup({
 require('lib.plugins.typo').setup({
   trigger = '<leader>ft',
 })
+
+-- blokmayus + h, j, k, l
+-- vim.keymap.set('n', )

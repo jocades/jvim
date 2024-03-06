@@ -100,6 +100,8 @@ return {
         tailwindcss = {},
         -- Astro Framework
         astro = {},
+        -- Rust
+        rust_analyzer = {},
       },
     },
     config = function(_, opts)
@@ -164,6 +166,12 @@ return {
         },
       })
       vim.treesitter.language.register('markdown', 'mdx')
+
+      -- toggle inline text
+      require('utils').map('n', '<leader>dt', function()
+        opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
+        vim.diagnostic.config(opts.diagnostics)
+      end, { desc = 'LSP: Toggle inline text diagnostics' })
     end,
   },
 
@@ -211,6 +219,9 @@ return {
         b.formatting.gofmt.with({
           extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' },
         }),
+        b.formatting.rustfmt.with({
+          extra_args = { '--config', 'max_width=80' },
+        }),
       }
 
       require('null-ls').setup({
@@ -229,7 +240,6 @@ return {
       ensure_installed = {
         'prettierd',
         'autopep8',
-        -- 'ruff',
         'stylua',
         'shellcheck',
         'shfmt',

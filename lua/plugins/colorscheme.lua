@@ -3,20 +3,22 @@ return {
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
+    -- enabled = false,
     config = function()
-      vim.cmd([[colorscheme catppuccin]])
+      -- vim.cmd([[colorscheme catppuccin]])
       -- vim.cmd([[highlight Normal guibg=none ctermbg=none]])
     end,
   },
   {
     'navarasu/onedark.nvim',
-    enabled = false,
+    -- enabled = false,
     -- lazy = true,
     name = 'onedark',
   },
   {
     'rebelot/kanagawa.nvim',
-    enabled = false,
+    enabled = true,
+    priority = 1000,
     config = function()
       require('kanagawa').setup({
         -- overrides = function(color) end,
@@ -32,8 +34,14 @@ return {
         },
       })
 
-      -- vim.cmd([[colorscheme kanagawa]])
+      vim.cmd([[colorscheme kanagawa]])
     end,
+  },
+  {
+    'craftzdog/solarized-osaka.nvim',
+    lazy = false,
+    priority = 1000,
+    opts = {},
   },
   {
     'bluz71/vim-nightfly-guicolors',

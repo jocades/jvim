@@ -1,15 +1,8 @@
 local env = require('config.env')
 local log = require('utils.log')
+local shell = require('utils').shell
 
 local M = {}
-
-local function shell(cmd)
-  local handle = io.popen(cmd)
-  if not handle then return nil end
-  local result = handle:read('*a')
-  handle:close()
-  return result
-end
 
 local function get_selected_text()
   local a_orig = vim.fn.getreg('a')

@@ -1,5 +1,8 @@
 -- Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, { command = 'checktime' })
+vim.api.nvim_create_autocmd(
+  { 'FocusGained', 'TermClose', 'TermLeave' },
+  { command = 'checktime' }
+)
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -37,9 +40,30 @@ vim.api.nvim_create_autocmd('FileType', {
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+    vim.keymap.set(
+      'n',
+      'q',
+      '<cmd>close<cr>',
+      { buffer = event.buf, silent = true }
+    )
   end,
 })
+
+-- Close some files (types) with <q>
+-- vim.api.nvim_create_autocmd('BufEnter', {
+--   -- 'fugitive://.*',
+--   pattern = 'fugitive://.*',
+--   callback = function(event)
+--     print('fugitive://.*')
+--     vim.bo[event.buf].buflisted = false
+--     vim.keymap.set(
+--       'n',
+--       'q',
+--       '<cmd>close<cr>',
+--       { buffer = event.buf, silent = true }
+--     )
+--   end,
+-- })
 
 -- Set wrap and spell for some filetypes
 vim.api.nvim_create_autocmd('FileType', {

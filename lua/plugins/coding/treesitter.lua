@@ -1,9 +1,9 @@
 return {
   'nvim-treesitter/nvim-treesitter',
   event = 'BufReadPre',
-  build = function() -- auto install languages
-    pcall(require('nvim-treesitter.install').update({ with_sync = true }))
-  end,
+  -- build = function() -- auto install languages
+  --   pcall(require('nvim-treesitter.install').update({ with_sync = true }))
+  -- end,
   dependencies = {
     'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
     'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
@@ -37,6 +37,10 @@ return {
         'diff',
         'astro',
       },
+      auto_install = true,
+      ignore_install = {},
+      modules = {},
+      sync_install = false,
       highlight = { enable = true },
       indent = { enable = true, disable = { 'python' } },
       incremental_selection = {

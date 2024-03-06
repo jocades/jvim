@@ -3,6 +3,7 @@ local h = require('utils.api')
 local str = require('utils.str')
 local log = require('utils.log')
 local Path = require('lib.path')
+local shell = require('utils').shell
 
 local M = {}
 
@@ -37,7 +38,13 @@ local State = {
   autocmds = {},
   command = nil,
   commands = {
-    py = function(file) return { 'python' } end,
+    py = function(file) return { 'python', file.abs } end,
+    rs = function(file)
+      shell(string.format('rustc %s -o %s', file, file.parent() / file.stem))
+      return {
+        '.' .. file.parent() / file.stem,
+      }
+    end,
   },
   header = {
     command = true,
@@ -52,18 +59,14 @@ local state = State:new()
 
 ---@param config? RunConfig
 function State:setup(config)
-  if not config then
-    return
-  end
+  if not config then return end
 
   self.config = config
 
   if config.commands ~= nil then
     self.commands = table.merge(self.commands, config.commands)
   end
-  if config.output ~= nil then
-    self.output_buf.name = config.output.name
-  end
+  if config.output ~= nil then self.output_buf.name = config.output.name end
   if config.header ~= nil then
     self.header = table.merge(self.header, config.header)
   end
@@ -103,10 +106,11 @@ function State:get_command()
   elseif type(self.command) == 'table' then
     ---@diagnostic disable-next-line
     command = table.copy(self.command)
+    table.insert(command, self.file.abs)
   else
     error('Invalid command type')
   end
-  table.insert(command, self.file.abs)
+  -- table.insert(command, self.file.abs)
   return command
 end
 
@@ -116,9 +120,7 @@ local function write_header(command)
   if state.header.command then
     table.insert(lines, 'CMD: ' .. table.concat(command, ' '))
   end
-  if state.header.date then
-    table.insert(lines, 'TIME: ' .. os.date('%c'))
-  end
+  if state.header.date then table.insert(lines, 'TIME: ' .. os.date('%c')) end
   if state.header.execution_time then
     table.insert(lines, 'EXIT: ...')
     state.header.execution_time_ln = #lines - 1
@@ -132,9 +134,7 @@ local function write_header(command)
 end
 
 local function append_data(_, data)
-  if data then
-    h.write_to_buf(state.output_buf.id, data, { append = true })
-  end
+  if data then h.write_to_buf(state.output_buf.id, data, { append = true }) end
 end
 
 local function execute()

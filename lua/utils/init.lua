@@ -23,8 +23,8 @@ end
 function M.on_attach(on_attach)
   api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
-      local buffer = args.buf
       local client = vim.lsp.get_client_by_id(args.data.client_id)
+      local buffer = args.buf
       on_attach(client, buffer)
     end,
   })
@@ -35,12 +35,22 @@ end
 ---@return boolean
 function M.file_exists(path) return vim.fn.filereadable(path) == 1 end
 
--- Execute shell command
+-- Execute shell command using vim.fn.system
 ---@param exec string | table { string }
 function M.sys(exec, debug)
   if type(exec) == 'table' then exec = table.concat(exec, ' && ') end
   if debug then print(exec) end
   vim.fn.system(exec)
+end
+
+-- Execute shell command using lua io.popen and return result
+---@param cmd string
+function M.shell(cmd)
+  local handle = io.popen(cmd)
+  if not handle then return nil end
+  local result = handle:read('*a')
+  handle:close()
+  return result
 end
 
 return M

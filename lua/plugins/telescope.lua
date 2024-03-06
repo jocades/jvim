@@ -91,10 +91,12 @@ return {
         ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },
         ['<leader>.'] = {
           function() -- pass additional configuration to telescope to change theme, layout, etc.
-            b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown({
-              winblend = 10,
-              previewer = false,
-            }))
+            b.current_buffer_fuzzy_find(
+              require('telescope.themes').get_dropdown({
+                winblend = 10,
+                previewer = false,
+              })
+            )
           end,
           'Fuzzily search in current buffer]',
         },
@@ -128,11 +130,14 @@ return {
 
       for k, v in pairs({
         ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
-        ['<M-h>'] = { ui.toggle_quick_menu },
-        ['<M-j>'] = { function() ui.nav_file(1) end },
-        ['<M-k>'] = { function() ui.nav_file(2) end },
-        ['<M-l>'] = { function() ui.nav_file(3) end },
-        ['<M-;>'] = { function() ui.nav_file(4) end },
+        ['<leader>jh'] = {
+          ui.toggle_quick_menu,
+          { desc = 'Toggle Harpoon Menu' },
+        },
+        ['<leader>jj'] = { function() ui.nav_file(1) end },
+        ['<leader>jk'] = { function() ui.nav_file(2) end },
+        ['<leader>jl'] = { function() ui.nav_file(3) end },
+        ['<leader>j;'] = { function() ui.nav_file(4) end },
       }) do
         map('n', k, v[1], v[2])
       end
