@@ -2,7 +2,7 @@ local Popup = require('nui.popup')
 local h = require('utils.api')
 
 local pop = {
-  bottom_right = function()
+  bottom_right = function(title)
     return Popup({
       relative = 'editor',
       -- enter = true,
@@ -18,7 +18,7 @@ local pop = {
       border = {
         style = 'rounded',
         text = {
-          top = ' Links ',
+          top = title and string.format(' %s ', title) or ' Links ',
           top_align = 'center',
           -- bottom = 'I am bottom title',
           -- bottom_align = 'left',
