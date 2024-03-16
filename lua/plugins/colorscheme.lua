@@ -5,7 +5,7 @@ return {
     priority = 1000,
     -- enabled = false,
     config = function()
-      -- vim.cmd([[colorscheme catppuccin]])
+      vim.cmd([[colorscheme catppuccin]])
       -- vim.cmd([[highlight Normal guibg=none ctermbg=none]])
     end,
   },
@@ -34,7 +34,7 @@ return {
         },
       })
 
-      vim.cmd([[colorscheme kanagawa]])
+      -- vim.cmd([[colorscheme kanagawa]])
     end,
   },
   {

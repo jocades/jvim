@@ -69,9 +69,9 @@ local pop = {
   end,
 }
 
--- local p = pop.bottom_right()
---
--- p:mount()
+local p = pop.bottom_right()
+
+p:mount()
 
 -- h.write_to_buf(p.bufnr, { 'Hello', 'World' })
 

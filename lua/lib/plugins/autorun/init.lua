@@ -181,6 +181,7 @@ function M.attach()
       direction = 'horizontal',
       size = 0.25,
     })
+    vim.keymap.set('n', 'q', vim.cmd.q, { buffer = state.output_buf.id })
   end
 
   execute()

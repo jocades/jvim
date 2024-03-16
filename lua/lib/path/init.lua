@@ -12,9 +12,7 @@ local is_uri = function(filename)
 end
 
 local function clean(pathname)
-  if is_uri(pathname) then
-    return pathname
-  end
+  if is_uri(pathname) then return pathname end
 
   -- remove double SEPs
   pathname = string.gsub(pathname, SEP .. SEP, SEP)
@@ -56,9 +54,7 @@ local function iterator(ls, callback, opts)
   return function()
     i = i + 1
     if i <= n then
-      if opts and opts.enumerate then
-        return i, callback(i)
-      end
+      if opts and opts.enumerate then return i, callback(i) end
       return callback(i)
     end
   end
@@ -69,9 +65,7 @@ end
 local function open(path, mode)
   local file, err = io.open(path, mode)
 
-  if not file then
-    error('Could not open file: ' .. path .. ' - ' .. err)
-  end
+  if not file then error('Could not open file: ' .. path .. ' - ' .. err) end
 
   return file
 end
@@ -88,13 +82,9 @@ local Path = class()
 
 function Path:new(pathname)
   self._path = (function()
-    if Path.is_path(pathname) then
-      return pathname.abs
-    end
+    if Path.is_path(pathname) then return pathname.abs end
 
-    if is_uri(pathname) then
-      return pathname
-    end
+    if is_uri(pathname) then return pathname end
 
     return clean(pathname)
   end)()
@@ -106,9 +96,7 @@ function Path:new(pathname)
   self.stem = vim.fn.fnamemodify(self.abs, ':t:r')
   self.ext = (function()
     local ext = vim.fn.fnamemodify(self.abs, ':e')
-    if ext == '' then
-      return nil
-    end
+    if ext == '' then return nil end
     return ext
   end)()
 
@@ -127,18 +115,14 @@ function Path:new(pathname)
   ---Get the size of the file in bytes
   ---@return integer
   self.size = (function()
-    if self.is_file() then
-      return vim.fn.getfsize(self.abs)
-    end
+    if self.is_file() then return vim.fn.getfsize(self.abs) end
     return 0
   end)()
 
   ---Get the last modified time of the file
   ---@return integer
   self.mtime = (function()
-    if self.exists() then
-      return vim.fn.getftime(self.abs)
-    end
+    if self.exists() then return vim.fn.getftime(self.abs) end
     return 0
   end)()
 
@@ -150,9 +134,7 @@ function Path:new(pathname)
     for i, v in ipairs(args) do
       assert(Path.is_path(v) or type(v) == 'string')
 
-      if Path.is_path(v) then
-        args[i] = v._path
-      end
+      if Path.is_path(v) then args[i] = v._path end
     end
 
     return Path(self._path .. SEP .. table.concat(args, SEP))
@@ -160,9 +142,7 @@ function Path:new(pathname)
 
   ---Iterate over the directory
   self.iterdir = function()
-    if not self.is_dir() then
-      error('Cannot iterate a file: ' .. self.abs)
-    end
+    if not self.is_dir() then error('Cannot iterate a file: ' .. self.abs) end
 
     local nodes = list(self.abs)
 
@@ -186,20 +166,14 @@ function Path:new(pathname)
 
   ---Create the file if it does not exist
   self.touch = function()
-    if self.is_dir() then
-      error('Cannot touch a directory: ' .. self.abs)
-    end
+    if self.is_dir() then error('Cannot touch a directory: ' .. self.abs) end
 
-    if not self.is_file() then
-      open(self.abs, 'w'):close()
-    end
+    if not self.is_file() then open(self.abs, 'w'):close() end
   end
 
   ---Delete the file if it exists
   self.unlink = function()
-    if self.is_dir() then
-      error('Cannot unlink a directory: ' .. self.abs)
-    end
+    if self.is_dir() then error('Cannot unlink a directory: ' .. self.abs) end
 
     if self.is_file() then
       local ok, err = os.remove(self.abs)
@@ -213,27 +187,21 @@ function Path:new(pathname)
   ---Create the directory if it does not exist
   ---@param opts? { parents?: boolean }
   self.mkdir = function(opts)
-    if self.is_file() then
-      error('Cannot mkdir a file: ' .. self.abs)
-    end
+    if self.is_file() then error('Cannot mkdir a file: ' .. self.abs) end
 
     opts = opts or {}
     local cmd = opts.parents and 'mkdir -p ' or 'mkdir '
 
     if not self.is_dir() then
       local ok, err = os.execute(cmd .. self.abs)
-      if not ok then
-        error('Could not mkdir: ' .. self.abs .. ' - ' .. err)
-      end
+      if not ok then error('Could not mkdir: ' .. self.abs .. ' - ' .. err) end
     end
   end
 
   ---Delete the directory if it exists
   ---@param opts? { force?: boolean }
   self.rmdir = function(opts)
-    if self.is_file() then
-      error('Cannot rmdir a file: ' .. self.abs)
-    end
+    if self.is_file() then error('Cannot rmdir a file: ' .. self.abs) end
 
     opts = opts or {}
     local cmd = opts.force and 'rm -rf ' or 'rmdir '
@@ -241,18 +209,14 @@ function Path:new(pathname)
     if self.is_dir() then
       local ok, err = os.execute(cmd .. self.abs)
 
-      if not ok then
-        error('Could not rmdir: ' .. self.abs .. ' - ' .. err)
-      end
+      if not ok then error('Could not rmdir: ' .. self.abs .. ' - ' .. err) end
     end
   end
 
   ---Read the file
   ---@return string
   self.read = function()
-    if self.is_dir() then
-      error('Cannot read a directory: ' .. self.abs)
-    end
+    if self.is_dir() then error('Cannot read a directory: ' .. self.abs) end
 
     local file = open(self.abs, 'r')
     local content, err = file:read('*a')
@@ -282,9 +246,7 @@ function Path:new(pathname)
   ---Read the file as bytes
   ---@return string
   self.readbytes = function()
-    if self.is_dir() then
-      error('Cannot read a directory: ' .. self.abs)
-    end
+    if self.is_dir() then error('Cannot read a directory: ' .. self.abs) end
 
     local file = open(self.abs, 'rb')
     local content, err = file:read('*a')
@@ -301,9 +263,7 @@ function Path:new(pathname)
   ---@param data string | string[]
   ---@param mode? 'w' | 'a' | 'wb' | 'ab'
   self.write = function(data, mode)
-    if self.is_dir() then
-      error('Cannot write to a directory: ' .. self.abs)
-    end
+    if self.is_dir() then error('Cannot write to a directory: ' .. self.abs) end
 
     local file = open(self.abs, mode or 'w')
 
@@ -337,15 +297,11 @@ function Path:new(pathname)
   self.exec = function(command, opts)
     opts = opts or {}
 
-    if type(command) == 'table' then
-      command = table.concat(command, ' ')
-    end
+    if type(command) == 'table' then command = table.concat(command, ' ') end
 
     local output = vim.fn.systemlist(command .. ' ' .. self.abs)
 
-    if opts.split then
-      return output
-    end
+    if opts.split then return output end
 
     return table.concat(output, '\n')
   end
@@ -375,5 +331,7 @@ function Path.is_path(o) return getmetatable(o) == Path end
 function Path.cwd() return Path(vim.fn.getcwd()) end
 
 function Path.home() return Path(vim.fn.expand('~')) end
+
+function Path.is_nvim() return Path.cwd() == Path.home() / '.config' / 'nvim' end
 
 return Path

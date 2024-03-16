@@ -21,5 +21,4 @@ require('lib.plugins.typo').setup({
   trigger = '<leader>ft',
 })
 
--- blokmayus + h, j, k, l
--- vim.keymap.set('n', )
+require('lib.plugins.todo').setup()
