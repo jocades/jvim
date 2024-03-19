@@ -21,4 +21,4 @@ require('lib.plugins.typo').setup({
   trigger = '<leader>ft',
 })
 
-require('lib.plugins.todo').setup()
+-- require('lib.plugins.todo').setup()
