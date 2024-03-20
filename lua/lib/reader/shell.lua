@@ -4,8 +4,6 @@
 
 while true do
   local line = io.read()
-  if line == nil then
-    break
-  end
+  if line == nil then break end
   print(line .. 'FROM LUA')
 end

@@ -24,10 +24,6 @@ local function set_selected_text(text)
   vim.fn.setreg('a', a_orig)
 end
 
---
--- Megustan las manzanas
--- y las peras
-
 local py = string.format(
   'OPENAI_API_KEY=%s python ~/dev/ai/aicli/aicli/cmd.py',
   env.OPENAI_API_KEY

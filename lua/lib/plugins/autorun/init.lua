@@ -39,12 +39,7 @@ local State = {
   command = nil,
   commands = {
     py = function(file) return { 'python', file.abs } end,
-    rs = function(file)
-      shell(string.format('rustc %s -o %s', file, file.parent() / file.stem))
-      return {
-        '.' .. file.parent() / file.stem,
-      }
-    end,
+    rs = function() return { 'cargo', 'run' } end,
   },
   header = {
     command = true,
