@@ -3,7 +3,7 @@ local map = require('utils').map
 return {
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
+    version = false,
     cmd = 'Telescope',
     dependencies = {
       { -- Telescope fzf native
@@ -26,7 +26,7 @@ return {
               ['<C-k>'] = actions.move_selection_previous,
               ['<C-n>'] = actions.cycle_history_next,
               ['<C-p>'] = actions.cycle_history_prev,
-              -- Set results loclist with troble
+              -- Set results loclist with trouble
               ['<C-l>'] = trouble.open_with_trouble,
             },
             n = {
@@ -79,7 +79,7 @@ return {
         },
       })
       pcall(telescope.load_extension, 'fzf')
-      telescope.load_extension('harpoon')
+      pcall(telescope.load_extension, 'harpoon')
 
       local b = require('telescope.builtin')
       -- KEYMAPS

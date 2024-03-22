@@ -55,8 +55,8 @@ local K = {
     ['<C-S-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
     -- Insert blank line
-    ['<C-cr>'] = { 'o<ESC>' },
-    ['<S-cr>'] = { 'O<ESC>' },
+    ['<C-cr>'] = { 'o<esc>' },
+    ['<S-cr>'] = { 'O<esc>' },
 
     -- Centralization
     ['<leader>c'] = { 'zz', { nowait = true } },

@@ -61,9 +61,9 @@ local function iterator(ls, callback, opts)
 end
 
 ---@param path string
----@param mode 'r' | 'w' | 'a' | 'rb' | 'wb' | 'ab'
+---@param mode? 'r' | 'w' | 'a' | 'rb' | 'wb' | 'ab'
 local function open(path, mode)
-  local file, err = io.open(path, mode)
+  local file, err = io.open(path, mode or 'r')
 
   if not file then error('Could not open file: ' .. path .. ' - ' .. err) end
 
@@ -165,10 +165,17 @@ function Path:new(pathname)
   end
 
   ---Create the file if it does not exist
-  self.touch = function()
+  ---@param opts? { force: boolean }
+  self.touch = function(opts)
     if self.is_dir() then error('Cannot touch a directory: ' .. self.abs) end
 
-    if not self.is_file() then open(self.abs, 'w'):close() end
+    opts = opts or {}
+
+    if self.is_file() and not opts.force then
+      error('File already exists: ' .. self.abs)
+    else
+      open(self.abs, 'w'):close()
+    end
   end
 
   ---Delete the file if it exists
@@ -218,7 +225,7 @@ function Path:new(pathname)
   self.read = function()
     if self.is_dir() then error('Cannot read a directory: ' .. self.abs) end
 
-    local file = open(self.abs, 'r')
+    local file = open(self.abs)
     local content, err = file:read('*a')
     file:close()
 
