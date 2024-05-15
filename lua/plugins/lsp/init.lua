@@ -1,3 +1,5 @@
+local Path = require('lib.path')
+
 return {
   {
     'neovim/nvim-lspconfig',
@@ -200,6 +202,9 @@ return {
         javascriptreact = { { 'prettierd', 'prettier' } },
         typescript = { { 'prettierd', 'prettier' } },
         typescriptreact = { { 'prettierd', 'prettier' } },
+        json = { { 'prettierd', 'prettier' } },
+        html = { { 'prettierd', 'prettier' } },
+        css = { { 'prettierd', 'prettier' } },
         sh = { 'shfmt' },
         c = { 'clang_format' },
         rust = { 'rustfmt' },
@@ -218,68 +223,22 @@ return {
       }
       f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
       f.shfmt = { prepend_args = { '-i', '4' } }
-      f.clang_format = { prepend_args = { '-style=file' } }
+      f.clang_format = { prepend_args = { '-style=google' } }
       f.gofmt = { prepend_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } }
       f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
+
+      if not Path.cwd().join('.prettierrc').exists() then
+        f.prettierd = {
+          prepend_args = {
+            '--semi=false',
+            '--single-quote',
+            '--print-width=80',
+            '--end-of-line=lf',
+          },
+        }
+      end
     end,
   },
-
-  -- Formatting
-  -- {
-  --   'jose-elias-alvarez/null-ls.nvim',
-  --   event = 'BufReadPre',
-  --   config = function()
-  --     local b = require('null-ls').builtins
-  --
-  --     local ts_formatter = b.formatting.deno_fmt.with({
-  --       extra_args = { '--no-semicolons', '--single-quote' },
-  --     })
-  --
-  --     local root_dir = vim.fn.getcwd()
-  --     local prettier_files = { '.prettierrc', 'prettier.config.js', 'main.py' }
-  --
-  --     for _, file in ipairs(prettier_files) do
-  --       local prettier_config = root_dir .. '/' .. file
-  --       if require('utils').file_exists(prettier_config) then
-  --         ts_formatter = b.formatting.prettierd
-  --         break
-  --       end
-  --     end
-  --
-  --     local sources = {
-  --       ts_formatter,
-  --       b.formatting.autopep8.with({
-  --         extra_args = {
-  --           '--max-line-length',
-  --           '80',
-  --           '--experimental',
-  --         },
-  --       }),
-  --       -- b.formatting.ruff.with { extra_args = { '--config', vim.fn.stdpath('config') .. '/.ruff.toml' } },
-  --       b.formatting.stylua.with({
-  --         extra_args = {
-  --           '--config-path',
-  --           vim.fn.stdpath('config') .. '/stylua.toml',
-  --         },
-  --       }),
-  --       b.formatting.shfmt.with({ extra_args = { '-i', '4' } }),
-  --       b.diagnostics.shellcheck.with({ diagnostics_format = '#{m} [#{c}]' }),
-  --       b.formatting.clang_format.with({ extra_args = { '-style=file' } }),
-  --       b.formatting.gofmt.with({
-  --         extra_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' },
-  --       }),
-  --       b.formatting.rustfmt.with({
-  --         extra_args = { '--config', 'max_width=80' },
-  --       }),
-  --     }
-  --
-  --     require('null-ls').setup({
-  --       debug = true,
-  --       sources = sources,
-  --       on_attach = require('plugins.lsp.formatting').on_attach,
-  --     })
-  --   end,
-  -- },
 
   -- LS manager
   {
@@ -294,6 +253,7 @@ return {
         'shfmt',
         'flake8',
         'clangd',
+        'clang-format',
       },
     },
     config = function(_, opts)

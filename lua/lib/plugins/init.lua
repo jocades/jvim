@@ -17,8 +17,8 @@ require('lib.plugins.autorun').setup({
 --   data_path = '~/.local/data/notes',
 -- })
 
-require('lib.plugins.typo').setup({
-  trigger = '<leader>ft',
-})
+-- require('lib.plugins.typo').setup({
+--   trigger = '<leader>ft',
+-- })
 
 -- require('lib.plugins.todo').setup()

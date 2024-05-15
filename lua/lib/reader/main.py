@@ -9,4 +9,7 @@ def loop(count=0):
 
 
 if __name__ == "__main__":
-    loop()
+    try:
+        loop()
+    except KeyboardInterrupt:
+        print("Bye!")

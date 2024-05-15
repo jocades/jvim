@@ -25,8 +25,11 @@ return {
           -- 'filename',
           {
             function()
-              local path = vim.fn.expand('%:p')
-              return path:gsub(vim.fn.getcwd() .. '/', '')
+              local cwd = vim.fn.getcwd()
+              local path = vim.fn.expand('%:~:.')
+              if vim.fn.empty(path) == 1 then return '' end
+              if vim.fn.stridx(path, cwd) == 0 then return path end
+              return vim.fn.fnamemodify(path, ':~:.')
             end,
           },
 

@@ -5,19 +5,20 @@ return {
     priority = 1000,
     -- enabled = false,
     config = function()
-      vim.cmd([[colorscheme catppuccin]])
+      require('catppuccin').setup()
+      vim.cmd.colorscheme('catppuccin')
       -- vim.cmd([[highlight Normal guibg=none ctermbg=none]])
     end,
   },
   {
     'navarasu/onedark.nvim',
-    -- enabled = false,
+    enabled = false,
     -- lazy = true,
     name = 'onedark',
   },
   {
     'rebelot/kanagawa.nvim',
-    enabled = true,
+    enabled = false,
     priority = 1000,
     config = function()
       require('kanagawa').setup({

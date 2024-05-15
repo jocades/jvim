@@ -160,7 +160,7 @@ local function execute()
 end
 
 function M.attach()
-  local file = Path(h.get_curr_pathname())
+  local file = Path(vim.api.nvim_buf_get_name(0))
 
   if not state.commands[file.ext] then
     log.error(string.format('No command found for: %s', file.ext))
@@ -201,7 +201,7 @@ end
 function M.show_info()
   local buf, _ = h.new_floating_win()
   h.write_to_buf(buf, str.split(vim.inspect(state), '\n'))
-  api.nvim_buf_set_keymap(buf, 'n', 'q', '<cmd>q<cr>', { noremap = true })
+  vim.keymap.set('n', 'q', vim.cmd.q, { buffer = buf })
   api.nvim_buf_set_option(buf, 'modifiable', false)
 end
 

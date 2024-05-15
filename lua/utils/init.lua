@@ -5,7 +5,7 @@ local M = {}
 -- Set keymaps with default options
 ---@param mode string | string[]
 ---@param keys string
----@param exec string | function
+---@param exec string | fun()
 ---@param opts? table
 function M.map(mode, keys, exec, opts)
   local common = { silent = true, noremap = true }

@@ -33,5 +33,6 @@ require('lazy').setup(
 require('config.autocmds')
 require('config.options')
 require('config.keymaps')
+require('config.ft')
 require('lib.plugins')
 require('lib.snippets')

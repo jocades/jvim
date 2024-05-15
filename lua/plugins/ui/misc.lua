@@ -11,6 +11,11 @@ return {
             color = '#EF8547',
             name = 'astro',
           },
+          es = {
+            icon = '󰈸',
+            color = '#F7DF1E',
+            name = 'es',
+          },
         },
       })
     end,

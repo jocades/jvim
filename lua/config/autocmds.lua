@@ -73,3 +73,30 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.spell = true
   end,
 })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'html' },
+  callback = function(event)
+    vim.keymap.set('n', '<leader>ls', function()
+      local output, ok =
+        pcall(require('utils').shell, 'live-server --port=6969')
+
+      if not ok then
+        require('utils.log').error(output)
+      else
+        require('utils.log').info(output)
+      end
+    end, { buffer = event.buf })
+  end,
+})
+
+-- Set correct indent for languages I made, create syntax highlighting in the future
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = { '*.ene', '*.lox' },
+  callback = function()
+    print('LOX or ENE file detected')
+    vim.opt_local.expandtab = true
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.tabstop = 2
+  end,
+})
