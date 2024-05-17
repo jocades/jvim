@@ -106,7 +106,7 @@ return {
         ['<leader>th'] = { b.colorscheme, 'Switch colorscheme' },
         -- Git
         ['<leader>fg'] = { b.git_files, 'Find Git files' },
-        ['<leader>cm'] = { b.git_commits, 'Git commits' },
+        ['<leader>ch'] = { b.git_commits, 'Git commit history' },
         ['<leader>st'] = { b.git_status, 'Git status' },
         ['<leader>gb'] = { b.git_branches, 'Git branches' },
         ['<leader>gs'] = { b.git_stash, 'Git stash' },

@@ -65,6 +65,13 @@ local K = {
 
     -- Git
     ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
+    ['<leader>cm'] = {
+      function()
+        vim.cmd('G add .')
+        vim.cmd('G commit')
+      end,
+      { desc = 'Git commit' },
+    },
     ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
     --[[ ['<leader>gp'] = {
       function()
