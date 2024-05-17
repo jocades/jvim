@@ -66,15 +66,15 @@ local K = {
     -- Git
     ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
     ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
-    ['<leader>gp'] = {
+    --[[ ['<leader>gp'] = {
       function()
         vim.cmd('!git pull')
         vim.notify('Git pull', vim.log.levels.WARN, { title = 'Git' })
       end,
       { desc = 'Git pull' },
-    },
+    }, ]]
 
-    -- Misc
+    -- Use at your own risk
     ['<leader>hr'] = {
       function() exec.hacky_reload() end,
       { desc = 'Hacky realod process (use with caution)' },

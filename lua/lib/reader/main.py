@@ -1,11 +1,10 @@
 import time
 
 
-def loop(count=0):
-    count += 1
+def loop():
     print(time.strftime("%H:%M:%S", time.localtime()), flush=True)
     time.sleep(1)
-    loop(count)
+    loop()
 
 
 if __name__ == "__main__":

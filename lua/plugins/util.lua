@@ -10,8 +10,8 @@ return {
     -- enabled = false,
     event = 'InsertEnter',
   },
-  'tpope/vim-fugitive',
-  'tpope/vim-rhubarb',
+  'tpope/vim-fugitive', -- git commands in nvim
+  'tpope/vim-rhubarb', -- fugitive-companion to interact with github
   {
     'lewis6991/gitsigns.nvim',
     event = 'VeryLazy',

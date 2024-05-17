@@ -8,9 +8,7 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
       if vim.fn.argc() == 1 then
         local stat = vim.loop.fs_stat(vim.fn.argv(0))
-        if stat and stat.type == 'directory' then
-          require('neo-tree')
-        end
+        if stat and stat.type == 'directory' then require('neo-tree') end
       end
     end,
     deactivate = function() vim.cmd([[Neotree close]]) end,
@@ -35,7 +33,10 @@ return {
               -- Copy of `open` command from author
               require('neo-tree.sources.common.commands').open(
                 state,
-                require('neo-tree.utils').wrap(require('neo-tree.sources.filesystem').toggle_directory, state)
+                require('neo-tree.utils').wrap(
+                  require('neo-tree.sources.filesystem').toggle_directory,
+                  state
+                )
               )
 
               vim.cmd('Gvdiffsplit')
@@ -64,6 +65,7 @@ return {
         {
           event = 'neo_tree_window_after_open',
           handler = function(args)
+            print('NeoTree opened', P(args))
             if args.position == 'left' or args.position == 'right' then
               vim.cmd.wincmd('=')
             end
@@ -72,6 +74,7 @@ return {
         {
           event = 'neo_tree_window_after_close',
           handler = function(args)
+            print('NeoTree opened', P(args))
             if args.position == 'left' or args.position == 'right' then
               vim.cmd.wincmd('=')
             end

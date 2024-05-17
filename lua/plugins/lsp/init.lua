@@ -23,7 +23,7 @@ return {
       },
       autoformat = true,
       format = {
-        formatting_options = nil, -- handled by null-ls
+        formatting_options = nil, -- handled by conform.nvim
         timeout_ms = nil,
       },
       -- Servers & Settings
@@ -221,9 +221,9 @@ return {
           vim.fn.stdpath('config') .. '/stylua.toml',
         },
       }
+      f.clang_format = { prepend_args = { '-style=file' } }
       f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
       f.shfmt = { prepend_args = { '-i', '4' } }
-      f.clang_format = { prepend_args = { '-style=google' } }
       f.gofmt = { prepend_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } }
       f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
 
