@@ -127,20 +127,8 @@ return {
             on_attach = require('plugins.lsp.keymaps').on_attach,
           }
 
-          if opts.servers[server_name].cmd ~= nil then
-            setup.cmd = opts.servers[server_name].cmd
-          end
-
-          if opts.servers[server_name].settings ~= nil then
-            setup.settings = opts.servers[server_name].settings
-          end
-
-          if opts.servers[server_name].init_options ~= nil then
-            setup.init_options = opts.servers[server_name].init_options
-          end
-
-          if opts.servers[server_name].on_new_config ~= nil then
-            setup.on_new_config = opts.servers[server_name].on_new_config
+          if opts.servers[server_name] then
+            setup = vim.tbl_extend('force', setup, opts.servers[server_name])
           end
 
           if server_name == 'denols' then

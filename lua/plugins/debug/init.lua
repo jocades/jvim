@@ -5,15 +5,12 @@ return {
       'rcarriga/nvim-dap-ui',
       'nvim-neotest/nvim-nio',
       'theHamsta/nvim-dap-virtual-text',
-      'jay-babu/mason-nvim-dap.nvim',
     },
     config = function()
       local dap = require('dap')
       local dapui = require('dapui')
 
-      dapui.setup()
-      require('nvim-dap-virtual-text').setup({})
-
+      -- C/C++
       dap.adapters.codelldb = {
         type = 'server',
         port = '${port}',
@@ -42,19 +39,38 @@ return {
 
       dap.configurations.cpp = dap.configurations.c
 
+      for k, v in pairs({
+        ['<leader>dc'] = { dap.continue, 'Continue' }, -- use it to start dap
+        ['<leader>db'] = { dap.toggle_breakpoint, 'Toggle breakpoint' },
+      }) do
+        require('utils').map('n', k, v[1], { desc = 'DAP: ' .. v[2] })
+      end
+
       local keymaps = {
-        ['<leader>b'] = { dap.toggle_breakpoint, 'Toggle breakpoint' },
-        ['<leader>i'] = { dap.step_into, 'Step into' },
-        ['<leader>o'] = { dap.step_over, 'Step over' },
-        ['<leader>O'] = { dap.step_out, 'Step out' },
+        ['i'] = { dap.step_into, 'Step into' },
+        ['o'] = { dap.step_over, 'Step over' },
+        ['O'] = { dap.step_out, 'Step out' },
         ['<leader>t'] = { dap.terminate, 'Terminate' },
-        ['<leader>c'] = { dap.continue, 'Continue' },
         ['<leader>r'] = { dap.repl.open, 'Open REPL' },
         ['<leader>l'] = { dap.run_last, 'Run last' },
+        ['<leader>K'] = {
+          function() dapui.eval(nil, { enter = true }) end,
+          'Hover',
+        },
       }
 
-      for k, v in pairs(keymaps) do
-        require('utils').map('n', k, v[1], { desc = 'DBG: ' .. v[2] })
+      local kr = require('lib.kr').KeymapRegister.new()
+
+      dap.listeners.before.event_initialized['me'] = function()
+        kr:save(keymaps, 'DAP: ')
+        print('Keymaps saved')
+        kr:dbg()
+      end
+
+      dap.listeners.after.event_terminated['me'] = function()
+        kr:restore()
+        print('Keymaps restored')
+        kr:dbg()
       end
 
       dap.listeners.after.event_initialized['dapui_config'] = function()
@@ -66,6 +82,9 @@ return {
       dap.listeners.before.event_exited['dapui_config'] = function()
         dapui.close()
       end
+
+      dapui.setup()
+      require('nvim-dap-virtual-text').setup({})
     end,
   },
 }

@@ -8,7 +8,7 @@ local M = {}
 ---@param exec string | fun()
 ---@param opts? table
 function M.map(mode, keys, exec, opts)
-  local common = { silent = true, noremap = true }
+  local common = { silent = true }
   if not opts then
     opts = common
   else
