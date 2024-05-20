@@ -53,7 +53,7 @@ return {
         ['<leader>t'] = { dap.terminate, 'Terminate' },
         ['<leader>r'] = { dap.repl.open, 'Open REPL' },
         ['<leader>l'] = { dap.run_last, 'Run last' },
-        ['<leader>K'] = {
+        ['<leader>k'] = {
           function() dapui.eval(nil, { enter = true }) end,
           'Hover',
         },
@@ -62,7 +62,7 @@ return {
       local kr = require('lib.kr').KeymapRegister.new()
 
       dap.listeners.before.event_initialized['me'] = function()
-        kr:save(keymaps, 'DAP: ')
+        kr:listen('*.c', keymaps, 'DAP: ')
         print('Keymaps saved')
         kr:dbg()
       end

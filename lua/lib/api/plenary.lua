@@ -11,9 +11,7 @@ local function get_files()
     add_dirs = true,
     depth = 1,
     on_insert = function(entry, typ)
-      if typ == 'file' then
-        table.insert(files, entry)
-      end
+      if typ == 'file' then table.insert(files, entry) end
     end,
   })
   return files

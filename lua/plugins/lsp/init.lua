@@ -67,8 +67,14 @@ return {
         },
         -- TypeScript (handled by typescript.nvim)
         tsserver = {},
+        --- HTML
+        html = {},
         -- Deno
         denols = {},
+        -- Tailwind CSS
+        tailwindcss = {},
+        -- Astro Framework
+        astro = {},
         -- C
         clangd = {
           cmd = {
@@ -98,14 +104,10 @@ return {
             },
           },
         },
-        -- Tailwind CSS
-        tailwindcss = {},
-        -- Astro Framework
-        astro = {},
         -- Rust
         rust_analyzer = {},
-        --- HTML
-        html = {},
+        -- Zig
+        zls = {},
       },
     },
     config = function(_, opts)
