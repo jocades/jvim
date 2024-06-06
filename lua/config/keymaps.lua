@@ -54,6 +54,17 @@ local K = {
     ['<C-S-Left>'] = { '<cmd>vertical resize -2<cr>' },
     ['<C-S-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
+    ['<leader>do'] = {
+      function()
+        local win = vim.api.nvim_get_current_win()
+        local ln = vim.api.nvim_win_get_cursor(win)[1]
+        vim.api.nvim_buf_set_lines(0, ln, ln, false, { '/**', '* ', '*/' })
+        vim.cmd.normal('jj')
+        vim.cmd('startinsert!')
+      end,
+      { desc = 'JSDoc' },
+    },
+
     -- Insert blank line
     ['<C-cr>'] = { 'o<esc>' },
     ['<S-cr>'] = { 'O<esc>' },
@@ -73,13 +84,6 @@ local K = {
       { desc = 'Git commit' },
     },
     ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
-    --[[ ['<leader>gp'] = {
-      function()
-        vim.cmd('!git pull')
-        vim.notify('Git pull', vim.log.levels.WARN, { title = 'Git' })
-      end,
-      { desc = 'Git pull' },
-    }, ]]
 
     -- Use at your own risk
     ['<leader>hr'] = {

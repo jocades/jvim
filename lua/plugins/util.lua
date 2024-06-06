@@ -2,12 +2,12 @@ return {
   { 'nvim-lua/plenary.nvim', lazy = true },
   { 'moll/vim-bbye', event = 'VeryLazy' }, -- better buffer deletion
   { 'tpope/vim-sleuth', event = 'BufReadPre' }, -- detect tabstop and shiftwidth automatically
-  --'p00f/nvim-ts-rainbow', -- colored parenthesis
+  -- 'p00f/nvim-ts-rainbow', -- colored parenthesis
 
   -- Git related plugins
   {
     'github/copilot.vim',
-    -- enabled = false,
+    enabled = false,
     event = 'InsertEnter',
   },
   'tpope/vim-fugitive', -- git commands in nvim

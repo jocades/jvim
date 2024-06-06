@@ -5,9 +5,12 @@ return {
     priority = 1000,
     -- enabled = false,
     config = function()
-      require('catppuccin').setup()
+      require('catppuccin').setup({
+        show_end_of_buffer = true,
+        transparent_background = true,
+        no_italic = true,
+      })
       vim.cmd.colorscheme('catppuccin')
-      -- vim.cmd([[highlight Normal guibg=none ctermbg=none]])
     end,
   },
   {

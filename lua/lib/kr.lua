@@ -1,6 +1,3 @@
-local map = require('utils').map
-local event = require('nui.utils.autocmd').event
-
 local M = {}
 
 ---@class KeymapRegister
@@ -22,7 +19,7 @@ end
 function KeymapRegister:listen(pattern, new_keymaps, desc_prefix)
   self.new_keymaps = new_keymaps
 
-  self.id = vim.api.nvim_create_autocmd(event.BufEnter, {
+  self.id = vim.api.nvim_create_autocmd('BufEnter', {
     pattern = pattern,
     callback = function(e)
       if self.bufs[e.buf] then return end

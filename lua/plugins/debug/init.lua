@@ -62,7 +62,8 @@ return {
       local kr = require('lib.kr').KeymapRegister.new()
 
       dap.listeners.before.event_initialized['me'] = function()
-        kr:listen('*.c', keymaps, 'DAP: ')
+        local ext = vim.fn.expand('%:e')
+        kr:listen('*.' .. ext, keymaps, 'DAP: ')
         print('Keymaps saved')
         kr:dbg()
       end

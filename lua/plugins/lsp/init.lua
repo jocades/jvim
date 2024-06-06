@@ -1,4 +1,5 @@
 local Path = require('lib.path')
+local map = require('utils').map
 
 return {
   {
@@ -10,14 +11,13 @@ return {
       { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
-      { 'b0o/SchemaStore.nvim', version = false },
+      { 'b0o/SchemaStore.nvim', version = false }, -- lsp for common json schemas
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
       diagnostics = {
         underline = true,
         update_in_insert = false,
-        -- virtual_text = false, -- disable in-line text diagnostic
         virtual_text = { spacing = 4, prefix = '●' },
         severity_sort = true,
       },
@@ -45,6 +45,7 @@ return {
             Lua = {
               workspace = { checkThirdParty = false },
               telemetry = { enable = false },
+              hint = { enable = true },
             },
           },
         },
@@ -65,8 +66,22 @@ return {
             },
           },
         },
-        -- TypeScript (handled by typescript.nvim)
-        tsserver = {},
+        -- TypeScript
+        tsserver = {
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayVariableTypeHints = false,
+              },
+            },
+          },
+        },
         --- HTML
         html = {},
         -- Deno
@@ -124,13 +139,10 @@ return {
 
       lsp_config.setup_handlers({
         function(server_name)
-          local setup = {
-            capabilities = capabilities,
-            on_attach = require('plugins.lsp.keymaps').on_attach,
-          }
+          local setup = {}
 
           if opts.servers[server_name] then
-            setup = vim.tbl_extend('force', setup, opts.servers[server_name])
+            setup = opts.servers[server_name]
           end
 
           if server_name == 'denols' then
@@ -140,8 +152,11 @@ return {
           elseif server_name == 'tsserver' then
             setup.root_dir =
               require('lspconfig.util').root_pattern('package.json')
-            setup.single_file_support = false
+            -- setup.single_file_support = false
           end
+
+          setup.capabilities = capabilities
+          setup.on_attach = require('plugins.lsp.keymaps').on_attach
 
           require('lspconfig')[server_name].setup(setup)
         end,
@@ -160,12 +175,20 @@ return {
         },
       })
       vim.treesitter.language.register('markdown', 'mdx')
-
       -- toggle inline text
-      require('utils').map('n', '<leader>dt', function()
+      map('n', '<leader>dt', function()
         opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
         vim.diagnostic.config(opts.diagnostics)
       end, { desc = 'LSP: Toggle inline text diagnostics' })
+
+      map(
+        'n',
+        '<leader>di',
+        function()
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end,
+        { desc = 'LSP: Toggle inlay hints' }
+      )
     end,
   },
 
