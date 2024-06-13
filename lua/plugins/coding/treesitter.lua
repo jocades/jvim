@@ -36,13 +36,14 @@ return {
         'cpp',
         'diff',
         'astro',
+        'elixir',
       },
       auto_install = true,
       ignore_install = {},
       modules = {},
       sync_install = false,
       highlight = { enable = true },
-      indent = { enable = true, disable = { 'python' } },
+      indent = { enable = false, disable = { 'python' } },
       incremental_selection = {
         enable = true,
         keymaps = {

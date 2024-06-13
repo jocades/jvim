@@ -7,7 +7,7 @@ return {
   -- Git related plugins
   {
     'github/copilot.vim',
-    enabled = false,
+    -- enabled = false,
     event = 'InsertEnter',
   },
   'tpope/vim-fugitive', -- git commands in nvim

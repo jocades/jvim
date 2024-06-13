@@ -123,6 +123,12 @@ return {
         rust_analyzer = {},
         -- Zig
         zls = {},
+        --- Elixir
+        elixirls = {
+          cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
+          -- root_dir = require('lspconfig.util').root_pattern('mix.exs'),
+          single_file_support = true,
+        },
       },
     },
     config = function(_, opts)
@@ -199,7 +205,12 @@ return {
     cmd = 'ConformInfo',
     init = function() vim.o.formatexpr = "v:lua.require'conform'.formatexpr()" end,
     opts = {
-      format_on_save = { timeout_ms = 500, lsp_fallback = true },
+      format_on_save = function(bufnr)
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
+        return { timeout_ms = 500, lsp_fallback = true }
+      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         python = function(bufnr)

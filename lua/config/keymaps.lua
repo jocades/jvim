@@ -1,5 +1,5 @@
 local cmd = vim.cmd
-local exec = require('lib.commands')
+local exec = require('lib.exec')
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
