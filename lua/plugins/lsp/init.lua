@@ -82,14 +82,19 @@ return {
             },
           },
         },
-        --- HTML
-        html = {},
         -- Deno
         denols = {},
+        --- HTML
+        html = {},
+        -- CSS
+        cssls = {},
+        css_variables = {},
         -- Tailwind CSS
         tailwindcss = {},
         -- Astro Framework
         astro = {},
+        -- Svelte
+        svelte = {},
         -- C
         clangd = {
           cmd = {
@@ -168,19 +173,6 @@ return {
         end,
       })
 
-      -- astro filetype (maybe use ftdetect dir?)
-      vim.filetype.add({
-        extension = {
-          astro = 'astro',
-        },
-      })
-      -- mdx filetype
-      vim.filetype.add({
-        extension = {
-          mdx = 'mdx',
-        },
-      })
-      vim.treesitter.language.register('markdown', 'mdx')
       -- toggle inline text
       map('n', '<leader>dt', function()
         opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
@@ -206,6 +198,7 @@ return {
     init = function() vim.o.formatexpr = "v:lua.require'conform'.formatexpr()" end,
     opts = {
       format_on_save = function(bufnr)
+        print('format_on_save', vim.bo.filetype)
         if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
           return
         end
@@ -228,6 +221,7 @@ return {
         typescriptreact = { { 'prettierd', 'prettier' } },
         json = { { 'prettierd', 'prettier' } },
         html = { { 'prettierd', 'prettier' } },
+        lite = { { 'prettierd', 'prettier' } },
         css = { { 'prettierd', 'prettier' } },
         sh = { 'shfmt' },
         c = { 'clang_format' },

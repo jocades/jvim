@@ -18,9 +18,9 @@ local tmux = {
 
 function M.run_last()
   sys({
-    tmux.select_pane('-D'),
+    tmux.select_pane('-l'),
     tmux.send_keys({ '!!', 'Enter' }),
-    tmux.select_pane('-U'),
+    tmux.select_pane('-l'),
   })
 end
 
@@ -36,9 +36,7 @@ end
 ---@param opts? table { type: 'v' | 'h' }
 function M.new_buf(opts)
   local name = vim.fn.input('Enter file name: ')
-  if name == '' then
-    return
-  end
+  if name == '' then return end
   local path = '%:h/' .. name
   if not opts then
     vim.cmd.e(path)
