@@ -1,15 +1,11 @@
-local present, ls = pcall(require, 'luasnip')
-
-if not present then
-  return
-end
+local ls = require('luasnip')
 
 local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 
-local function input(args, _, _) return args[1][1] end
+local input = require('lib.snippets.helper').input
 
 local function set_state_name(args_, _, _)
   local state_name = args_[1][1]
@@ -32,9 +28,7 @@ local component_with_state = s({
   i(0),
   t({ '}', '', 'export function ' }),
   i(1, 'ComponentName'),
-  t({
-    '(props: ',
-  }),
+  t({ '(props: ' }),
   f(input, { 1 }),
   t({
     'Props) {',
@@ -131,43 +125,4 @@ ls.add_snippets('typescriptreact', {
   component_with_state,
   react_server_component,
   react_context_provider_with_helper,
-})
-
-local python_main = s({
-  trig = 'main',
-  name = 'Python Main Function',
-}, {
-  t({
-    'def main() -> None:',
-    '\t',
-  }),
-  i(0, 'pass'),
-  t({
-    '',
-    '',
-    '',
-    'if __name__ == "__main__":',
-    '\tmain()',
-  }),
-})
-
-ls.add_snippets('python', {
-  python_main,
-})
-
--- mardkwon helpers like ```pyhthon and ```typescript
-local function md_code_block(lang)
-  return s({
-    trig = lang,
-    name = 'Markdown ' .. lang:sub(1, 1):upper() .. lang:sub(2),
-  }, {
-    t({ '```' .. lang, '' }),
-    i(0),
-    t({ '', '```' }),
-  })
-end
-
-ls.add_snippets('markdown', {
-  md_code_block('py'),
-  md_code_block('ts'),
 })

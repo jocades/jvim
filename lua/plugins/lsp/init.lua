@@ -68,6 +68,8 @@ return {
         },
         -- TypeScript
         tsserver = {
+          -- root_dir = require('lspconfig.util').root_pattern('package.json'),
+          single_file_support = true,
           settings = {
             typescript = {
               inlayHints = {
@@ -83,12 +85,15 @@ return {
           },
         },
         -- Deno
-        denols = {},
+        --[[ denols = {
+          root_dir = require('lspconfig.util').root_pattern('deno.json'),
+          init_options = { enable = true, unstable = true },
+        }, ]]
         --- HTML
         html = {},
         -- CSS
         cssls = {},
-        css_variables = {},
+        -- css_variables = {},
         -- Tailwind CSS
         tailwindcss = {},
         -- Astro Framework
@@ -141,8 +146,7 @@ return {
       local capabilities = require('cmp_nvim_lsp').default_capabilities(
         vim.lsp.protocol.make_client_capabilities()
       )
-      -- Fix clang formatter warnings
-      capabilities.offsetEncoding = { 'utf-16' }
+      capabilities.offsetEncoding = { 'utf-16' } -- fix clang formatter warnings
 
       local lsp_config = require('mason-lspconfig')
 
@@ -156,16 +160,6 @@ return {
             setup = opts.servers[server_name]
           end
 
-          if server_name == 'denols' then
-            setup.root_dir =
-              require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
-            setup.init_options = { enable = true, unstable = true }
-          elseif server_name == 'tsserver' then
-            setup.root_dir =
-              require('lspconfig.util').root_pattern('package.json')
-            -- setup.single_file_support = false
-          end
-
           setup.capabilities = capabilities
           setup.on_attach = require('plugins.lsp.keymaps').on_attach
 
@@ -173,7 +167,6 @@ return {
         end,
       })
 
-      -- toggle inline text
       map('n', '<leader>dt', function()
         opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
         vim.diagnostic.config(opts.diagnostics)
@@ -198,7 +191,6 @@ return {
     init = function() vim.o.formatexpr = "v:lua.require'conform'.formatexpr()" end,
     opts = {
       format_on_save = function(bufnr)
-        print('format_on_save', vim.bo.filetype)
         if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
           return
         end
@@ -242,7 +234,7 @@ return {
       f.clang_format = { prepend_args = { '-style=file' } }
       f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
       f.shfmt = { prepend_args = { '-i', '4' } }
-      f.gofmt = { prepend_args = { '-s', '-w', '-tabs=false', '-tabwidth=4' } }
+      f.gofmt = { prepend_args = { '-s', '-w', '-tabwidth=4' } }
       f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
 
       if not Path.cwd().join('.prettierrc').exists() then

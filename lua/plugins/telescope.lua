@@ -87,18 +87,20 @@ return {
         -- Fuzzy find
         ['<C-p>'] = { b.find_files, 'Find Files' },
         ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
+        ['<leader>fc'] = { b.grep_string, 'Find Current word' },
         ['<leader>/'] = { b.buffers, 'Find existing buffers' },
         ['<leader>?'] = { b.oldfiles, 'Find recently opened files' },
         ['<leader>.'] = {
-          function() -- pass additional configuration to telescope to change theme, layout, etc.
+          --[[ function() -- pass additional configuration to telescope to change theme, layout, etc.
             b.current_buffer_fuzzy_find(
               require('telescope.themes').get_dropdown({
                 winblend = 10,
                 previewer = false,
               })
             )
-          end,
-          'Fuzzily search in current buffer]',
+          end, ]]
+          b.current_buffer_fuzzy_find,
+          'Fuzzily search in current buffer',
         },
         ['<leader>:'] = { b.command_history, 'Command history' },
         ['<leader>fm'] = { b.marks, 'Find marks' },
@@ -112,7 +114,6 @@ return {
         ['<leader>gs'] = { b.git_stash, 'Git stash' },
         -- Misc
         ['<leader>fh'] = { b.help_tags, 'Find Help' },
-        ['<leader>fc'] = { b.grep_string, 'Find Current word' },
         ['<leader>ts'] = { b.builtin, 'Open Telescope Menu' },
         ['<leader>fo'] = { ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
       }) do
