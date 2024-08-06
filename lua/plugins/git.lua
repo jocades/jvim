@@ -3,7 +3,7 @@ return {
   'tpope/vim-rhubarb', -- fugitive-companion to interact with github
   {
     'zbirenbaum/copilot.lua',
-    cmd = 'InsertEnter',
+    cmd = 'Copilot',
     opts = {
       hello = 'world',
       panel = { enabled = false },

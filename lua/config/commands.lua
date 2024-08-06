@@ -1,3 +1,7 @@
+vim.api.nvim_create_user_command('ModeToggle', function() LVim:toggle() end, {
+  desc = 'Toggle editor mode',
+})
+
 -- Enable / disable autoformatting on save
 vim.api.nvim_create_user_command('FormatDisable', function(args)
   if args.bang then

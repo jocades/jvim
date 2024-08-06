@@ -2,16 +2,19 @@ return {
   {
     'catppuccin/nvim',
     name = 'catppuccin',
+    lazy = true,
     priority = 1000,
+    ---@type CatppuccinOptions
+    opts = {
+      show_end_of_buffer = true,
+      transparent_background = true,
+      no_italic = true,
+    },
     -- enabled = false,
-    config = function()
-      require('catppuccin').setup({
-        show_end_of_buffer = true,
-        transparent_background = true,
-        no_italic = true,
-      })
+    --[[ config = function()
+      require('catppuccin').setup({})
       vim.cmd.colorscheme('catppuccin')
-    end,
+    end, ]]
   },
   {
     'navarasu/onedark.nvim',

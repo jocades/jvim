@@ -31,13 +31,3 @@ function LVim:reset()
 end
 
 function LVim:diagnostics() return vim.deepcopy(self.mode.lsp.diagnostics) end
-
-vim.api.nvim_create_user_command('ModeToggle', function() LVim:toggle() end, {
-  desc = 'Toggle editor mode',
-})
-
-vim.api.nvim_create_user_command(
-  'Test',
-  function() require('test').setup() end,
-  {}
-)
