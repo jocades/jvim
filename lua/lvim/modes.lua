@@ -4,10 +4,10 @@
 ---@field signs boolean
 
 ---@class LSPSettings
----@field diagnostics { virtual_text: boolean|{ spacing: number, prefix: string } }
+---@field diagnostics vim.diagnostic.Opts
 
 ---@class Mode
----@field git { copilot: boolean, line_blame: boolean, signs: boolean }
+---@field git GitSettings
 ---@field lsp LSPSettings
 
 local M = {}

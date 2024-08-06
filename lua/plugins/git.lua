@@ -3,12 +3,12 @@ return {
   'tpope/vim-rhubarb', -- fugitive-companion to interact with github
   {
     'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
+    cmd = 'InsertEnter',
     opts = {
       hello = 'world',
       panel = { enabled = false },
       suggestion = {
-        enabled = LVim.mode.git.copilot,
+        enabled = true,
         auto_trigger = true,
         hide_during_completion = true,
         debounce = 75,

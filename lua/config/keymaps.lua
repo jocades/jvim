@@ -85,7 +85,17 @@ local K = {
     },
     ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
 
-    -- Use at your own risk
+    ['<leader>gc'] = {
+      function()
+        if require('copilot.client').is_disabled() then
+          require('copilot.command').disable()
+        else
+          require('copilot.command').enable()
+        end
+      end,
+      desc = { 'Toggle copilot' },
+    },
+
     ['<leader>hr'] = {
       function() exec.hacky_reload() end,
       { desc = 'Hacky realod process (use with caution)' },

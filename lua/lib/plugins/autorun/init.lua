@@ -3,7 +3,6 @@ local h = require('utils.api')
 local str = require('utils.str')
 local log = require('utils.log')
 local Path = require('lib.path')
-local shell = require('utils').shell
 
 local M = {}
 
