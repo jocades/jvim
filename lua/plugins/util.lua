@@ -4,28 +4,6 @@ return {
   { 'tpope/vim-sleuth', event = 'BufReadPre' }, -- detect tabstop and shiftwidth automatically
   -- 'p00f/nvim-ts-rainbow', -- colored parenthesis
 
-  -- Git related plugins
-  {
-    'github/copilot.vim',
-    -- enabled = false,
-    event = 'InsertEnter',
-  },
-  'tpope/vim-fugitive', -- git commands in nvim
-  'tpope/vim-rhubarb', -- fugitive-companion to interact with github
-  {
-    'lewis6991/gitsigns.nvim',
-    event = 'VeryLazy',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
-
   -- Session management
   {
     'folke/persistence.nvim',

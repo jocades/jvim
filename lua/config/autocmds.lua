@@ -49,44 +49,12 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- Close some files (types) with <q>
--- vim.api.nvim_create_autocmd('BufEnter', {
---   -- 'fugitive://.*',
---   pattern = 'fugitive://.*',
---   callback = function(event)
---     print('fugitive://.*')
---     vim.bo[event.buf].buflisted = false
---     vim.keymap.set(
---       'n',
---       'q',
---       '<cmd>close<cr>',
---       { buffer = event.buf, silent = true }
---     )
---   end,
--- })
-
 -- Set wrap and spell for some filetypes
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'gitcommit', 'markdown' },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
-  end,
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'html' },
-  callback = function(event)
-    vim.keymap.set('n', '<leader>ls', function()
-      local output, ok =
-        pcall(require('utils').shell, 'live-server --port=6969')
-
-      if not ok then
-        require('utils.log').error(output)
-      else
-        require('utils.log').info(output)
-      end
-    end, { buffer = event.buf })
   end,
 })
 

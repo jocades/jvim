@@ -139,6 +139,8 @@ return {
           -- root_dir = require('lspconfig.util').root_pattern('mix.exs'),
           single_file_support = true,
         },
+        -- SQL
+        sqlls = {},
       },
     },
     config = function(_, opts)
