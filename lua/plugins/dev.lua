@@ -2,6 +2,7 @@ return {
   {
     'test',
     dev = true,
-    config = function() require('test').setup() end,
+    opts = {},
+    -- config = function() require('test').setup() end,
   },
 }

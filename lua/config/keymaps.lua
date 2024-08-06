@@ -41,8 +41,8 @@ local K = {
     ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
 
     -- Buffer navigation (telescope + harpoon)
-    ['<C-]>'] = { cmd.bnext },
-    ['<C-[>'] = { cmd.bprev },
+    -- ['<C-]>'] = { cmd.bnext },
+    -- ['<C-[>'] = { cmd.bprev },
 
     -- Window actions
     ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
@@ -122,8 +122,4 @@ local K = {
   },
 }
 
-for mode, keymaps in pairs(K) do
-  for k, t in pairs(keymaps) do
-    require('utils').map(mode, k, t[1], t[2])
-  end
-end
+return K

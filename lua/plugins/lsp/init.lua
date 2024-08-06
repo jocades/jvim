@@ -4,7 +4,7 @@ local map = require('utils').map
 return {
   {
     'neovim/nvim-lspconfig',
-    event = 'BufReadPre',
+    event = 'BufEnter',
     dependencies = {
       'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
       'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
@@ -15,12 +15,7 @@ return {
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = { spacing = 4, prefix = '●' },
-        severity_sort = true,
-      },
+      diagnostics = LVim:diagnostics(),
       autoformat = true,
       format = {
         formatting_options = nil, -- handled by conform.nvim
@@ -51,7 +46,7 @@ return {
         },
         -- JSON
         jsonls = {
-          on_new_config = function(new_config)
+          on_new_config = function()
             new_config.settings.json.schemas = new_config.settings.json.schemas
               or {}
             vim.list_extend(
@@ -156,12 +151,7 @@ return {
 
       lsp_config.setup_handlers({
         function(server_name)
-          local setup = {}
-
-          if opts.servers[server_name] then
-            setup = opts.servers[server_name]
-          end
-
+          local setup = opts.servers[server_name] or {}
           setup.capabilities = capabilities
           setup.on_attach = require('plugins.lsp.keymaps').on_attach
 

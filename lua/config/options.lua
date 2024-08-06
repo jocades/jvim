@@ -1,6 +1,6 @@
 -- See `:help vim.o`
 
-local options = {
+return {
   clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
   mouse = 'a', -- enable mouse mode
   incsearch = true, -- highlit while search
@@ -45,7 +45,3 @@ local options = {
   --winbar = '%=%m %f',
   colorcolumn = '80', -- Line length marker (ruler)
 }
-
-for k, v in pairs(options) do
-  vim.opt[k] = v
-end
