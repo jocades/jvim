@@ -7,9 +7,15 @@ return {
     ---@type CatppuccinOptions
     opts = {
       show_end_of_buffer = true,
-      transparent_background = true,
+      transparent_background = false,
       no_italic = true,
     },
+    init = function()
+      vim.cmd([[
+  hi DiagnosticUnderlineError gui=undercurl
+  hi DiagnosticUnderlineWarn gui=undercurl
+]])
+    end,
   },
   {
     'navarasu/onedark.nvim',

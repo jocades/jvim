@@ -67,7 +67,7 @@ return {
       pcall(telescope.load_extension, 'harpoon')
 
       local b = require('telescope.builtin')
-      JVim:register({
+      JVim.keymap.register({
         -- Fuzzy find
         ['<C-p>'] = { b.find_files, 'Find Files' },
         ['<leader>fw'] = { b.live_grep, 'Find Word by grep' },
@@ -103,16 +103,32 @@ return {
       local mark = require('harpoon.mark')
       local ui = require('harpoon.ui')
 
-      JVim:register({
+      JVim.keymap.register({
         ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
         ['<leader>jh'] = {
           ui.toggle_quick_menu,
           { desc = 'Toggle Harpoon Menu' },
         },
-        ['<leader>jj'] = { function() ui.nav_file(1) end },
-        ['<leader>jk'] = { function() ui.nav_file(2) end },
-        ['<leader>jl'] = { function() ui.nav_file(3) end },
-        ['<leader>j;'] = { function() ui.nav_file(4) end },
+        ['<leader>jj'] = {
+          function()
+            ui.nav_file(1)
+          end,
+        },
+        ['<leader>jk'] = {
+          function()
+            ui.nav_file(2)
+          end,
+        },
+        ['<leader>jl'] = {
+          function()
+            ui.nav_file(3)
+          end,
+        },
+        ['<leader>j;'] = {
+          function()
+            ui.nav_file(4)
+          end,
+        },
       })
     end,
   },

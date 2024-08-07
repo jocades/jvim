@@ -15,7 +15,7 @@ return {
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
-      diagnostics = JVim:diagnostics(),
+      diagnostics = JVim.diagnostics(),
       autoformat = true,
       format = {
         formatting_options = nil, -- handled by conform.nvim
@@ -159,86 +159,32 @@ return {
         end,
       })
 
-      map('n', '<leader>dt', function()
-        opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
-        vim.diagnostic.config(opts.diagnostics)
-      end, { desc = 'LSP: Toggle inline text diagnostics' })
-
-      map(
-        'n',
-        '<leader>di',
-        function()
-          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-        end,
-        { desc = 'LSP: Toggle inlay hints' }
-      )
-    end,
-  },
-
-  -- Formatting
-  {
-    'stevearc/conform.nvim',
-    event = 'BufWritePre',
-    cmd = 'ConformInfo',
-    init = function() vim.o.formatexpr = "v:lua.require'conform'.formatexpr()" end,
-    opts = {
-      format_on_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
-        end
-        return { timeout_ms = 500, lsp_fallback = true }
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        python = function(bufnr)
-          if
-            require('conform').get_formatter_info('ruff_format', bufnr).available
-          then
-            return { 'ruff_format' }
-          else
-            return { 'autopep8' }
-          end
-        end,
-        javascript = { { 'prettierd', 'prettier' } },
-        javascriptreact = { { 'prettierd', 'prettier' } },
-        typescript = { { 'prettierd', 'prettier' } },
-        typescriptreact = { { 'prettierd', 'prettier' } },
-        json = { { 'prettierd', 'prettier' } },
-        html = { { 'prettierd', 'prettier' } },
-        lite = { { 'prettierd', 'prettier' } },
-        css = { { 'prettierd', 'prettier' } },
-        sh = { 'shfmt' },
-        c = { 'clang_format' },
-        rust = { 'rustfmt' },
-        go = { 'gofmt' },
-      },
-    },
-    config = function(_, opts)
-      require('conform').setup(opts)
-
-      local f = require('conform').formatters
-      f.stylua = {
-        prepend_args = {
-          '--config-path',
-          vim.fn.stdpath('config') .. '/stylua.toml',
+      JVim.keymap.register({
+        ['<leader>dt'] = {
+          function()
+            opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
+            vim.diagnostic.config(opts.diagnostics)
+          end,
+          'LSP: Toggle inline text diagnostics',
         },
-      }
-      f.clang_format = { prepend_args = { '-style=file' } }
-      f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
-      f.shfmt = { prepend_args = { '-i', '4' } }
-      f.gofmt = { prepend_args = { '-s', '-w', '-tabwidth=4' } }
-      f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
+      })
 
-      if not Path.cwd().join('.prettierrc').exists() then
-        f.prettierd = {
-          prepend_args = {
-            '--semi=false',
-            '--single-quote',
-            '--print-width=80',
-            '--end-of-line=lf',
-          },
-        }
-      end
+      -- map('n', '<leader>dt', function()
+      --   opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
+      --   vim.diagnostic.config(opts.diagnostics)
+      -- end, { desc = 'LSP: Toggle inline text diagnostics' })
+      JVim.keymap.register({
+        ['<leader>di'] = {
+          function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+          end,
+          'LSP: Toggle inlay hints',
+        },
+      })
+
+      JVim.map('n', '<leader>di', function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end, { desc = 'LSP: Toggle inlay hints' })
     end,
   },
 
@@ -263,7 +209,9 @@ return {
       local mr = require('mason-registry')
       for _, tool in ipairs(opts.ensure_installed) do
         local p = mr.get_package(tool)
-        if not p:is_installed() then p:install() end
+        if not p:is_installed() then
+          p:install()
+        end
       end
     end,
   },

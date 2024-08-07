@@ -6,7 +6,9 @@ local M = {}
 local function diagnostic_goto(next, severity)
   local go_to = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
   severity = severity and vim.diagnostic.severity[severity] or nil
-  return function() go_to({ severity = severity }) end
+  return function()
+    go_to({ severity = severity })
+  end
 end
 
 local keymaps = {
@@ -49,7 +51,9 @@ local keymaps = {
   ['<leader>wa'] = { lsp.add_workspace_folder, 'Workspace Add Folder' },
   ['<leader>wr'] = { lsp.remove_workspace_folder, 'Workspace Remove Folder' },
   ['<leader>wl'] = {
-    function() print(vim.inspect(lsp.list_workspace_folders())) end,
+    function()
+      print(vim.inspect(lsp.list_workspace_folders()))
+    end,
     'Workspace List Folders',
   },
 }
@@ -70,7 +74,9 @@ function M.on_attach(client, bufnr)
       'Remove Unused Imports (ts)',
     }
     keymaps['<leader>tR'] = {
-      function() ts.renameFile() end,
+      function()
+        ts.renameFile()
+      end,
       'Rename File (ts)',
     }
   end
@@ -79,22 +85,19 @@ function M.on_attach(client, bufnr)
     client.server_capabilities.hoverProvider = false
   end
 
-  JVim:register(
-    keymaps,
-    function(desc)
-      return {
-        buffer = bufnr,
-        desc = 'LSP: ' .. desc,
-      }
-    end
-  )
+  JVim.keymap.register(keymaps, function(desc)
+    return {
+      buffer = bufnr,
+      desc = 'LSP: ' .. desc,
+    }
+  end)
 
-  for k, v in pairs(keymaps) do
+  --[[ for k, v in pairs(keymaps) do
     require('jvim.utils').map('n', k, v[1], {
       buffer = bufnr,
       desc = 'LSP: ' .. v[2],
     })
-  end
+  end ]]
 end
 
 return M

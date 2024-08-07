@@ -3,7 +3,7 @@ local exec = require('jvim.lib.exec')
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-local K = {
+local M = {
   -- NORMAL
   n = {
     -- Common
@@ -25,11 +25,15 @@ local K = {
       { desc = 'Create new file in current dir' },
     },
     ['<leader>ns'] = {
-      function() exec.new_buf({ type = 'v' }) end,
+      function()
+        exec.new_buf({ type = 'v' })
+      end,
       { desc = 'Create new vertical split' },
     },
     ['<leader>nh'] = {
-      function() exec.new_buf({ type = 'h' }) end,
+      function()
+        exec.new_buf({ type = 'h' })
+      end,
       { desc = 'Create new horizontal split' },
     },
     ['<leader>so'] = {
@@ -97,15 +101,21 @@ local K = {
     },
 
     ['<leader>hr'] = {
-      function() exec.hacky_reload() end,
+      function()
+        exec.hacky_reload()
+      end,
       { desc = 'Hacky realod process (use with caution)' },
     },
     ['<leader>rl'] = {
-      function() exec.run_last() end,
+      function()
+        exec.run_last()
+      end,
       { desc = 'Run last command' },
     },
     ['<leader>rr'] = {
-      function() require('jvim.lib.plugins.autorun').attach() end,
+      function()
+        require('jvim.lib.plugins.autorun').attach()
+      end,
       { desc = 'Attach autorun' },
     },
   },
@@ -132,4 +142,4 @@ local K = {
   },
 }
 
-return K
+return M

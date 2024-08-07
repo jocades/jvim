@@ -1,3 +1,5 @@
+local M = {}
+
 ---@class GitSettings
 ---@field copilot boolean
 ---@field line_blame boolean
@@ -10,10 +12,8 @@
 ---@field git GitSettings
 ---@field lsp LSPSettings
 
-local M = {}
-
 ---@type Mode
-M.relaxed = {
+local relaxed = {
   git = {
     copilot = false,
     line_blame = false,
@@ -30,7 +30,7 @@ M.relaxed = {
 }
 
 ---@type Mode
-M.work = {
+local work = {
   git = {
     copilot = true,
     line_blame = true,
@@ -45,5 +45,34 @@ M.work = {
     },
   },
 }
+
+---@type Mode
+---@diagnostic disable-next-line assign-type-missmatch
+vim.g = vim.g
+
+local mode = relaxed
+
+function M.toggle()
+  if mode == relaxed then
+    mode = work
+  else
+    mode = relaxed
+  end
+end
+
+function M.reset()
+  local copilot = require('copilot.command')
+  local gitsigns = require('gitsigns')
+
+  if mode.git.copilot then
+    copilot.enable()
+  else
+    copilot.disable()
+  end
+
+  gitsigns.toggle_signs(mode.git.signs)
+  gitsigns.toggle_current_line_blame(mode.git.line_blame)
+  vim.diagnostic.config(mode.lsp.diagnostics)
+end
 
 return M
