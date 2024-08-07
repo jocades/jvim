@@ -1,9 +1,9 @@
 return {
   'windwp/nvim-autopairs',
   event = 'VeryLazy',
-  dependencies = { { 'windwp/nvim-ts-autotag', lazy = true, config = true } },
+  -- dependencies = { { 'windwp/nvim-ts-autotag', lazy = true, config = true } },
   config = function()
-    require('nvim-autopairs').setup {
+    require('nvim-autopairs').setup({
       check_ts = true,
       ts_config = {
         lua = { 'string', 'source' },
@@ -22,10 +22,12 @@ return {
         highlight = 'PmenuSel',
         highlight_grey = 'LineNr',
       },
-    }
+    })
     require('cmp').event:on(
       'confirm_done',
-      require('nvim-autopairs.completion.cmp').on_confirm_done { map_char = { tex = '' } }
+      require('nvim-autopairs.completion.cmp').on_confirm_done({
+        map_char = { tex = '' },
+      })
     )
   end,
 }

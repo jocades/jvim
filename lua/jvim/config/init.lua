@@ -25,7 +25,7 @@ function M.setup(opts)
       colorscheme = { opts.colorscheme },
     },
     dev = {
-      path = '~/dev/neovim/plugins',
+      path = opts.dev,
       patterns = {},
       fallback = false,
     },

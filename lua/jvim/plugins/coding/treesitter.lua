@@ -1,13 +1,23 @@
 return {
   'nvim-treesitter/nvim-treesitter',
-  event = 'BufReadPre',
-  -- build = function() -- auto install languages
-  --   pcall(require('nvim-treesitter.install').update({ with_sync = true }))
-  -- end,
+  version = false, -- last release is way too old
+  build = ':TSUpdate',
+  event = 'VeryLazy',
+  lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+  init = function(plugin)
+    -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
+    -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
+    -- no longer trigger the **nvim-treesitter** module to be loaded in time.
+    -- Luckily, the only things that those plugins need are the custom queries, which we make available
+    -- during startup.
+    require('lazy.core.loader').add_to_rtp(plugin)
+    require('nvim-treesitter.query_predicates')
+  end,
   dependencies = {
     'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
     'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
     'nvim-treesitter/playground', -- treesitter playground
+    'windwp/nvim-ts-autotag', -- auto close tags in html and jsx
   },
   config = function()
     -- See `:help nvim-treesitter`

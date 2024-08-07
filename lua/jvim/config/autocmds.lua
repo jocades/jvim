@@ -6,7 +6,9 @@ vim.api.nvim_create_autocmd(
 
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function() vim.highlight.on_yank() end,
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 -- Resize splits if window got resized
