@@ -1,4 +1,4 @@
-require('utils').map(
+require('jvim.utils').map(
   'n',
   '<leader>ff',
   function() print('Hola amigo!') end,

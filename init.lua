@@ -1,3 +1,3 @@
-require('lvim').setup({
+require('jvim').setup({
   colorscheme = 'catppuccin',
 })
