@@ -1,13 +1,29 @@
 _G.JVim = require('jvim.utils')
 
-require('jvim.config.options')
-require('jvim.lib.globals')
-
 local M = {}
+
+local function load(name)
+  local function _load(mod)
+    if require('lazy.core.cache').find(mod)[1] then
+      print('require', mod)
+      require(mod)
+    end
+  end
+end
 
 ---@param opts? JVimOptions
 function M.setup(opts)
   opts = opts or {}
+
+  require('jvim.config.options')
+  require('jvim.lib.globals')
+
+  -- autocmds can be loaded lazily when not opening a file
+  -- local lazy_autocmds = vim.fn.argc(-1) == 0
+  if true then
+    -- vim.notify('dont lazy load')
+    -- M.load("autocmds")
+  end
 
   require('lazy').setup({
     { import = 'jvim.plugins' },
@@ -19,7 +35,7 @@ function M.setup(opts)
       notify = false,
     },
     change_detection = {
-      notify = false,
+      notify = true,
     },
     install = {
       colorscheme = { opts.colorscheme },
@@ -28,6 +44,21 @@ function M.setup(opts)
       path = opts.dev,
       patterns = {},
       fallback = false,
+    },
+    performance = {
+      rtp = {
+        -- disable some rtp plugins
+        disabled_plugins = {
+          'gzip',
+          -- "matchit",
+          -- "matchparen",
+          -- "netrwPlugin",
+          'tarPlugin',
+          'tohtml',
+          'tutor',
+          'zipPlugin',
+        },
+      },
     },
   })
 

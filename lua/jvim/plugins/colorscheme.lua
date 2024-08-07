@@ -9,13 +9,18 @@ return {
       show_end_of_buffer = true,
       transparent_background = false,
       no_italic = true,
+      integrations = {
+        native_lsp = {
+          enabled = true,
+          underlines = {
+            errors = { 'undercurl' },
+            hints = { 'undercurl' },
+            warnings = { 'undercurl' },
+            information = { 'undercurl' },
+          },
+        },
+      },
     },
-    init = function()
-      vim.cmd([[
-  hi DiagnosticUnderlineError gui=undercurl
-  hi DiagnosticUnderlineWarn gui=undercurl
-]])
-    end,
   },
   {
     'navarasu/onedark.nvim',

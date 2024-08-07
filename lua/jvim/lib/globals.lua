@@ -1,4 +1,6 @@
-P = function(v) print(vim.inspect(v)) end
+P = function(v)
+  print(vim.inspect(v))
+end
 
 -- Merge 2 or more dictionaries
 ---@param ... table[]
@@ -28,7 +30,9 @@ end
 ---Check if a table is empty
 ---@param tbl table
 ---@return boolean
-table.is_empty = function(tbl) return next(tbl) == nil end
+table.is_empty = function(tbl)
+  return next(tbl) == nil
+end
 
 ---Append the values of a list into another list
 ---@generic T

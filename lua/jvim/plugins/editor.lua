@@ -2,16 +2,18 @@ return {
   { -- File explorer
     'nvim-neo-tree/neo-tree.nvim',
     cmd = 'Neotree',
-    -- branch = 'main',
-    -- commit = '230ff118613fa07138ba579b89d13ec2201530b9',
     init = function()
       vim.g.neo_tree_remove_legacy_commands = 1
       if vim.fn.argc() == 1 then
         local stat = vim.loop.fs_stat(vim.fn.argv(0))
-        if stat and stat.type == 'directory' then require('neo-tree') end
+        if stat and stat.type == 'directory' then
+          require('neo-tree')
+        end
       end
     end,
-    deactivate = function() vim.cmd([[Neotree close]]) end,
+    deactivate = function()
+      vim.cmd([[Neotree close]])
+    end,
     opts = {
       window = {
         position = 'left',
@@ -82,7 +84,7 @@ return {
     },
   },
 
-  -- navigate between vim and tmux panes
+  -- Navigate between vim and tmux panes
   {
     'christoomey/vim-tmux-navigator',
     cmd = {
@@ -102,5 +104,5 @@ return {
   },
 
   -- Distraction free coding
-  { 'folke/zen-mode.nvim', cmd = 'ZenMode', config = true },
+  { 'folke/zen-mode.nvim', cmd = 'ZenMode', opts = {} },
 }

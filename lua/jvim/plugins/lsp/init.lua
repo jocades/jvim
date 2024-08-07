@@ -1,6 +1,3 @@
-local Path = require('jvim.lib.path')
-local map = require('jvim.utils').map
-
 return {
   {
     'neovim/nvim-lspconfig',
@@ -10,7 +7,6 @@ return {
       'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
       { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
-      { 'folke/neodev.nvim', opts = { experimental = { pathStrict = true } } }, -- additional lua configuration (neovim globals, require paths cmp, etc)
       { 'b0o/SchemaStore.nvim', version = false }, -- lsp for common json schemas
       'jose-elias-alvarez/typescript.nvim',
     },
@@ -63,7 +59,6 @@ return {
         },
         -- TypeScript
         tsserver = {
-          -- root_dir = require('lspconfig.util').root_pattern('package.json'),
           single_file_support = true,
           settings = {
             typescript = {
@@ -79,19 +74,13 @@ return {
             },
           },
         },
-        -- Deno
-        --[[ denols = {
-          root_dir = require('lspconfig.util').root_pattern('deno.json'),
-          init_options = { enable = true, unstable = true },
-        }, ]]
         --- HTML
         html = {},
         -- CSS
         cssls = {},
-        -- css_variables = {},
         -- Tailwind CSS
         tailwindcss = {},
-        -- Astro Framework
+        -- Astro
         astro = {},
         -- Svelte
         svelte = {},
@@ -131,7 +120,6 @@ return {
         --- Elixir
         elixirls = {
           cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
-          -- root_dir = require('lspconfig.util').root_pattern('mix.exs'),
           single_file_support = true,
         },
         -- SQL
@@ -169,19 +157,6 @@ return {
         },
       })
 
-      -- map('n', '<leader>dt', function()
-      --   opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
-      --   vim.diagnostic.config(opts.diagnostics)
-      -- end, { desc = 'LSP: Toggle inline text diagnostics' })
-      JVim.keymap.register({
-        ['<leader>di'] = {
-          function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-          end,
-          'LSP: Toggle inlay hints',
-        },
-      })
-
       JVim.map('n', '<leader>di', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
       end, { desc = 'LSP: Toggle inlay hints' })
@@ -214,29 +189,5 @@ return {
         end
       end
     end,
-  },
-
-  -- Better diagnostics lists
-  {
-    'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
-    opts = { use_diagnostic_signs = true },
-  },
-  { 'folke/lsp-colors.nvim', event = 'BufReadPre', config = true },
-
-  -- Lsp symbol outline
-  {
-    'SmiteshP/nvim-navic',
-    enabled = false,
-    lazy = true,
-    init = function()
-      vim.g.navic_silence = true
-      require('jvim.utils').on_attach(function(client, buffer)
-        if client.server_capabilities.documentSymbolProvider then
-          require('nvim-navic').attach(client, buffer)
-        end
-      end)
-    end,
-    opts = { separator = ' ', highlight = false, depth_limit = 5 },
   },
 }
