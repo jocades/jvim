@@ -36,23 +36,23 @@ end
 
 ---Append the values of a list into another list
 ---@generic T
----@param list T[]
+---@param ls T[]
 ---@param other T[]
-table.extend = function(list, other)
+table.extend = function(ls, other)
   for _, value in ipairs(other) do
-    table.insert(list, value)
+    table.insert(ls, value)
   end
 end
 
 ---Reduce a list to a single value
 ---@generic T, R
----@param tbl T[]
+---@param ls T[]
 ---@param fn fun(acc: R, value: T): R
 ---@param initial R
 ---@return R
-table.reduce = function(tbl, fn, initial)
+table.reduce = function(ls, fn, initial)
   local acc = initial
-  for _, value in ipairs(tbl) do
+  for _, value in ipairs(ls) do
     acc = fn(acc, value)
   end
   return acc
@@ -60,12 +60,12 @@ end
 
 ---Create a new list, mapping the values of another table
 ---@generic T, R
----@param tbl T[]
+---@param ls T[]
 ---@param fn fun(value: T): R
 ---@return R[]
-table.map = function(tbl, fn)
+table.map = function(ls, fn)
   local new = {}
-  for k, v in pairs(tbl) do
+  for k, v in pairs(ls) do
     new[k] = fn(v)
   end
   return new
@@ -73,12 +73,12 @@ end
 
 ---Filter the values of a list
 ---@generic T
----@param tbl T[]
+---@param ls T[]
 ---@param fn fun(value: T): boolean
 ---@return T[]
-table.filter = function(tbl, fn)
+table.filter = function(ls, fn)
   local new = {}
-  for k, v in pairs(tbl) do
+  for k, v in pairs(ls) do
     if fn(v) then
       new[k] = v
     end
@@ -88,10 +88,10 @@ end
 
 ---Iterate over the values of a list
 ---@generic T
----@param tbl T[]
+---@param ls T[]
 ---@param fn fun(value: T)
-table.for_each = function(tbl, fn)
-  for _, v in ipairs(tbl) do
+table.for_each = function(ls, fn)
+  for _, v in ipairs(ls) do
     fn(v)
   end
 end
@@ -118,18 +118,6 @@ table.deepcopy = function(tbl)
     end
   end
   return new
-end
-
----Inspect a table
----@param tbl table
-table.inspect = function(tbl)
-  for k, v in pairs(tbl) do
-    if type(v) == 'table' then
-      table.inspect(v)
-    else
-      print(k, v)
-    end
-  end
 end
 
 -- xd

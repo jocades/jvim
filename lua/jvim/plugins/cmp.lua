@@ -1,13 +1,13 @@
 return {
   'hrsh7th/nvim-cmp',
-  version = false,
+  version = false, -- last release is way too old
   event = 'InsertEnter',
   dependencies = {
     'hrsh7th/cmp-nvim-lsp', -- lsp completion
-    'hrsh7th/cmp-buffer', -- buffer completion
-    'hrsh7th/cmp-cmdline', -- cmdline completion
-    'saadparwaiz1/cmp_luasnip', -- snippet completion
     'hrsh7th/cmp-path', -- path completion
+    'hrsh7th/cmp-buffer', -- buffer completion
+    -- 'hrsh7th/cmp-cmdline', -- cmdline completion
+    'saadparwaiz1/cmp_luasnip', -- snippet completion
     'onsails/lspkind-nvim', -- icons for completion
   },
   opts = function()
@@ -16,7 +16,9 @@ return {
 
     return {
       snippet = {
-        expand = function(args) require('luasnip').lsp_expand(args.body) end,
+        expand = function(args)
+          require('luasnip').lsp_expand(args.body)
+        end,
       },
       mapping = cmp.mapping.preset.insert({
         ['<C-k>'] = cmp.mapping.select_prev_item(),

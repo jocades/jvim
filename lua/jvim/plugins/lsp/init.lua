@@ -17,6 +17,20 @@ return {
         formatting_options = nil, -- handled by conform.nvim
         timeout_ms = nil,
       },
+      codelens = {
+        enabled = false,
+      },
+      document_highlight = {
+        enabled = true,
+      },
+      capabilities = {
+        workspace = {
+          fileOperations = {
+            didRename = true,
+            willRename = true,
+          },
+        },
+      },
       -- Servers & Settings
       servers = {
         -- Python
@@ -127,6 +141,10 @@ return {
       },
     },
     config = function(_, opts)
+      JVim.lsp.on_attach(function(client, e)
+        -- vim.notify(e.file, 'warn')
+      end)
+
       vim.diagnostic.config(opts.diagnostics)
       local capabilities = require('cmp_nvim_lsp').default_capabilities(
         vim.lsp.protocol.make_client_capabilities()

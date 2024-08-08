@@ -12,7 +12,7 @@ local M = {}
 ---@param mode string
 ---@param keymaps jvim.Keymap<`T`>[]
 ---@param modifier? fun(opts: `T`): vim.keymap.set.Opts
-local function register(mode, keymaps, modifier)
+local function set(mode, keymaps, modifier)
   for k, v in pairs(keymaps) do
     local opts = type(v[2]) == 'string' and { desc = v[2] } or v[2]
     vim.keymap.set(mode, k, v[1], modifier and modifier(opts) or opts)
@@ -23,10 +23,10 @@ end
 function M.register(keymaps, modifier)
   if keymaps.n or keymaps.i or keymaps.v then
     for mode, mappings in pairs(keymaps) do
-      register(mode, mappings, modifier)
+      set(mode, mappings, modifier)
     end
   else
-    register('n', keymaps)
+    set('n', keymaps)
   end
 end
 

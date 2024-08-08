@@ -1,3 +1,17 @@
+if vim.env.JVIM_TEST then
+  vim.api.nvim_create_autocmd('BufReadPre', {
+    callback = function()
+      print('BufReadPre!!!')
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    callback = function()
+      print('BufReadPost!!!')
+    end,
+  })
+end
+
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd(
   { 'FocusGained', 'TermClose', 'TermLeave' },

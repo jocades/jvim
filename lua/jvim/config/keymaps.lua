@@ -3,7 +3,7 @@ local exec = require('jvim.lib.exec')
 
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
-local M = {
+return {
   -- NORMAL
   n = {
     -- Common
@@ -15,31 +15,14 @@ local M = {
 
     -- Buffer actions
     ['<leader>x'] = { cmd.Bdelete, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = {
-      '<cmd>Bdelete!<cr>',
-      { desc = 'Close buffer without saving' },
-    },
+    -- stylua: ignore start
+    ['<leader>X'] = { '<cmd>Bdelete!<cr>', { desc = 'Close buffer without saving' }, },
     ['<leader>bd'] = { exec.close_saved, { desc = 'Close all saved buffers' } },
-    ['<leader>nf'] = {
-      exec.new_buf,
-      { desc = 'Create new file in current dir' },
-    },
-    ['<leader>ns'] = {
-      function()
-        exec.new_buf({ type = 'v' })
-      end,
-      { desc = 'Create new vertical split' },
-    },
-    ['<leader>nh'] = {
-      function()
-        exec.new_buf({ type = 'h' })
-      end,
-      { desc = 'Create new horizontal split' },
-    },
-    ['<leader>so'] = {
-      '<cmd>w | so %<cr>',
-      { desc = 'Save, source & run current config file' },
-    },
+    ['<leader>nf'] = { exec.new_buf, { desc = 'Create new file in current dir' }, },
+    ['<leader>ns'] = { function() exec.new_buf({ type = 'v' }) end, { desc = 'Create new vertical split' }, },
+    ['<leader>nh'] = { function() exec.new_buf({ type = 'h' }) end, { desc = 'Create new horizontal split' }, },
+    ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' }, },
+    -- stylua: ignore end
     ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
     ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
@@ -69,16 +52,13 @@ local M = {
       { desc = 'JSDoc' },
     },
 
-    -- Insert blank line
-    ['<C-cr>'] = { 'o<esc>' },
-    ['<S-cr>'] = { 'O<esc>' },
-
     -- Centralization
     ['<leader>c'] = { 'zz', { nowait = true } },
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
 
     -- Git
+    ['<leader>lg'] = { function() end, { desc = 'Lazygit' } },
     ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
     ['<leader>cm'] = {
       function()
@@ -87,7 +67,6 @@ local M = {
       end,
       { desc = 'Git commit' },
     },
-    ['<leader>lg'] = { '<cmd>lua Lazygit()<cr>', { desc = 'Lazygit' } },
 
     ['<leader>gc'] = {
       function()
@@ -100,24 +79,11 @@ local M = {
       desc = { 'Toggle copilot' },
     },
 
-    ['<leader>hr'] = {
-      function()
-        exec.hacky_reload()
-      end,
-      { desc = 'Hacky realod process (use with caution)' },
-    },
-    ['<leader>rl'] = {
-      function()
-        exec.run_last()
-      end,
-      { desc = 'Run last command' },
-    },
-    ['<leader>rr'] = {
-      function()
-        require('jvim.lib.plugins.autorun').attach()
-      end,
-      { desc = 'Attach autorun' },
-    },
+    -- stylua: ignore start
+    ['<leader>hr'] = { function() exec.hacky_reload() end, 'Hacky realod process (use with caution)' , },
+    ['<leader>rl'] = { function() exec.run_last() end, 'Run last command' , },
+    ['<leader>rr'] = { function() require('jvim.lib.plugins.autorun').attach() end, 'Attach autorun' , },
+    -- stylua: ignore end
   },
 
   -- INSERT
@@ -141,5 +107,3 @@ local M = {
     ['>'] = { '>gv' },
   },
 }
-
-return M

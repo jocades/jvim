@@ -27,15 +27,13 @@ function M.setup(opts)
 
   require('lazy').setup({
     { import = 'jvim.plugins' },
-    { import = 'jvim.plugins.ui' },
-    { import = 'jvim.plugins.coding' },
   }, {
     checker = {
       enabled = true,
       notify = false,
     },
     change_detection = {
-      notify = true,
+      notify = false,
     },
     install = {
       colorscheme = { opts.colorscheme },
