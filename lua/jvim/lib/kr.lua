@@ -53,7 +53,7 @@ function KeymapRegister:restore()
   vim.api.nvim_del_autocmd(self.id)
 
   if not self.new_keymaps then
-    require('jvim.utils.log').error('No keymaps to restore')
+    require('jvim.util.log').error('No keymaps to restore')
     return
   end
 

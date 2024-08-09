@@ -1,6 +1,7 @@
 return {
   {
     'mfussenegger/nvim-dap',
+    cmd = 'Dap',
     dependencies = {
       'rcarriga/nvim-dap-ui',
       'nvim-neotest/nvim-nio',
@@ -43,7 +44,7 @@ return {
         ['<leader>dc'] = { dap.continue, 'Continue' }, -- use it to start dap
         ['<leader>db'] = { dap.toggle_breakpoint, 'Toggle breakpoint' },
       }) do
-        require('jvim.utils').map('n', k, v[1], { desc = 'DAP: ' .. v[2] })
+        require('jvim.util').map('n', k, v[1], { desc = 'DAP: ' .. v[2] })
       end
 
       local keymaps = {
@@ -54,7 +55,9 @@ return {
         ['<leader>r'] = { dap.repl.open, 'Open REPL' },
         ['<leader>l'] = { dap.run_last, 'Run last' },
         ['<leader>k'] = {
-          function() dapui.eval(nil, { enter = true }) end,
+          function()
+            dapui.eval(nil, { enter = true })
+          end,
           'Hover',
         },
       }

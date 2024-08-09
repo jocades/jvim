@@ -31,8 +31,8 @@ return {
               ['q'] = actions.close,
             },
           },
-          prompt_prefix = ' ', --  ',
-          selection_caret = ' ', --' ',
+          prompt_prefix = ' ',
+          selection_caret = ' ',
           path_display = { 'smart' }, -- truncate, shorten, absolute, tail, smart
           file_ignore_patterns = { '.git/', 'node_modules' },
           layout_strategy = 'horizontal',

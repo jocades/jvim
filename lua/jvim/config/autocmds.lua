@@ -1,5 +1,5 @@
 if vim.env.JVIM_TEST then
-  vim.api.nvim_create_autocmd('BufReadPre', {
+  JVim.autocmd('BufReadPre', {
     callback = function()
       print('BufReadPre!!!')
     end,

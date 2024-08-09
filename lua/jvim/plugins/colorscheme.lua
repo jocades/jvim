@@ -4,6 +4,7 @@ return {
     name = 'catppuccin',
     lazy = false,
     priority = 1000,
+    ---@module 'catppuccin'
     ---@type CatppuccinOptions
     opts = {
       show_end_of_buffer = true,
@@ -22,11 +23,7 @@ return {
       },
     },
   },
-  {
-    'navarasu/onedark.nvim',
-    enabled = false,
-    name = 'onedark',
-  },
+
   {
     'rebelot/kanagawa.nvim',
     enabled = false,
@@ -49,26 +46,13 @@ return {
       -- vim.cmd([[colorscheme kanagawa]])
     end,
   },
-  {
-    'craftzdog/solarized-osaka.nvim',
-    enabled = false,
-    lazy = false,
-    priority = 1000,
-    opts = {},
-  },
-  {
-    'bluz71/vim-nightfly-guicolors',
-    enabled = false,
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme nightfly]]) end,
-  },
-  {
 
-    'EdenEast/nightfox.nvim',
+  {
+    'navarasu/onedark.nvim',
     enabled = false,
-    -- priority = 1000,
-    -- config = function() vim.cmd([[colorscheme carbonfox]]) end,
+    name = 'onedark',
   },
+
   {
     'folke/tokyonight.nvim',
     -- priority = 1000,

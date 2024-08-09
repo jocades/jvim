@@ -1,14 +1,14 @@
 ---@class JVim: LazyUtil
 local M = {
-  buf = require('jvim.utils.buf'),
-  lsp = require('jvim.utils.lsp'),
+  buf = require('jvim.util.buf'),
+  lsp = require('jvim.util.lsp'),
 }
 
 setmetatable(M, { __index = require('lazy.util') })
 
 function M.who()
   vim.system({ 'whoami' }, nil, function(proc)
-    print(proc.stdout)
+    vim.notify(proc.stdout)
   end)
 end
 
@@ -16,7 +16,7 @@ end
 ---@param keys string
 ---@param exec string|fun()
 ---@param opts? vim.keymap.set.Opts|string
----@param modify? fun(opts: vim.keymap.set.Opts)
+---@param modify? fun(opts: vim.keymap.set.Opts): nil
 function M.map(mode, keys, exec, opts, modify)
   opts = type(opts) == 'string' and { desc = opts } or opts or {}
   ---@cast opts vim.keymap.set.Opts
@@ -25,7 +25,7 @@ function M.map(mode, keys, exec, opts, modify)
 end
 
 ---@param keymaps jvim.Keymaps|[string,string|fun(),vim.keymap.set.Opts|string][]
----@param modify? fun(opts: vim.keymap.set.Opts)
+---@param modify? fun(opts: vim.keymap.set.Opts): nil
 function M.register(keymaps, modify)
   if vim.islist(keymaps) then
     for _, t in ipairs(keymaps) do
@@ -34,16 +34,32 @@ function M.register(keymaps, modify)
   else
     ---@cast keymaps jvim.Keymaps
     for mode, mappings in pairs(keymaps) do
-      for k, v in pairs(mappings) do
-        M.map(mode, k, v[1], v[2], modify)
+      for k, t in pairs(mappings) do
+        M.map(mode, k, t[1], t[2], modify)
       end
     end
   end
 end
 
+---@param name? string
+function M.augroup(name)
+  if not name then
+    return vim.api.nvim_create_augroup('__jvim', { clear = false })
+  end
+  return vim.api.nvim_create_augroup('__jvim_' .. name, { clear = true })
+end
+
+---@param event string|string[]
+---@param opts vim.api.keyset.create_autocmd
+---@param name? string
+function M.autocmd(event, opts, name)
+  opts.group = M.augroup(name)
+  return vim.api.nvim_create_autocmd(event, opts)
+end
+
 ---@param fn fun()
 function M.on_very_lazy(fn)
-  vim.api.nvim_create_autocmd('User', {
+  M.autocmd('User', {
     pattern = 'VeryLazy',
     callback = function()
       fn()
@@ -51,17 +67,12 @@ function M.on_very_lazy(fn)
   })
 end
 
----@param mod string
-function M.lazy_load(mod)
-  --[[ if #mods == 0 then
-    JVim.on_very_lazy(function()
-      for m in mods do
-        print(m)
-        -- require(m)
-      end
-    end)
-  end
-  table.insert(mods, mod) ]]
+---@param name 'autocmds' | 'keymaps' | 'options'
+function M.load(name)
+  local mod = 'jvim.config.' .. name
+  return M.try(function()
+    return require(mod)
+  end, { msg = 'Failed loading ' .. mod })
 end
 
 return M

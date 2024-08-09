@@ -20,13 +20,15 @@ return {
         end,
       },
       mapping = cmp.mapping.preset.insert({
-        -- ['<C-n>'] = cmp.config.disable,
-        -- ['<C-p>'] = cmp.config.disable,
         ['<C-k>'] = cmp.mapping.select_prev_item(),
         ['<C-j>'] = cmp.mapping.select_next_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
+        -- ['<C-y>'] = cmp.mapping.confirm({
+        --   behavior = cmp.ConfirmBehavior.Replace,
+        --   select = true,
+        -- }),
         ['<C-i>'] = cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Replace,
           select = true,
@@ -72,8 +74,6 @@ return {
                 return vim_item
               end
             end
-            -- vim_item.kind = icons[vim_item.kind] and (icons[vim_item.kind] .. vim_item.kind) or vim_item.kind
-            -- or just show the icon
             vim_item.kind = lspkind.symbolic(vim_item.kind)
                 and lspkind.symbolic(vim_item.kind)
               or vim_item.kind

@@ -9,13 +9,6 @@ return {
     'lewis6991/gitsigns.nvim',
     event = 'BufReadPost',
     opts = {
-      --[[ signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      }, ]]
       signs = {
         add = { text = '┃' },
         change = { text = '┃' },
@@ -38,7 +31,7 @@ return {
     opts = {
       panel = { enabled = false },
       suggestion = {
-        enabled = false,
+        enabled = true,
         auto_trigger = true,
         hide_during_completion = true,
         debounce = 75,

@@ -33,7 +33,7 @@ return {
   -- Comments
   {
     'numToStr/Comment.nvim',
-    event = 'InsertEnter',
+    event = 'BufReadPost',
     cmd = '',
     dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     opts = function()
@@ -64,13 +64,13 @@ return {
   {
     'L3MON4D3/LuaSnip',
     event = 'InsertEnter',
+    build = 'make install_jsregexp',
     --stylua: ignore
     dependencies = {
       'rafamadriz/friendly-snippets',
       config = function() require('luasnip.loaders.from_vscode').lazy_load() end,
     },
     opts = function()
-      -- require('jvim.lib.snippets')
       return {
         history = true,
         delete_check_events = 'TextChanged',
@@ -119,30 +119,10 @@ return {
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
-    opts = {
-      fast_wrap = {
-        map = '<M-e>', -- ALT-e on insert mode
-        chars = { '{', '[', '(', '"', "'" },
-        pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], '%s+', ''),
-        offset = 0, -- Offset from pattern match
-        end_key = '$',
-        keys = 'qwertyuiopzxcvbnmasdfghjkl',
-        check_comma = true,
-        highlight = 'PmenuSel',
-        highlight_grey = 'LineNr',
-      },
-    },
+    opts = {},
   },
-  --   init = function()
-  --     require('cmp').event:on(
-  --       'confirm_done',
-  --       require('nvim-autopairs.completion.cmp').on_confirm_done({
-  --         map_char = { tex = '' },
-  --       })
-  --     )
-  --   end,
-  -- },
 
+  -- Todos (loclists and hl)
   {
     'folke/todo-comments.nvim',
     cmd = { 'TodoTrouble', 'TodoTelescope' },

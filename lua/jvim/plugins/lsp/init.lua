@@ -139,8 +139,6 @@ return {
           cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
           single_file_support = true,
         },
-        -- SQL
-        sqlls = {},
       },
     },
     config = function(_, opts)
@@ -185,12 +183,10 @@ return {
     cmd = 'Mason',
     opts = {
       ensure_installed = {
-        'prettierd',
         'autopep8',
         'stylua',
         'shellcheck',
         'shfmt',
-        'flake8',
         'clangd',
         'clang-format',
       },
