@@ -47,13 +47,14 @@ return {
         vim.fn.stdpath('config') .. '/stylua.toml',
       },
     }
+
     f.clang_format = { prepend_args = { '-style=file' } }
     f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
     f.shfmt = { prepend_args = { '-i', '4' } }
     f.gofmt = { prepend_args = { '-s', '-w', '-tabwidth=4' } }
     f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
 
-    if not require('jvim.lib.path').cwd().join('.prettierrc').exists() then
+    if not vim.uv.fs_stat(vim.fs.joinpath(vim.uv.cwd(), '.prettierrc')) then
       f.prettierd = {
         prepend_args = {
           '--semi=false',

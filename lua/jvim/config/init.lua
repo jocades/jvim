@@ -29,7 +29,6 @@ function M.setup(opts)
     },
     performance = {
       rtp = {
-        -- disable some rtp plugins
         disabled_plugins = {
           'gzip',
           'matchit',
@@ -48,11 +47,18 @@ function M.setup(opts)
     vim.cmd.colorscheme(opts.colorscheme)
   end
 
-  require('jvim.config.autocmds')
-  require('jvim.lib.plugins')
-  require('jvim.lib.snippets')
+  if vim.fn.argc(-1) == 0 then
+    JVim.on_very_lazy(function()
+      require('jvim.config.autocmds')
+      require('jvim.lib.snippets')
+    end)
+  end
 
   JVim.register(require('jvim.config.keymaps'))
+
+  -- JVim.on_very_lazy(function()
+  --   require('jvim.lib.snippets')
+  -- end)
 end
 
 return M

@@ -17,19 +17,10 @@ return {
     -- stylua: ignore start
     ['<leader>x'] = { JVim.buf.remove, { desc = 'Close buffer', nowait = true } },
     ['<leader>X'] = { '<cmd>Bdelete!<cr>', { desc = 'Close buffer without saving' }, },
-    -- ['<leader>bd'] = { exec.close_saved, { desc = 'Close all saved buffers' } },
-    ['<leader>nf'] = { exec.new_buf, { desc = 'Create new file in current dir' }, },
-    ['<leader>ns'] = { function() exec.new_buf({ type = 'v' }) end, { desc = 'Create new vertical split' }, },
-    ['<leader>nh'] = { function() exec.new_buf({ type = 'h' }) end, { desc = 'Create new horizontal split' }, },
     ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' }, },
-    ['<C-s>'] = { cmd.w, { desc = 'Save buffer' } },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
     ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
     -- stylua: ignore end
-
-    -- Buffer navigation (telescope + harpoon)
-    -- ['<C-]>'] = { cmd.bnext },
-    -- ['<C-[>'] = { cmd.bprev },
 
     -- Window actions
     ['<leader>z'] = { cmd.close, { desc = 'Close window', nowait = true } },
@@ -82,7 +73,6 @@ return {
     -- stylua: ignore start
     ['<leader>hr'] = { function() exec.hacky_reload() end, 'Hacky realod process (use with caution)' , },
     ['<leader>rl'] = { function() exec.run_last() end, 'Run last command' , },
-    ['<leader>rr'] = { function() require('jvim.lib.plugins.autorun').attach() end, 'Attach autorun' , },
     -- stylua: ignore end
   },
 

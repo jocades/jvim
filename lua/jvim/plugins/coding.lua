@@ -60,31 +60,6 @@ return {
     opts = {},
   },
 
-  -- Configures LuaLS for editing your Neovim config by lazily updating your workspace libraries.
-  {
-    'folke/lazydev.nvim',
-    ft = 'lua', -- only load on lua files
-    opts = {
-      library = {
-        'lazy.nvim',
-        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
-      },
-    },
-  },
-
-  -- Neovim libuv types for lua. Plugin will never be loaded
-  { 'Bilal2453/luvit-meta', lazy = true },
-  { -- optional completion source for require statements and module annotations
-    'hrsh7th/nvim-cmp',
-    opts = function(_, opts)
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, {
-        name = 'lazydev',
-        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
-      })
-    end,
-  },
-
   -- Snippets
   {
     'L3MON4D3/LuaSnip',
@@ -113,6 +88,31 @@ return {
       { '<c-n>', function() require('luasnip').jump(1) end, mode = 's' },
       { '<c-p>', function() require('luasnip').jump(-1) end, mode = { 'i', 's' } },
     },
+  },
+
+  -- Configures LuaLS for editing your Neovim config by lazily updating your workspace libraries.
+  {
+    'folke/lazydev.nvim',
+    ft = 'lua', -- only load on lua files
+    opts = {
+      library = {
+        'lazy.nvim',
+        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
+
+  -- Neovim libuv types for lua. Plugin will never be loaded
+  { 'Bilal2453/luvit-meta', lazy = true },
+  { -- optional completion source for require statements and module annotations
+    'hrsh7th/nvim-cmp',
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = 'lazydev',
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
   },
 
   -- Auto pairs

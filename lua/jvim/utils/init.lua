@@ -1,13 +1,11 @@
 ---@class JVim: LazyUtil
 local M = {
   buf = require('jvim.utils.buf'),
-  log = require('jvim.utils.log'),
   lsp = require('jvim.utils.lsp'),
 }
 
 setmetatable(M, { __index = require('lazy.util') })
 
--- Just testing vim.notify
 function M.who()
   vim.system({ 'whoami' }, nil, function(proc)
     print(proc.stdout)
@@ -41,6 +39,29 @@ function M.register(keymaps, modify)
       end
     end
   end
+end
+
+---@param fn fun()
+function M.on_very_lazy(fn)
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'VeryLazy',
+    callback = function()
+      fn()
+    end,
+  })
+end
+
+---@param mod string
+function M.lazy_load(mod)
+  --[[ if #mods == 0 then
+    JVim.on_very_lazy(function()
+      for m in mods do
+        print(m)
+        -- require(m)
+      end
+    end)
+  end
+  table.insert(mods, mod) ]]
 end
 
 return M

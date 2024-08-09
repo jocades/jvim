@@ -1,33 +1,13 @@
 return {
   {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    opts = {
-      hello = 'world',
-      panel = { enabled = false },
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        hide_during_completion = true,
-        debounce = 75,
-        keymap = {
-          accept = '<tab>',
-          accept_word = false,
-          accept_line = false,
-          -- next = '<C-]>',
-          -- prev = '[[',
-          -- dismiss = '<C-]>',
-        },
-      },
-      filetypes = {
-        help = true,
-        markdown = true,
-      },
-    },
+    'sindrets/diffview.nvim',
+    event = 'VeryLazy',
+    opts = {},
   },
+
   {
     'lewis6991/gitsigns.nvim',
-    event = 'BufReadPre',
+    event = 'BufReadPost',
     opts = {
       --[[ signs = {
         add = { text = '+' },
@@ -49,6 +29,29 @@ return {
       numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
       linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
       word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+    },
+  },
+
+  {
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    opts = {
+      panel = { enabled = false },
+      suggestion = {
+        enabled = false,
+        auto_trigger = true,
+        hide_during_completion = true,
+        debounce = 75,
+        keymap = {
+          accept = '<tab>',
+          accept_word = false,
+          accept_line = false,
+        },
+      },
+      filetypes = {
+        help = true,
+        markdown = true,
+      },
     },
   },
 }

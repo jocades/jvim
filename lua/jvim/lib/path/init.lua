@@ -1,5 +1,4 @@
 local class = require('jvim.lib.class')
-local str = require('jvim.utils.str')
 
 local SEP = '/'
 
@@ -105,7 +104,7 @@ function Path:new(pathname)
 
   self.abs = clean(vim.fn.fnamemodify(self._path, ':p'))
 
-  self.parts = str.split(self._path, SEP)
+  self.parts = vim.split(self._path, SEP)
   self.name = vim.fn.fnamemodify(self.abs, ':t')
   self.stem = vim.fn.fnamemodify(self.abs, ':t:r')
   self.ext = (function()
@@ -284,7 +283,7 @@ function Path:new(pathname)
   ---@return string[]
   self.readlines = function()
     local content = self.read()
-    return str.split(content, '\n')
+    return vim.split(content, '\n')
   end
 
   ---Iterate over the lines of the file
@@ -325,7 +324,6 @@ function Path:new(pathname)
     local file = open(self.abs, mode or 'w')
 
     if type(data) == 'table' then
-      local content = table.map(data)
       for _, line in ipairs(data) do
         file:write(line .. '\n')
       end
