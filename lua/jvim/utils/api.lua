@@ -3,9 +3,13 @@ local str = require('jvim.utils.str')
 
 local M = {}
 
-function M.get_curr_buf() return api.nvim_get_current_buf() end
+function M.get_curr_buf()
+  return api.nvim_get_current_buf()
+end
 
-function M.get_curr_pathname() return api.nvim_buf_get_name(0) end
+function M.get_curr_pathname()
+  return api.nvim_buf_get_name(0)
+end
 
 ---@param buf number
 ---@param data string[]

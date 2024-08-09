@@ -54,13 +54,13 @@ vim.api.nvim_create_autocmd('FileType', {
     'tsplayground',
     'PlenaryTestPopup',
   },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
+  callback = function(e)
+    vim.bo[e.buf].buflisted = false
     vim.keymap.set(
       'n',
       'q',
       '<cmd>close<cr>',
-      { buffer = event.buf, silent = true }
+      { buffer = e.buf, silent = true }
     )
   end,
 })

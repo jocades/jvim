@@ -7,6 +7,8 @@ local f = ls.function_node
 
 local input = require('jvim.lib.snippets.helper').input
 
+print('Loaded rust snippets')
+
 local unit_tests = s({
   trig = 'test',
   name = 'unit-tests',

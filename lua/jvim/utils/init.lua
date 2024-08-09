@@ -1,55 +1,46 @@
-local LazyUtil = require('lazy.util')
-
 ---@class JVim: LazyUtil
 local M = {
-  __index = function(t, k)
-    if LazyUtil[k] then
-      vim.notify('using lazy util')
-      return LazyUtil[k]
-    end
-    return t[k]
-    -- t[k] = require('jvim.utils.' .. k)
-    -- return t[k]
-  end,
-  keymap = require('jvim.utils.keymap'),
+  buf = require('jvim.utils.buf'),
   log = require('jvim.utils.log'),
-  str = require('jvim.utils.str'),
-  mode = require('jvim.utils.mode'),
-  git = require('jvim.utils.git'),
   lsp = require('jvim.utils.lsp'),
 }
 
+setmetatable(M, { __index = require('lazy.util') })
+
 -- Just testing vim.notify
 function M.who()
-  vim.system({ 'whoami' }, nil, function(o)
-    vim.notify(o.stdout)
+  vim.system({ 'whoami' }, nil, function(proc)
+    print(proc.stdout)
   end)
 end
 
-function M.diagnostics()
-  return vim.deepcopy(M.lsp.diagnostics)
-end
-
-local default = { silent = true }
-
----Set keymaps with default options
 ---@param mode string|string[]
 ---@param keys string
 ---@param exec string|fun()
----@param opts? table|string
-function M.map(mode, keys, exec, opts)
-  if type(opts) == 'string' then
-    opts = { desc = opts }
-  end
-  table.merge(default, opts or {})
-  vim.keymap.set(mode, keys, exec, opts)
+---@param opts? vim.keymap.set.Opts|string
+---@param modify? fun(opts: vim.keymap.set.Opts)
+function M.map(mode, keys, exec, opts, modify)
+  opts = type(opts) == 'string' and { desc = opts } or opts or {}
+  ---@cast opts vim.keymap.set.Opts
+  opts.silent = opts.silent ~= false
+  vim.keymap.set(mode, keys, exec, modify and modify(opts) or opts)
 end
 
--- Check if file exists
----@param path string
----@return boolean
-function M.file_exists(path)
-  return vim.fn.filereadable(path) == 1
+---@param keymaps jvim.Keymaps|[string,string|fun(),vim.keymap.set.Opts|string][]
+---@param modify? fun(opts: vim.keymap.set.Opts)
+function M.register(keymaps, modify)
+  if vim.islist(keymaps) then
+    for _, t in ipairs(keymaps) do
+      M.map('n', t[1], t[2], t[3], modify)
+    end
+  else
+    ---@cast keymaps jvim.Keymaps
+    for mode, mappings in pairs(keymaps) do
+      for k, v in pairs(mappings) do
+        M.map(mode, k, v[1], v[2], modify)
+      end
+    end
+  end
 end
 
 return M

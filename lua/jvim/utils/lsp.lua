@@ -14,23 +14,27 @@ local M = {
 ---@field file string Absolute file path
 ---@field id number
 
----@param on_attach fun(client: vim.lsp.Client, e: LspAttachEvent)
+---@param callback fun(client: vim.lsp.Client, e: LspAttachEvent)
 ---@return number # The autocmd id
-function M.on_attach(on_attach)
+function M.on_attach(callback)
   return vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(e)
-      -- vim.notify('Attached')
-      -- vim.notify(e)
       local client = vim.lsp.get_client_by_id(e.data.client_id)
-
       if not client then
-        vim.notify('No client found for LSP attach event')
+        JVim.warn('No client found for LSP attach event')
         return
       end
-
-      on_attach(client, e)
+      callback(client, e)
     end,
   })
+end
+
+function M.diagnostic_goto(next, severity)
+  local go_to = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go_to({ severity = severity })
+  end
 end
 
 return M

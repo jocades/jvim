@@ -16,9 +16,9 @@ end
 
 --- Remove leading and trailing whitespaces
 ---@param str string
----@return string, integer
+---@return string
 function M.trim(str)
-  return str:gsub('^%s*(.-)%s*$', '%1')
+  return str:gsub('^%s*(.-)%s*$', '%1')[1]
 end
 
 --- Capitalize the first letter of a string

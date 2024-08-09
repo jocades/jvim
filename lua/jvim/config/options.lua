@@ -55,12 +55,9 @@ local opts = {
 
 if vim.fn.has('nvim-0.10') == 1 then
   vim.opt.smoothscroll = true
-  vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
-  vim.opt.foldmethod = 'expr'
-  vim.opt.foldtext = ''
-else
-  vim.opt.foldmethod = 'indent'
-  vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
+  -- vim.wo.foldmethod = 'expr'
+  -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+  -- vim.opt.foldtext = ''
 end
 
 for k, v in pairs(opts) do

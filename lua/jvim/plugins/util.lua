@@ -1,8 +1,5 @@
 return {
   { 'nvim-lua/plenary.nvim', lazy = true },
-  { 'moll/vim-bbye', event = 'VeryLazy' }, -- better buffer deletion
-  { 'tpope/vim-sleuth', event = 'BufReadPre' }, -- detect tabstop and shiftwidth automatically
-  -- 'p00f/nvim-ts-rainbow', -- colored parenthesis
 
   -- Session management
   {
@@ -12,17 +9,23 @@ return {
     keys = {
       {
         '<leader>qs',
-        function() require('persistence').load() end,
+        function()
+          require('persistence').load()
+        end,
         desc = 'Restore Session',
       },
       {
         '<leader>ql',
-        function() require('persistence').load({ last = true }) end,
+        function()
+          require('persistence').load({ last = true })
+        end,
         desc = 'Restore Last Session',
       },
       {
         '<leader>qd',
-        function() require('persistence').stop() end,
+        function()
+          require('persistence').stop()
+        end,
         desc = "Don't Save Current Session",
       },
     },

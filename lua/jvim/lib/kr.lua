@@ -22,7 +22,9 @@ function KeymapRegister:listen(pattern, new_keymaps, desc_prefix)
   self.id = vim.api.nvim_create_autocmd('BufEnter', {
     pattern = pattern,
     callback = function(e)
-      if self.bufs[e.buf] then return end
+      if self.bufs[e.buf] then
+        return
+      end
 
       local buf = e.buf
       local buf_keymaps = vim.api.nvim_buf_get_keymap(buf, 'n')

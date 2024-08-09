@@ -1,7 +1,3 @@
-P = function(v)
-  print(vim.inspect(v))
-end
-
 -- Merge 2 or more dictionaries
 ---@param ... table[]
 ---@return table
@@ -74,7 +70,7 @@ end
 ---Filter the values of a list
 ---@generic T
 ---@param ls T[]
----@param fn fun(value: T): boolean
+---@param fn fun(val: T): boolean
 ---@return T[]
 table.filter = function(ls, fn)
   local new = {}

@@ -3,15 +3,18 @@ return {
     'neovim/nvim-lspconfig',
     event = 'BufEnter',
     dependencies = {
-      'williamboman/mason.nvim', -- automatically install LSPs to stdpath for neovim
       'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
-      { 'j-hui/fidget.nvim', config = true }, -- lsp status UI
       { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
       { 'b0o/SchemaStore.nvim', version = false }, -- lsp for common json schemas
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
-      diagnostics = JVim.diagnostics(),
+      diagnostics = {
+        underline = true,
+        virtual_text = { spacing = 4, source = 'if_many', prefix = '●' },
+        update_in_insert = false,
+        severity_sort = true,
+      },
       autoformat = true,
       format = {
         formatting_options = nil, -- handled by conform.nvim
@@ -165,15 +168,10 @@ return {
         end,
       })
 
-      JVim.keymap.register({
-        ['<leader>dt'] = {
-          function()
-            opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
-            vim.diagnostic.config(opts.diagnostics)
-          end,
-          'LSP: Toggle inline text diagnostics',
-        },
-      })
+      JVim.map('n', '<leader>dt', function()
+        opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
+        vim.diagnostic.config(opts.diagnostics)
+      end, 'LSP: Toggle inline text diagnostics')
 
       JVim.map('n', '<leader>di', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())

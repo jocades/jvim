@@ -33,7 +33,8 @@ return {
   -- Comments
   {
     'numToStr/Comment.nvim',
-    event = 'VeryLazy',
+    event = 'InsertEnter',
+    cmd = '',
     dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
     opts = function()
       return {
@@ -50,6 +51,13 @@ return {
         },
       }
     end,
+  },
+
+  {
+    'kylechui/nvim-surround',
+    version = '*', -- Use for stability; omit to use `main` branch for the latest features
+    event = 'InsertEnter',
+    opts = {},
   },
 
   -- Configures LuaLS for editing your Neovim config by lazily updating your workspace libraries.
@@ -86,10 +94,13 @@ return {
       'rafamadriz/friendly-snippets',
       config = function() require('luasnip.loaders.from_vscode').lazy_load() end,
     },
-    opts = {
-      history = true,
-      delete_check_events = 'TextChanged',
-    },
+    opts = function()
+      -- require('jvim.lib.snippets')
+      return {
+        history = true,
+        delete_check_events = 'TextChanged',
+      }
+    end,
     --stylua: ignore
     keys = {
       {
@@ -131,13 +142,6 @@ return {
   --     )
   --   end,
   -- },
-
-  {
-    'kylechui/nvim-surround',
-    version = '*', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'VeryLazy',
-    opts = {},
-  },
 
   {
     'folke/todo-comments.nvim',
