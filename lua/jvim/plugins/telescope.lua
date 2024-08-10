@@ -13,7 +13,7 @@ return {
     config = function()
       local actions = require('telescope.actions')
       local telescope = require('telescope')
-      local trouble = require('trouble.providers.telescope')
+      local trouble = require('trouble.sources.telescope')
       telescope.setup({
         defaults = {
           mappings = {
@@ -25,7 +25,7 @@ return {
               ['<C-n>'] = actions.cycle_history_next,
               ['<C-p>'] = actions.cycle_history_prev,
               -- Set results loclist with trouble
-              ['<C-l>'] = trouble.open_with_trouble,
+              ['<C-l>'] = trouble.open,
             },
             n = {
               ['q'] = actions.close,

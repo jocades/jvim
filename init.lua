@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local stdout = vim.fn.system({
     'git',
@@ -23,6 +24,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('jvim').setup({
-  colorscheme = 'catppuccin',
+  colorscheme = 'rose-pine',
   dev = '~/dev/neovim/plugins',
 })

@@ -7,6 +7,7 @@ return {
       { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- lsp for common json schemas
       'jose-elias-alvarez/typescript.nvim',
     },
+    ---@class jvim.LspOpts
     opts = {
       diagnostics = {
         underline = true,
@@ -32,6 +33,7 @@ return {
             willRename = true,
           },
         },
+        offsetEncoding = { 'utf-16' }, -- fix clang formatter warnings
       },
       -- Servers & Settings
       servers = {
@@ -143,30 +145,28 @@ return {
         },
       },
     },
+    ---@param opts jvim.LspOpts
     config = function(_, opts)
+      local lspconfig = require('lspconfig')
+      local capabilities = JVim.lsp.capabilities(opts)
+
+      for server, config in pairs(opts.servers) do
+        config.capabilities = capabilities
+        lspconfig[server].setup(config)
+      end
+
+      require('mason-lspconfig').setup({
+        ensure_installed = vim.tbl_keys(opts.servers),
+        automatic_installation = {
+          exclude = { 'rust_analyzer' },
+        },
+      })
+
       JVim.lsp.on_attach(function(client, e)
-        -- vim.notify(e.file, 'warn')
+        require('jvim.plugins.lsp.keymaps').on_attach(client, e.buf)
       end)
 
       vim.diagnostic.config(opts.diagnostics)
-      local capabilities = require('cmp_nvim_lsp').default_capabilities(
-        vim.lsp.protocol.make_client_capabilities()
-      )
-      capabilities.offsetEncoding = { 'utf-16' } -- fix clang formatter warnings
-
-      local lsp_config = require('mason-lspconfig')
-
-      lsp_config.setup({ ensure_installed = vim.tbl_keys(opts.servers) })
-
-      lsp_config.setup_handlers({
-        function(server_name)
-          local setup = opts.servers[server_name] or {}
-          setup.capabilities = capabilities
-          setup.on_attach = require('jvim.plugins.lsp.keymaps').on_attach
-
-          require('lspconfig')[server_name].setup(setup)
-        end,
-      })
 
       JVim.map('n', '<leader>dt', function()
         opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
@@ -179,7 +179,7 @@ return {
     end,
   },
 
-  -- LS manager
+  -- LS + tooling manager
   {
     'williamboman/mason.nvim',
     cmd = 'Mason',

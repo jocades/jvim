@@ -1,6 +1,6 @@
 ---@meta
 
----@class JVimOptions
+---@class JVimOpts
 ---@field colorscheme? string
 ---@field dev? string
 

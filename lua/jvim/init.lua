@@ -2,7 +2,7 @@ _G.JVim = require('jvim.util')
 
 local M = {}
 
----@param opts? JVimOptions
+---@param opts? JVimOpts
 function M.setup(opts)
   opts = opts or {}
 
@@ -39,9 +39,7 @@ function M.setup(opts)
   end
 
   JVim.load('autocmds')
-
   JVim.on_very_lazy(function()
-    require('jvim.lib.globals')
     JVim.register(JVim.load('keymaps'))
   end)
 end

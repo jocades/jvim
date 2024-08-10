@@ -25,6 +25,25 @@ return {
   },
 
   {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    ---@module 'rose-pine'
+    ---@type Options
+    opts = {
+      enable = {
+        terminal = true,
+        legacy_highlights = false, -- Improve compatibility for previous versions of Neovim
+        migrations = false, -- Handle deprecated options automatically
+      },
+      styles = {
+        bold = true,
+        italic = false,
+        transparency = false,
+      },
+    },
+  },
+
+  {
     'rebelot/kanagawa.nvim',
     enabled = false,
     priority = 1000,

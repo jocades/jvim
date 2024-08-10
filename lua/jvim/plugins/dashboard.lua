@@ -19,7 +19,7 @@ return {
       ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
       ]]
 
-      logo = string.rep('\n', 10) .. logo .. '\n\n'
+      logo = string.rep('\n', 8) .. logo .. '\n\n'
       dashboard.section.header.val = vim.split(logo, '\n')
     --stylua: ignore
     dashboard.section.buttons.val = {

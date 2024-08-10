@@ -1,11 +1,4 @@
-local M = {
-  diagnostics = {
-    underline = true,
-    virtual_text = { spacing = 4, source = 'if_many', prefix = '●' },
-    update_in_insert = false,
-    severity_sort = true,
-  },
-}
+local M = {}
 
 ---@class LspAttachEvent
 ---@field buf number Buffer id
@@ -14,19 +7,29 @@ local M = {
 ---@field file string Absolute file path
 ---@field id number
 
----@param callback fun(client: vim.lsp.Client, e: LspAttachEvent)
+---@param fn fun(client: vim.lsp.Client, e: LspAttachEvent)
 ---@return number # The autocmd id
-function M.on_attach(callback)
+function M.on_attach(fn)
   return vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(e)
       local client = vim.lsp.get_client_by_id(e.data.client_id)
       if not client then
-        JVim.warn('No client found for LSP attach event')
+        JVim.warn({ 'No client found', e.file }, { title = 'LSP' })
         return
       end
-      callback(client, e)
+      fn(client, e)
     end,
   })
+end
+
+function M.capabilities(opts)
+  return vim.tbl_deep_extend(
+    'force',
+    {},
+    vim.lsp.protocol.make_client_capabilities(),
+    require('cmp_nvim_lsp').default_capabilities(),
+    opts.capabilities or {}
+  )
 end
 
 function M.diagnostic_goto(next, severity)
