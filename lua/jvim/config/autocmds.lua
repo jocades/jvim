@@ -12,12 +12,6 @@ if vim.env.JVIM_TEST then
   })
 end
 
--- Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd(
-  { 'FocusGained', 'TermClose', 'TermLeave' },
-  { command = 'checktime' }
-)
-
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -25,10 +19,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Resize splits if window got resized
--- vim.api.nvim_create_autocmd({ 'VimResized' }, {
---   callback = function() vim.cmd('tabdo wincmd =') end,
--- })
+-- Check if we need to reload the file when it changed
+JVim.autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
+  callback = function()
+    if vim.o.buftype ~= 'nofile' then
+      vim.cmd('checktime')
+    end
+  end,
+})
 
 -- Go to last loc when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
@@ -41,6 +39,40 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   end,
 })
 
+-- Set wrap and spell for some filetypes
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'text', 'plaintex', 'gitcommit', 'markdown' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})
+
+-- Disable syntax highlighting when opening big files
+vim.filetype.add({
+  pattern = {
+    ['.*'] = {
+      function(path, buf)
+        return vim.bo[buf]
+            and vim.bo[buf].filetype ~= 'bigfile'
+            and path
+            and vim.fn.getfsize(path) > vim.g.bigfile_size
+            and 'bigfile'
+          or nil
+      end,
+    },
+  },
+})
+
+JVim.autocmd({ 'FileType' }, {
+  pattern = 'bigfile',
+  callback = function(e)
+    vim.schedule(function()
+      vim.bo[e.buf].syntax = vim.filetype.match({ buf = e.buf }) or ''
+    end)
+  end,
+})
+
 -- Close some filetypes with <q>
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
@@ -48,39 +80,10 @@ vim.api.nvim_create_autocmd('FileType', {
     'help',
     'man',
     'notify',
-    'lspinfo',
-    'spectre_panel',
     'startuptime',
-    'tsplayground',
-    'PlenaryTestPopup',
   },
   callback = function(e)
     vim.bo[e.buf].buflisted = false
-    vim.keymap.set(
-      'n',
-      'q',
-      '<cmd>close<cr>',
-      { buffer = e.buf, silent = true }
-    )
-  end,
-})
-
--- Set wrap and spell for some filetypes
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'gitcommit', 'markdown' },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.spell = true
-  end,
-})
-
--- Set correct indent for languages I made, create syntax highlighting in the future
-vim.api.nvim_create_autocmd('BufEnter', {
-  pattern = { '*.ene', '*.lox' },
-  callback = function()
-    print('LOX or ENE file detected')
-    vim.opt_local.expandtab = true
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
+    vim.keymap.set('n', 'q', vim.cmd.q, { buffer = e.buf, silent = true })
   end,
 })

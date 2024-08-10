@@ -13,4 +13,5 @@
 ---@field v? jvim.Keymap
 
 _G.JVim = require('jvim.util')
+_G.JVim.git = require('neogit')
 _G.vim = vim -- for treesitter highlights

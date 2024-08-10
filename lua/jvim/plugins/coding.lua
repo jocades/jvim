@@ -27,7 +27,13 @@ return {
   {
     'folke/trouble.nvim',
     cmd = { 'TroubleToggle', 'Trouble' },
-    opts = { use_diagnostic_signs = true },
+    opts = {
+      modes = {
+        lsp = {
+          win = { position = 'right' },
+        },
+      },
+    },
   },
 
   -- Comments
@@ -100,6 +106,36 @@ return {
         { path = 'luvit-meta/library', words = { 'vim%.uv' } },
       },
     },
+    keys = {
+      {
+        '[q',
+        function()
+          if require('trouble').is_open() then
+            require('trouble').prev({ skip_groups = true, jump = true }) ---@diagnostic disable-line
+          else
+            local ok, err = pcall(vim.cmd.cprev)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
+        end,
+        desc = 'Previous Trouble/Quickfix Item',
+      },
+      {
+        ']q',
+        function()
+          if require('trouble').is_open() then
+            require('trouble').next({ skip_groups = true, jump = true }) ---@diagnostic disable-line
+          else
+            local ok, err = pcall(vim.cmd.cnext)
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          end
+        end,
+        desc = 'Next Trouble/Quickfix Item',
+      },
+    },
   },
 
   -- Neovim libuv types for lua. Plugin will never be loaded
@@ -132,9 +168,9 @@ return {
   keys = {
     { "]t", function() require("todo-comments").jump_next() end, desc = "Next todo comment" },
     { "[t", function() require("todo-comments").jump_prev() end, desc = "Previous todo comment" },
-    { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Todo (Trouble)" },
-    { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
-    { "<leader>tt", "<cmd>TodoTelescope<cr>", desc = "Todo" },
+    { "<leader>tt", "<cmd>TodoTrouble<cr>", desc = "Todo (Trouble)" },
+    { "<leader>tT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
+    { "<leader>ft", "<cmd>TodoTelescope<cr>", desc = "Todo" },
     { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
   },
   },

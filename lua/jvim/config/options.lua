@@ -3,8 +3,6 @@ vim.g.maplocalleader = ' '
 
 -- Set filetype to `bigfile` for files larger than 1.5 MB
 -- Only vim syntax will be enabled (with the correct filetype)
--- LSP, treesitter and other ft plugins will be disabled.
--- mini.animate will also be disabled.
 vim.g.bigfile_size = 1024 * 1024 * 1.5 -- 1.5 MB
 
 local opts = {
@@ -12,11 +10,10 @@ local opts = {
   mouse = 'a', -- enable mouse mode
   incsearch = true, -- highlit while search
   hlsearch = false, -- highlight on search
-  swapfile = false,
   number = true, -- make line numbers default
   rnu = false, -- set relative line numbers
   wrap = false,
-  --  smartindent = true, -- make indenting smarter again
+  smartindent = true, -- make indenting smarter again
   equalalways = false, -- make windows always equal height
 
   expandtab = true, -- Use spaces instead of tabs
@@ -24,7 +21,7 @@ local opts = {
   grepformat = '%f:%l:%c:%m',
   grepprg = 'rg --vimgrep',
   inccommand = 'nosplit', -- preview incremental substitute
-  laststatus = 0,
+  laststatus = 3,
   --list = true, -- Show some invisible characters (tabs...
   --pumblend = 10, -- Popup blend
   sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },

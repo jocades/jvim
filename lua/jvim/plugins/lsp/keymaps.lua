@@ -10,8 +10,8 @@ local keymaps = {
   { '<leader>D', lsp.type_definition, 'Type Definition' },
   { 'gI', lsp.implementation, 'Goto Implementation' },
   --stylua: ignore start
-  { '<leader>dl', '<cmd>TroubleToggle document_diagnostics<cr>', 'Document Diagnostics (Trouble)' },
-  { '<leader>dp', '<cmd>TroubleToggle workspace_diagnostics<cr>', 'Workspace Diagnostics (Trouble)' },
+  { '<leader>dd', '<cmd>Trouble diagnostics toggle<cr>', 'Diagnostics (Trouble)' },
+  -- { '<leader>dw', '<cmd>Trouble workspace_diagnostics<cr>', 'Workspace Diagnostics (Trouble)' },
   --stylua: ignore end
   { ']d', vim.diagnostic.goto_next, 'Goto Next Diagnostic' },
   { '[d', vim.diagnostic.goto_prev, 'Goto Previous Diagnostic' },

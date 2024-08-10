@@ -9,6 +9,8 @@ return {
         build = 'make',
         cond = vim.fn.executable('make') == 1,
       },
+      -- 'nvim-telescope/telescope-smart-history.nvim',
+      -- 'kkharji/sqlite.lua',
     },
     config = function()
       local actions = require('telescope.actions')
@@ -37,55 +39,88 @@ return {
           file_ignore_patterns = { '.git/', 'node_modules' },
           layout_strategy = 'horizontal',
           layout_config = {
-            width = 0.95,
-            height = 0.85,
+            -- width = 0.95,
+            -- height = 0.85,
             -- preview_cutoff = 120,
             prompt_position = 'top',
-            horizontal = {
-              preview_width = function(_, cols, _)
-                return math.floor(cols * 0.6)
-              end,
-            },
-            vertical = {
-              width = 0.9,
-              height = 0.95,
-              preview_height = 0.5,
-            },
-            flex = {
-              horizontal = {
-                preview_width = 0.9,
-              },
-            },
+            -- horizontal = {
+            --   preview_width = function(_, cols, _)
+            --     return math.floor(cols * 0.6)
+            --   end,
+            -- },
+            -- vertical = {
+            --   width = 0.9,
+            --   height = 0.95,
+            --   preview_height = 0.5,
+            -- },
+            -- flex = {
+            --   horizontal = {
+            --     preview_width = 0.9,
+            --   },
+            -- },
           },
           selection_strategy = 'reset',
           sorting_strategy = 'ascending',
           scroll_strategy = 'cycle',
           color_devicons = true,
         },
+        extensions = {
+          fzf = {},
+          history = {
+            limit = 100,
+            path = vim.fs.joinpath(
+              vim.fn.stdpath('data') --[[@as string]],
+              'telescope_history.sqlite3'
+            ),
+          },
+        },
       })
       pcall(telescope.load_extension, 'fzf')
-      pcall(telescope.load_extension, 'harpoon')
+      -- pcall(require('telescope').load_extension, 'smart_history')
+      -- pcall(telescope.load_extension, 'harpoon')
 
       local b = require('telescope.builtin')
       JVim.register({
         -- Fuzzy find
-        { '<C-p>', b.find_files, 'Find Files' },
-        { '<leader>fw', b.live_grep, 'Find Word by grep' },
-        { '<leader>fc', b.grep_string, 'Find Current word' },
+        { '<C-p>', b.find_files, 'Find files' },
+        -- { '<leader>fg', b.git_files, 'Find git files' },
+        { '<leader>fg', b.live_grep, 'Find grep' },
+        { '<leader>fw', b.grep_string, 'Find current word' },
         { '<leader>/', b.buffers, 'Find existing buffers' },
+        {
+          '<leader>fl',
+          function()
+            b.find_files({ ---@diagnostic disable-next-line: param-type-mismatch
+              cwd = vim.fs.joinpath(vim.fn.stdpath('data'), 'lazy'),
+            })
+          end,
+          'Find lazy plugins',
+        },
+        {
+          '<leader>fp',
+          function()
+            b.find_files({ cwd = '~/dev/neovim/plugins' })
+          end,
+          'Find plugins',
+        },
+        {
+          '<leader>fc',
+          function()
+            b.find_files({ cwd = vim.fn.stdpath('config') })
+          end,
+          'Find config',
+        },
         { '<leader>?', b.oldfiles, 'Find recently opened files' },
         --stylua: ignore
         { '<leader>.', b.current_buffer_fuzzy_find, 'Fuzzily search in current buffer', },
         { '<leader>:', b.command_history, 'Command history' },
-        { '<leader>fm', b.marks, 'Find marks' },
+        { '<leader>fm', b.man_pages, 'Find man pages' },
         { '<leader>fk', b.keymaps, 'Find keymaps' },
-        { '<leader>th', b.colorscheme, 'Switch colorscheme' },
         -- Git
-        { '<leader>fg', b.git_files, 'Find Git files' },
         { '<leader>ch', b.git_commits, 'Git commit history' },
-        { '<leader>st', b.git_status, 'Git status' },
+        { '<leader>gs', b.git_status, 'Git status' },
         { '<leader>gb', b.git_branches, 'Git branches' },
-        { '<leader>gs', b.git_stash, 'Git stash' },
+        -- { '<leader>gs', b.git_stash, 'Git stash' },
         -- Misc
         { '<leader>fh', b.help_tags, 'Find Help' },
         { '<leader>ts', b.builtin, 'Open Telescope Menu' },

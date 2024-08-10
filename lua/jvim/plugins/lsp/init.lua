@@ -3,15 +3,19 @@ return {
     'neovim/nvim-lspconfig',
     event = 'BufEnter',
     dependencies = {
-      'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
-      { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- lsp for common json schemas
+      'williamboman/mason-lspconfig.nvim', -- lspconfig setup bridge
+      { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- json/yaml schemas
       'jose-elias-alvarez/typescript.nvim',
     },
     ---@class jvim.LspOpts
     opts = {
       diagnostics = {
         underline = true,
-        virtual_text = { spacing = 4, source = 'if_many', prefix = '●' },
+        virtual_text = {
+          spacing = 4,
+          source = 'if_many',
+          prefix = '●',
+        },
         update_in_insert = false,
         severity_sort = true,
       },
@@ -167,15 +171,6 @@ return {
       end)
 
       vim.diagnostic.config(opts.diagnostics)
-
-      JVim.map('n', '<leader>dt', function()
-        opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
-        vim.diagnostic.config(opts.diagnostics)
-      end, 'LSP: Toggle inline text diagnostics')
-
-      JVim.map('n', '<leader>di', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-      end, { desc = 'LSP: Toggle inlay hints' })
     end,
   },
 

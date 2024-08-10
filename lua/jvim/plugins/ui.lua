@@ -78,7 +78,6 @@ return {
           -- view: (default is cmdline view)
           -- opts: any options passed to the view
           -- icon_hl_group: optional hl_group for the icon
-          -- title: set to anything or empty string to hide
           cmdline = {
             pattern = '^:',
             icon = '',
@@ -97,14 +96,15 @@ return {
             icon = ' ',
             lang = 'regex',
           },
+
           search_up = {
             kind = 'search',
             pattern = '^%?',
             icon = ' ',
             lang = 'regex',
           },
-          filter = { pattern = '^:%s*!', icon = '$', lang = 'bash' },
-          help = { pattern = '^:%s*he?l?p?%s+', icon = '󰋖' },
+          filter = { pattern = '^:%s*!', icon = '$', lang = 'bash', title = '' },
+          help = { pattern = '^:%s*he?l?p?%s+', icon = '󰋖', title = '' },
           input = { view = 'cmdline_input', icon = '󰥻 ' }, -- Used by input()
           -- lua = false, -- to disable a format, set to `false`
         },

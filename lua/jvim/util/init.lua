@@ -2,6 +2,8 @@
 local M = {
   buf = require('jvim.util.buf'),
   lsp = require('jvim.util.lsp'),
+  git = require('jvim.util.git'),
+  toggle = require('jvim.util.toggle'),
 }
 
 setmetatable(M, { __index = require('lazy.util') })

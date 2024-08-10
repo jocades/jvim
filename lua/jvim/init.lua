@@ -22,13 +22,13 @@ function M.setup(opts)
       rtp = {
         disabled_plugins = {
           'gzip',
-          'matchit',
-          'matchparen',
+          -- 'matchit',
+          -- 'matchparen',
           'netrwPlugin',
           'tarPlugin',
-          'tohtml',
+          -- 'tohtml',
           'tutor',
-          'zipPlugin',
+          -- 'zipPlugin',
         },
       },
     },
