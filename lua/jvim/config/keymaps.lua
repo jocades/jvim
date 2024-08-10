@@ -7,8 +7,6 @@ return {
     ['<leader>e'] = { cmd.Neotree, { desc = 'Focus nvim-tree' } },
     ['<leader>q'] = { cmd.qall, { desc = 'Quit all' } },
     ['<leader>Q'] = { '<cmd>qall!<cr>', { desc = 'Quit no save' } },
-    ['<leader>la'] = { '<cmd>Lazy<cr>', { desc = 'Open pkg manager' } },
-
 
     -- Buffer actions
     -- stylua: ignore start
@@ -29,36 +27,8 @@ return {
     ['<C-S-Right>'] = { '<cmd>vertical resize +2<cr>' },
 
     -- Centralization
-    ['<leader>c'] = { 'zz', { nowait = true } },
     ['<C-d>'] = { '<C-d>zz' },
     ['<C-u>'] = { '<C-u>zz' },
-
-    -- Git
-    ['<leader>lg'] = { function() end, { desc = 'Lazygit' } },
-    ['<leader>gd'] = { '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
-    ['<leader>cm'] = {
-      function()
-        vim.cmd('G add .')
-        vim.cmd('G commit')
-      end,
-      { desc = 'Git commit' },
-    },
-
-    ['<leader>gc'] = {
-      function()
-        if require('copilot.client').is_disabled() then
-          require('copilot.command').disable()
-        else
-          require('copilot.command').enable()
-        end
-      end,
-      desc = { 'Toggle copilot' },
-    },
-
-    -- stylua: ignore start
-    ['<leader>hr'] = { function() require('jvim.lib.exec').hacky_reload() end, 'Hacky realod process (use with caution)' , },
-    ['<leader>rl'] = { function() require('jvim.lib.exec').run_last() end, 'Run last command' , },
-    -- stylua: ignore end
   },
 
   i = {

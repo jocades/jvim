@@ -31,6 +31,7 @@ return {
       'jsdoc',
       'json',
       'jsonc',
+      'json5',
       'lua',
       'markdown',
       'markdown_inline',

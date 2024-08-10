@@ -1,13 +1,20 @@
 return {
   {
-    'sindrets/diffview.nvim',
-    event = 'VeryLazy',
+    'NeogitOrg/neogit',
+    cmd = 'Neogit',
     opts = {},
   },
 
   {
+    'sindrets/diffview.nvim',
+    event = 'VeryLazy',
+    opts = {},
+    -- ke,
+  },
+
+  {
     'lewis6991/gitsigns.nvim',
-    event = 'BufReadPost',
+    event = 'VeryLazy',
     opts = {
       signs = {
         add = { text = '┃' },
@@ -46,5 +53,37 @@ return {
         markdown = true,
       },
     },
+    config = function(_, opts)
+      local client = require('copilot.client')
+      local command = require('copilot.command')
+
+      JVim.register({
+        { '<leader>lg', function() end, { desc = 'Lazygit' } },
+        { '<leader>gd', '<cmd>Gvdiffsplit<cr>', { desc = 'Git diff' } },
+
+        {
+          '<leader>cm',
+          function()
+            vim.cmd('G add .')
+            vim.cmd('G commit')
+          end,
+          { desc = 'Git commit' },
+        },
+
+        {
+          '<leader>gco',
+          function()
+            if client.is_disabled() then
+              command.disable()
+            else
+              command.enable()
+            end
+          end,
+          desc = { 'Toggle copilot' },
+        },
+      })
+
+      -- Git
+    end,
   },
 }

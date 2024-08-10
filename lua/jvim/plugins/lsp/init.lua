@@ -4,8 +4,7 @@ return {
     event = 'BufEnter',
     dependencies = {
       'williamboman/mason-lspconfig.nvim', -- lspconfig setup (capabilites, on_attach, etc)
-      { 'folke/neoconf.nvim', cmd = 'Neoconf', config = true },
-      { 'b0o/SchemaStore.nvim', version = false }, -- lsp for common json schemas
+      { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- lsp for common json schemas
       'jose-elias-alvarez/typescript.nvim',
     },
     opts = {
@@ -16,8 +15,8 @@ return {
         severity_sort = true,
       },
       autoformat = true,
-      format = {
-        formatting_options = nil, -- handled by conform.nvim
+      format = { -- handled by conform.nvim
+        formatting_options = nil,
         timeout_ms = nil,
       },
       codelens = {
@@ -59,7 +58,8 @@ return {
         },
         -- JSON
         jsonls = {
-          on_new_config = function()
+          -- lazy-load schemastore when needed
+          on_new_config = function(new_config)
             new_config.settings.json.schemas = new_config.settings.json.schemas
               or {}
             vim.list_extend(
@@ -132,6 +132,8 @@ return {
         },
         -- Rust
         rust_analyzer = {},
+        -- TOML
+        taplo = {},
         -- Zig
         zls = {},
         --- Elixir
