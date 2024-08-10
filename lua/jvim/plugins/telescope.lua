@@ -39,25 +39,7 @@ return {
           file_ignore_patterns = { '.git/', 'node_modules' },
           layout_strategy = 'horizontal',
           layout_config = {
-            -- width = 0.95,
-            -- height = 0.85,
-            -- preview_cutoff = 120,
             prompt_position = 'top',
-            -- horizontal = {
-            --   preview_width = function(_, cols, _)
-            --     return math.floor(cols * 0.6)
-            --   end,
-            -- },
-            -- vertical = {
-            --   width = 0.9,
-            --   height = 0.95,
-            --   preview_height = 0.5,
-            -- },
-            -- flex = {
-            --   horizontal = {
-            --     preview_width = 0.9,
-            --   },
-            -- },
           },
           selection_strategy = 'reset',
           sorting_strategy = 'ascending',
@@ -126,6 +108,63 @@ return {
         { '<leader>ts', b.builtin, 'Open Telescope Menu' },
         { '<leader>fo', ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
       })
+    end,
+  },
+
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    opts = {
+      menu = {
+        -- width = vim.api.nvim_win_get_width(0) - 4,
+      },
+      settings = {
+        save_on_toggle = true,
+      },
+    },
+    keys = function()
+      local keys = {
+        {
+          '<leader>H',
+          function()
+            require('harpoon'):list():add()
+          end,
+          desc = 'Harpoon File',
+        },
+        {
+          '<leader>h',
+          function()
+            local harpoon = require('harpoon')
+            harpoon.ui:toggle_quick_menu(harpoon:list())
+          end,
+          desc = 'Harpoon Quick Menu',
+        },
+        {
+          '<C-]>',
+          function()
+            require('harpoon'):list():next()
+          end,
+          desc = 'Harpoon File',
+        },
+        {
+          '<C-[>',
+          function()
+            require('harpoon'):list():prev()
+          end,
+          desc = 'Harpoon File',
+        },
+      }
+
+      for i = 1, 5 do
+        table.insert(keys, {
+          '<leader>' .. i,
+          function()
+            require('harpoon'):list():select(i)
+          end,
+          desc = 'Harpoon to File ' .. i,
+        })
+      end
+      return keys
     end,
   },
 

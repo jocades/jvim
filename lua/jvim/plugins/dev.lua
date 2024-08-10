@@ -3,6 +3,10 @@ return {
     'test',
     dev = true,
     opts = {},
-    -- config = function() require('test').setup() end,
+  },
+  -- { dir = '~/dev/neovim/plugins/bquik' },
+  {
+    'bquik',
+    dev = true,
   },
 }

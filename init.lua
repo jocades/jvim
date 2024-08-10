@@ -24,6 +24,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('jvim').setup({
-  colorscheme = 'rose-pine',
+  colorscheme = 'catppuccin',
   dev = '~/dev/neovim/plugins',
 })

@@ -40,6 +40,7 @@ function M.setup(opts)
 
   JVim.load('autocmds')
   JVim.on_very_lazy(function()
+    -- require('bquik')
     JVim.register(JVim.load('keymaps'))
   end)
 end
