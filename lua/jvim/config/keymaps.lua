@@ -7,6 +7,7 @@ return {
     -- Buffer actions
     -- stylua: ignore start
     ['<leader>x'] = { JVim.buf.remove, { desc = 'Close buffer', nowait = true } },
+    ['<leader>X'] = { '<cmd>tabc<cr>', 'Close tab' },
     ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' }, },
     ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
     ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
@@ -28,9 +29,11 @@ return {
 
     -- Git
     ['<leader>gg'] = { JVim.git.open, 'Git panel' },
-    ['<leader>cm'] = { ':Neogit commit<cr>', 'Git commit' },
+    ['<leader>gc'] = { ':Neogit commit<cr>', 'Git commit' },
     ['<leader>gB'] = { JVim.git.browse, 'Git browse' },
-    ['<leader>gD'] = { ':DiffviewOpen<cr>', 'Git diff' },
+    ['<leader>gd'] = { ':DiffviewFileHistory %<cr>', 'Git diff (buffer)' },
+    ['<leader>gD'] = { ':DiffviewOpen<cr>', 'Git diff (project)' },
+    ['<leader>gF'] = { ':DiffviewFileHistory<cr>', 'Git diff (history)' },
 
     -- Toggle
     ['<leader>td'] = { JVim.toggle.diagnostics, 'Toggle diagnostics' },
