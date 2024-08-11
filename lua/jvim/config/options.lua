@@ -18,7 +18,6 @@ local opts = {
   shiftwidth = 2, -- Size of an indent
   smartindent = true, -- make indenting smarter again
   equalalways = false, -- make windows always equal height
-  confirm = true, -- Confirm to save changes before exiting modified buffer
   expandtab = true, -- Use spaces instead of tabs
   tabstop = 2, -- Number of spaces tabs count for
   inccommand = 'nosplit', -- preview incremental substitute
@@ -63,7 +62,6 @@ for k, v in pairs(opts) do
   vim.opt[k] = v
 end
 
-vim.o.formatoptions = 'jqlnt' -- dont add comment on new line
 vim.opt.smoothscroll = true
 
 -- File types (maybe use dedicated module)

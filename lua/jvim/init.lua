@@ -22,13 +22,11 @@ function M.setup(opts)
       rtp = {
         disabled_plugins = {
           'gzip',
-          -- 'matchit',
-          -- 'matchparen',
           'netrwPlugin',
           'tarPlugin',
-          -- 'tohtml',
+          'tohtml',
           'tutor',
-          -- 'zipPlugin',
+          'zipPlugin',
         },
       },
     },
@@ -41,21 +39,16 @@ function M.setup(opts)
   local function load()
     JVim.load('autocmds')
     JVim.register(JVim.load('keymaps'))
+    -- require('bquik')
   end
-
-  load()
 
   if vim.fn.argc(-1) == 0 then
-    vim.print('no args')
+    JVim.on_very_lazy(function()
+      load()
+    end)
+  else
+    load()
   end
-
-  JVim.on_very_lazy(function()
-    JVim.info({ 'VeryLazy', vim.o.formatoptions })
-    -- print(vim.o.formatoptions)
-
-    -- vim.o.formatoptions = 'jqlnt'
-    -- require('bquik')
-  end)
 end
 
 return M

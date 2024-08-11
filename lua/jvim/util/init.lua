@@ -3,7 +3,6 @@ local M = {
   buf = require('jvim.util.buf'),
   lsp = require('jvim.util.lsp'),
   git = require('jvim.util.git'),
-  tree = require('jvim.util.tree'),
   toggle = require('jvim.util.toggle'),
 }
 
@@ -76,6 +75,12 @@ function M.load(name)
   return M.try(function()
     return require(mod)
   end, { msg = 'Failed loading ' .. mod })
+end
+
+function M.lazy_require(mod)
+  return function()
+    return require(mod)
+  end
 end
 
 return M
