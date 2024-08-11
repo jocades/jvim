@@ -26,7 +26,6 @@ return {
               ['<C-k>'] = actions.move_selection_previous,
               ['<C-n>'] = actions.cycle_history_next,
               ['<C-p>'] = actions.cycle_history_prev,
-              -- Set results loclist with trouble
               ['<C-l>'] = trouble.open,
             },
             n = {
@@ -48,18 +47,9 @@ return {
         },
         extensions = {
           fzf = {},
-          history = {
-            limit = 100,
-            path = vim.fs.joinpath(
-              vim.fn.stdpath('data') --[[@as string]],
-              'telescope_history.sqlite3'
-            ),
-          },
         },
       })
       pcall(telescope.load_extension, 'fzf')
-      -- pcall(require('telescope').load_extension, 'smart_history')
-      -- pcall(telescope.load_extension, 'harpoon')
 
       local b = require('telescope.builtin')
       JVim.register({
@@ -106,7 +96,6 @@ return {
         -- Misc
         { '<leader>fh', b.help_tags, 'Find Help' },
         { '<leader>ts', b.builtin, 'Open Telescope Menu' },
-        { '<leader>fo', ':Telescope harpoon<cr>', 'Open Harpoon Menu' },
       })
     end,
   },
@@ -167,31 +156,4 @@ return {
       return keys
     end,
   },
-
-  -- Organize buffers
-  --[[ {
-    'ThePrimeagen/harpoon',
-    config = function()
-      local mark = require('harpoon.mark')
-      local ui = require('harpoon.ui')
-
-      JVim.keymap.register({
-        ['<leader>a'] = { mark.add_file, { desc = 'Add file to harpoon' } },
-        ['<leader>jh'] = { ui.toggle_quick_menu, { desc = 'Toggle Harpoon Menu' }, },
-        ['<leader>jj'] = { function() ui.nav_file(1) end, }, ['<leader>jk'] = { function() ui.nav_file(2)
-          end,
-        },
-        ['<leader>jl'] = {
-          function()
-            ui.nav_file(3)
-          end,
-        },
-        ['<leader>j;'] = {
-          function()
-            ui.nav_file(4)
-          end,
-        },
-      })
-    end,
-  }, ]]
 }
