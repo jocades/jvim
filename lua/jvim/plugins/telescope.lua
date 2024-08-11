@@ -16,6 +16,7 @@ return {
       local actions = require('telescope.actions')
       local telescope = require('telescope')
       local trouble = require('trouble.sources.telescope')
+
       telescope.setup({
         defaults = {
           mappings = {
@@ -150,7 +151,7 @@ return {
           function()
             require('harpoon'):list():select(i)
           end,
-          desc = 'Harpoon to File ' .. i,
+          desc = 'Harpoon to file ' .. i,
         })
       end
       return keys

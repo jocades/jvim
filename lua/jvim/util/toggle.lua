@@ -31,4 +31,8 @@ function M.inlay_hints()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 end
 
+function M.formatting()
+  vim.g.disable_autoformat = not vim.g.disable_autoformat
+end
+
 return M

@@ -38,10 +38,23 @@ function M.setup(opts)
     vim.cmd.colorscheme(opts.colorscheme)
   end
 
-  JVim.load('autocmds')
-  JVim.on_very_lazy(function()
-    -- require('bquik')
+  local function load()
+    JVim.load('autocmds')
     JVim.register(JVim.load('keymaps'))
+  end
+
+  load()
+
+  if vim.fn.argc(-1) == 0 then
+    vim.print('no args')
+  end
+
+  JVim.on_very_lazy(function()
+    JVim.info({ 'VeryLazy', vim.o.formatoptions })
+    -- print(vim.o.formatoptions)
+
+    -- vim.o.formatoptions = 'jqlnt'
+    -- require('bquik')
   end)
 end
 

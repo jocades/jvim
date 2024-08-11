@@ -3,6 +3,7 @@ local M = {
   buf = require('jvim.util.buf'),
   lsp = require('jvim.util.lsp'),
   git = require('jvim.util.git'),
+  tree = require('jvim.util.tree'),
   toggle = require('jvim.util.toggle'),
 }
 

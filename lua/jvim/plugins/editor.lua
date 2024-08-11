@@ -2,15 +2,25 @@ return {
   { -- File explorer
     'nvim-neo-tree/neo-tree.nvim',
     cmd = 'Neotree',
-    init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-      if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0))
-        if stat and stat.type == 'directory' then
-          require('neo-tree')
-        end
-      end
-    end,
+    keys = {
+      {
+        '<C-n>',
+        function()
+          require('neo-tree.command').execute({
+            toggle = true,
+            dir = vim.uv.cwd(),
+          })
+        end,
+        desc = 'Explorer toggle (cwd)',
+        remap = true,
+      },
+      {
+        '<leader>e',
+        '<cmd>Neotree<cr>',
+        desc = 'Explorer focus',
+      },
+    },
+    init = JVim.tree.init,
     deactivate = function()
       vim.cmd.Neotree('close')
     end,
@@ -21,30 +31,32 @@ return {
         mappings = {
           ['<space>'] = 'none',
           ['l'] = 'open',
-          ['<cr>'] = 'focus_preview',
+          ['P'] = { 'toggle_preview', config = { use_float = false } },
+          ['O'] = {
+            function(state)
+              JVim.open(state.tree:get_node().path, { system = true })
+            end,
+            desc = 'Open with system app',
+          },
+          ['Y'] = {
+            function(state)
+              local node = state.tree:get_node()
+              local path = node:get_id()
+              vim.fn.setreg('+', path, 'c')
+              JVim.info('Path copied', { title = 'File system' })
+            end,
+            desc = 'Copy path to clipboard',
+          },
         },
       },
       filesystem = {
         bind_to_cwd = false,
-        follow_current_file = {
-          enabled = true,
-        },
-        window = {
-          mappings = {
-            ['gd'] = function(state)
-              -- Copy of `open` command from author
-              require('neo-tree.sources.common.commands').open(
-                state,
-                require('neo-tree.utils').wrap(
-                  require('neo-tree.sources.filesystem').toggle_directory,
-                  state
-                )
-              )
-
-              vim.cmd('Gvdiffsplit')
-            end,
-          },
-        },
+        use_libuv_file_watcher = true, -- auto detect file changes
+        follow_current_file = { enabled = true },
+      },
+      source_selector = {
+        winbar = false,
+        statusline = false,
       },
       default_component_configs = {
         indent = {
@@ -110,5 +122,13 @@ return {
   },
 
   -- Distraction free coding
-  { 'folke/zen-mode.nvim', cmd = 'ZenMode', opts = {} },
+  {
+    'folke/zen-mode.nvim',
+    cmd = 'ZenMode',
+    opts = {
+      plugins = {
+        tmux = { enabled = true },
+      },
+    },
+  },
 }

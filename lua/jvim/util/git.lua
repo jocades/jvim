@@ -1,16 +1,5 @@
 local M = {}
 
-setmetatable(M, {
-  __index = function(t, k)
-    local Neogit = require('neogit')
-    if Neogit[k] then
-      return Neogit[k]
-    end
-
-    return t[k]
-  end,
-})
-
 local function exe(cmd)
   if type(cmd) == 'table' then
     cmd = table.concat(cmd, ' ')

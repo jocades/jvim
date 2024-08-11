@@ -1,7 +1,7 @@
 return {
   {
     'neovim/nvim-lspconfig',
-    event = 'BufEnter',
+    event = 'VeryLazy',
     dependencies = {
       'williamboman/mason-lspconfig.nvim', -- lspconfig setup bridge
       { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- json/yaml schemas
@@ -181,11 +181,11 @@ return {
     opts = {
       ensure_installed = {
         'autopep8',
-        'stylua',
+        'clang-format',
+        'clangd',
         'shellcheck',
         'shfmt',
-        'clangd',
-        'clang-format',
+        'stylua',
       },
     },
     config = function(_, opts)

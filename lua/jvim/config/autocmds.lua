@@ -31,6 +31,8 @@ JVim.autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
 -- Go to last loc when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
+    vim.o.formatoptions = 'jqlnt' -- dont add comment on new line
+
     local mark = vim.api.nvim_buf_get_mark(0, '"')
     local lcount = vim.api.nvim_buf_line_count(0)
     if mark[1] > 0 and mark[1] <= lcount then
@@ -69,6 +71,7 @@ JVim.autocmd({ 'FileType' }, {
   callback = function(e)
     vim.schedule(function()
       vim.bo[e.buf].syntax = vim.filetype.match({ buf = e.buf }) or ''
+      JVim.warn('Big file detected')
     end)
   end,
 })

@@ -12,23 +12,29 @@ local opts = {
   hlsearch = false, -- highlight on search
   number = true, -- make line numbers default
   rnu = false, -- set relative line numbers
-  wrap = false,
+  wrap = true,
+  linebreak = true,
+  shiftround = true, -- Round indent
+  shiftwidth = 2, -- Size of an indent
   smartindent = true, -- make indenting smarter again
   equalalways = false, -- make windows always equal height
-
+  confirm = true, -- Confirm to save changes before exiting modified buffer
   expandtab = true, -- Use spaces instead of tabs
-  formatoptions = 'jcroqlnt', -- tcqj
-  grepformat = '%f:%l:%c:%m',
-  grepprg = 'rg --vimgrep',
+  tabstop = 2, -- Number of spaces tabs count for
   inccommand = 'nosplit', -- preview incremental substitute
-  laststatus = 3,
-  --list = true, -- Show some invisible characters (tabs...
-  --pumblend = 10, -- Popup blend
-  sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize' },
-  shiftround = true, -- Round indent
-  --shiftwidth = 2, -- Size of an indent
+  laststatus = 3, -- global status line
+  list = true, -- Show some invisible characters (tabs...
+  sessionoptions = {
+    'buffers',
+    'curdir',
+    'tabpages',
+    'winsize',
+    'help',
+    'globals',
+    'skiprtp',
+    'folds',
+  },
   sidescrolloff = 8, -- Columns of context
-
   scrolloff = 6, -- always n lines below the cursor
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
@@ -46,38 +52,27 @@ local opts = {
   completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
   fillchars = { eob = '~' },
   showmode = false,
-  --winbar = '%=%m %f',
   colorcolumn = '80', -- Line length marker (ruler)
 }
 
-if vim.fn.has('nvim-0.10') == 1 then
-  vim.opt.smoothscroll = true
-  -- vim.wo.foldmethod = 'expr'
-  -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-  -- vim.opt.foldtext = ''
-end
+-- vim.wo.foldmethod = 'expr'
+-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+-- vim.opt.foldtext = ''
 
 for k, v in pairs(opts) do
   vim.opt[k] = v
 end
 
--- file types (maybe use dedicated module)
+vim.o.formatoptions = 'jqlnt' -- dont add comment on new line
+vim.opt.smoothscroll = true
+
+-- File types (maybe use dedicated module)
 vim.filetype.add({
   extension = {
     es = 'es',
-  },
-})
-
-vim.filetype.add({
-  extension = {
     mdx = 'markdown',
+    astro = 'astro',
   },
 })
 
 vim.treesitter.language.register('markdown', 'mdx')
-
-vim.filetype.add({
-  extension = {
-    astro = 'astro',
-  },
-})

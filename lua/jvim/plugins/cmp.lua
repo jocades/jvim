@@ -1,6 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
-  version = false, -- last release is way too old
+  version = false,
   event = 'InsertEnter',
   dependencies = {
     'hrsh7th/cmp-nvim-lsp', -- lsp completion
@@ -35,6 +35,10 @@ return {
         { name = 'buffer', keyword_length = 4 },
         { name = 'path' },
         { name = 'luasnip' },
+        {
+          name = 'lazydev',
+          group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+        },
       },
       formatting = { -- pop-up menu looks
         format = lspkind.cmp_format({
