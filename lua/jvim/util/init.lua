@@ -69,12 +69,23 @@ function M.on_very_lazy(fn)
   })
 end
 
----@param name 'autocmds' | 'keymaps' | 'options'
+---@param name 'autocmds'|'keymaps'|'options'
 function M.load(name)
   local mod = 'jvim.config.' .. name
   return M.try(function()
     return require(mod)
   end, { msg = 'Failed loading ' .. mod })
+end
+
+---@param cmd string|string[]
+function M.exe(cmd)
+  if type(cmd) == 'table' then
+    cmd = table.concat(cmd, ' ')
+  end
+  local handle = assert(io.popen(cmd))
+  local result = handle:read('*a')
+  handle:close()
+  return vim.trim(result)
 end
 
 return M

@@ -1,6 +1,6 @@
 return {
   'hrsh7th/nvim-cmp',
-  version = false, -- last release is way too old
+  version = false,
   event = 'InsertEnter',
   dependencies = {
     'hrsh7th/cmp-nvim-lsp', -- lsp completion
@@ -19,7 +19,10 @@ return {
           require('luasnip').lsp_expand(args.body)
         end,
       },
+
       mapping = cmp.mapping.preset.insert({
+        ['<C-n>'] = cmp.config.disable,
+        ['<C-p>'] = cmp.config.disable,
         ['<C-k>'] = cmp.mapping.select_prev_item(),
         ['<C-j>'] = cmp.mapping.select_next_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -35,6 +38,10 @@ return {
         { name = 'buffer', keyword_length = 4 },
         { name = 'path' },
         { name = 'luasnip' },
+        {
+          name = 'lazydev',
+          group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+        },
       },
       formatting = { -- pop-up menu looks
         format = lspkind.cmp_format({

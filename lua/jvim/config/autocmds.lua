@@ -1,17 +1,3 @@
-if vim.env.JVIM_TEST then
-  JVim.autocmd('BufReadPre', {
-    callback = function()
-      print('BufReadPre!!!')
-    end,
-  })
-
-  vim.api.nvim_create_autocmd('BufReadPost', {
-    callback = function()
-      print('BufReadPost!!!')
-    end,
-  })
-end
-
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -31,6 +17,8 @@ JVim.autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
 -- Go to last loc when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function()
+    vim.o.formatoptions = 'jqlnt' -- dont add comment on new line
+
     local mark = vim.api.nvim_buf_get_mark(0, '"')
     local lcount = vim.api.nvim_buf_line_count(0)
     if mark[1] > 0 and mark[1] <= lcount then
@@ -69,6 +57,7 @@ JVim.autocmd({ 'FileType' }, {
   callback = function(e)
     vim.schedule(function()
       vim.bo[e.buf].syntax = vim.filetype.match({ buf = e.buf }) or ''
+      JVim.warn('Big file detected')
     end)
   end,
 })
@@ -87,3 +76,18 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set('n', 'q', vim.cmd.q, { buffer = e.buf, silent = true })
   end,
 })
+
+-- TEST: what
+if vim.env.JVIM_TEST then
+  JVim.autocmd('BufReadPre', {
+    callback = function()
+      print('BufReadPre!!!')
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    callback = function()
+      print('BufReadPost!!!')
+    end,
+  })
+end

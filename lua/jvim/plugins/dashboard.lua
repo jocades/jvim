@@ -19,15 +19,16 @@ return {
       ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
       ]]
 
-      logo = string.rep('\n', 8) .. logo .. '\n\n'
+      logo = string.rep('\n', 4) .. logo .. '\n\n'
       dashboard.section.header.val = vim.split(logo, '\n')
     --stylua: ignore
     dashboard.section.buttons.val = {
-      dashboard.button('f', ' ' .. ' Find file', ':Telescope find_files<cr>'), -- 
+      dashboard.button('f', ' ' .. ' Find file', ':Telescope find_files<cr>'), -- 
       dashboard.button('n', '󱇧 ' .. ' New file', ':ene <BAR> startinsert<cr>'),
-      dashboard.button('r', '󰈙 ' .. ' Recent files', ':Telescope oldfiles<cr>'),
-      dashboard.button('w', '󰈭 ' .. ' Find word', ':Telescope live_grep<cr>'),
-      dashboard.button('s', '󰦛 ' .. ' Restore Session', [[:lua require("persistence").load()<cr>]]),
+      dashboard.button('r', ' ' .. ' Recent files', ':Telescope oldfiles<cr>'),
+      dashboard.button('t', '󰈙 ' .. ' Find grep', ':Telescope live_grep<cr>'),
+      dashboard.button('g', ' ' .. ' Git panel', ':Neogit<cr>'),
+      dashboard.button('s', '󰦛 ' .. ' Restore session', ':lua require("persistence").load()<cr>'),
       dashboard.button('c', ' ' .. ' Config', ':e $MYVIMRC<cr>'),
       dashboard.button('l', '󰒲 ' .. ' Lazy', ':Lazy<cr>'),
       dashboard.button('q', ' ' .. ' Quit', ':qa<cr>'),

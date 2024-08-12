@@ -111,28 +111,41 @@ return {
           ['vim.lsp.util.stylize_markdown'] = true,
           ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
         },
+        hover = {
+          enabled = true,
+          silent = true, -- set to true to not show a message if hover is not available
+          view = nil, -- when nil, use defaults from documentation
+          ---@type NoiceViewOptions
+          opts = {}, -- merged with defaults from documentation
+        },
       },
       messages = {
         -- NOTE: If you enable messages, then the cmdline is enabled automatically.
         -- This is a current Neovim limitation.
         enabled = true, -- enables the Noice messages UI
-        view = 'mini', -- default view for messages
+        view = 'notify', -- default view for messages
         view_error = 'notify', -- view for errors
         view_warn = 'notify', -- view for warnings
         view_history = 'messages', -- view for :messages
         view_search = 'virtualtext', -- view for search count messages. Set to `false` to disable
       },
+
       routes = {
+        {
+          view = 'split',
+          filter = { event = 'msg_show', min_height = 10 },
+        },
         {
           view = 'mini',
           filter = {
             event = 'msg_show',
             any = {
+              { find = '^%d+ .*lines' },
               { find = '%d+L, %d+B' },
               { find = '; after #%d+' },
               { find = '; before #%d+' },
-              { find = 'Already at .*change' },
-              { find = 'No information available ' }, -- lsp hover
+              { find = 'already at .*change' },
+              { find = 'no information available ' }, -- lsp hover
               { find = '.*: Pattern not found' },
             },
           },
@@ -143,15 +156,19 @@ return {
           filter = {
             event = 'notify',
             any = {
-              { find = 'No information available' },
-              -- { find = '[neo-tree]' },
+              { find = 'no information available' },
+              { find = '[neo-tree]' },
             },
           },
         },
-
         {
           view = 'mini',
-          filter = { event = 'msg_showmode' },
+          filter = {
+            any = {
+              { event = 'msg_showmode' },
+              -- { event = 'msg_show', kind = 'emsg' },
+            },
+          },
         },
       },
       cmdline = {
@@ -182,7 +199,6 @@ return {
             icon = ' ',
             lang = 'regex',
           },
-
           search_up = {
             kind = 'search',
             pattern = '^%?',
@@ -194,13 +210,6 @@ return {
           input = { view = 'cmdline_input', icon = '󰥻 ' }, -- Used by input()
           -- lua = false, -- to disable a format, set to `false`
         },
-      },
-      hover = {
-        enabled = true,
-        silent = true, -- set to true to not show a message if hover is not available
-        view = nil, -- when nil, use defaults from documentation
-        ---@type NoiceViewOptions
-        opts = {}, -- merged with defaults from documentation
       },
       -- you can enable a preset for easier configuration
       presets = {

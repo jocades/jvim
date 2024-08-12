@@ -7,6 +7,10 @@ return {
     ---@module 'catppuccin'
     ---@type CatppuccinOptions
     opts = {
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
       show_end_of_buffer = true,
       transparent_background = false,
       no_italic = true,
@@ -81,7 +85,6 @@ return {
       on_highlights = function(hl, c)
         hl.EndOfBuffer = { fg = c.dark5 } -- I like tildes
         hl.NvimTreeEndOfBuffer = { fg = c.bg_dark }
-        -- TODO: Brighter color for split windows separators
         local prompt = '#2d3149'
         hl.TelescopeNormal = {
           bg = c.bg_dark,

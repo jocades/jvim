@@ -1,19 +1,13 @@
 return {
   n = {
-    -- Common
-    ['<C-n>'] = { '<cmd>Neotree toggle<cr>', { desc = 'Toggle nvim-tree' } },
-    ['<leader>e'] = { vim.cmd.Neotree, { desc = 'Focus nvim-tree' } },
+    -- Buffers
+    ['<leader>x'] = { JVim.buf.remove, 'Close buffer' },
+    ['<leader>X'] = { vim.cmd.tabc, 'Close tab' },
+    ['<leader>y'] = { '<cmd>%y+<cr>', 'Copy buffer' },
+    ['<leader>v'] = { 'gg0vG$', 'Select buffer' },
+    ['<leader>so'] = { '<cmd>w | so %<cr>', 'Soruce and run lua file' },
 
-    -- Buffer actions
-    -- stylua: ignore start
-    ['<leader>x'] = { JVim.buf.remove, { desc = 'Close buffer', nowait = true } },
-    ['<leader>X'] = { '<cmd>tabc<cr>', 'Close tab' },
-    ['<leader>so'] = { '<cmd>w | so %<cr>', { desc = 'Save, source & run current config file' }, },
-    ['<leader>y'] = { '<cmd>%y+<cr>', { desc = 'Copy whole buffer' } },
-    ['<leader>v'] = { 'gg0vG$', { desc = 'Select whore buffer' } },
-    -- stylua: ignore end
-
-    -- Window actions
+    -- Windows
     ['<leader>z'] = { vim.cmd.close, { desc = 'Close window', nowait = true } },
     ['<leader>ss'] = { vim.cmd.vsplit, { desc = 'Vertical split' } },
     ['<leader>sh'] = { vim.cmd.split, { desc = 'Horizontal split' } },
@@ -28,17 +22,21 @@ return {
     ['<C-u>'] = { '<C-u>zz' },
 
     -- Git
-    ['<leader>gg'] = { JVim.git.open, 'Git panel' },
-    ['<leader>gc'] = { ':Neogit commit<cr>', 'Git commit' },
+    ['<leader>gg'] = { vim.cmd.Neogit, 'Git panel' },
+    ['<leader>gc'] = { '<cmd>Neogit commit<cr>', 'Git commit' },
     ['<leader>gB'] = { JVim.git.browse, 'Git browse' },
-    ['<leader>gd'] = { ':DiffviewFileHistory %<cr>', 'Git diff (buffer)' },
-    ['<leader>gD'] = { ':DiffviewOpen<cr>', 'Git diff (project)' },
-    ['<leader>gF'] = { ':DiffviewFileHistory<cr>', 'Git diff (history)' },
+    ['<leader>gd'] = { vim.cmd.DiffviewOpen, 'Git diff (project)' },
+    ['<leader>gH'] = { vim.cmd.DiffviewFileHistory, 'Git diff (history)' },
 
     -- Toggle
     ['<leader>td'] = { JVim.toggle.diagnostics, 'Toggle diagnostics' },
     ['<leader>th'] = { JVim.toggle.inlay_hints, 'Toggle inlay hints' },
     ['<leader>tv'] = { JVim.toggle.virtual_text, 'Toggle virtual text' },
+    ['<leader>tf'] = { JVim.toggle.formatting, 'Toggle formatting' },
+
+    -- Messages
+    ['<leader>nn'] = { vim.cmd.Noice, 'Noice history' },
+    ['<leader>nl'] = { '<cmd>Noice last<cr>', 'Noice last' },
   },
 
   i = {

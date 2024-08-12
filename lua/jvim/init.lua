@@ -22,13 +22,11 @@ function M.setup(opts)
       rtp = {
         disabled_plugins = {
           'gzip',
-          -- 'matchit',
-          -- 'matchparen',
           'netrwPlugin',
           'tarPlugin',
-          -- 'tohtml',
+          'tohtml',
           'tutor',
-          -- 'zipPlugin',
+          'zipPlugin',
         },
       },
     },
@@ -38,11 +36,19 @@ function M.setup(opts)
     vim.cmd.colorscheme(opts.colorscheme)
   end
 
-  JVim.load('autocmds')
-  JVim.on_very_lazy(function()
-    -- require('bquik')
+  local function load()
+    JVim.load('autocmds')
     JVim.register(JVim.load('keymaps'))
-  end)
+    -- require('bquik')
+  end
+
+  if vim.fn.argc(-1) == 0 then
+    JVim.on_very_lazy(function()
+      load()
+    end)
+  else
+    load()
+  end
 end
 
 return M

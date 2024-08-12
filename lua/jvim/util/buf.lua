@@ -55,8 +55,4 @@ function M.remove(buf)
   end
 end
 
---jvim.keymap.del('i', '<C-i>')
--- what to do with this?
---vim.print(vim.api.nvim_buf_get_keymap(0, 'i'))
-
 return M
