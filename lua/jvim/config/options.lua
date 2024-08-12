@@ -48,7 +48,7 @@ local opts = {
   termguicolors = true, -- set colorscheme
   cmdheight = 1, -- more space in the neovim command line for displaying messages
   pumheight = 10, -- pop up menu height
-  completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion experience
+  completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion
   fillchars = { eob = '~' },
   showmode = false,
   colorcolumn = '80', -- Line length marker (ruler)
