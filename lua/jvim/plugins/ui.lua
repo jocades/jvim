@@ -122,6 +122,7 @@ return {
         view_history = 'messages', -- view for :messages
         view_search = 'virtualtext', -- view for search count messages. Set to `false` to disable
       },
+
       routes = {
         {
           view = 'mini',
@@ -131,27 +132,30 @@ return {
               { find = '%d+L, %d+B' },
               { find = '; after #%d+' },
               { find = '; before #%d+' },
-              { find = 'Already at .*change' },
-              { find = 'No information available ' }, -- lsp hover
+              { find = 'already at .*change' },
+              { find = 'no information available ' }, -- lsp hover
               { find = '.*: Pattern not found' },
             },
           },
         },
-
         {
           view = 'mini',
           filter = {
             event = 'notify',
             any = {
-              { find = 'No information available' },
-              -- { find = '[neo-tree]' },
+              { find = 'no information available' },
+              { find = '[neo-tree]' },
             },
           },
         },
-
         {
           view = 'mini',
-          filter = { event = 'msg_showmode' },
+          filter = {
+            any = {
+              { event = 'msg_showmode' },
+              { event = 'msg_show', kind = 'emsg' },
+            },
+          },
         },
       },
       cmdline = {
@@ -182,7 +186,6 @@ return {
             icon = ' ',
             lang = 'regex',
           },
-
           search_up = {
             kind = 'search',
             pattern = '^%?',

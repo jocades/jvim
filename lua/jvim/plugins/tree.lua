@@ -14,7 +14,6 @@ return {
         end,
         desc = 'Explorer',
       },
-
       {
         '<C-n>',
         function()
@@ -43,6 +42,7 @@ return {
         desc = 'Buffer explorer',
       },
     },
+
     init = function()
       -- load neo-tree directly when opening a dir
       vim.api.nvim_create_autocmd('BufEnter', {
@@ -64,9 +64,11 @@ return {
         end,
       })
     end,
+
     deactivate = function()
       vim.cmd.Neotree('close')
     end,
+
     opts = {
       window = {
         position = 'left',
@@ -92,37 +94,31 @@ return {
           },
         },
       },
-      close_if_last_window = false,
+      close_if_last_window = true,
       filesystem = {
         bind_to_cwd = false,
-        use_libuv_file_watcher = true, -- auto detect file changes
-        always_show = { '.gitignored' },
+        use_libuv_file_watcher = true,
+        filtered_items = {
+          always_show = { '.gitignore' },
+        },
       },
       source_selector = {
         winbar = false,
         statusline = false,
       },
-      default_component_configs = {
-        indent = {
-          with_expanders = false, -- if nil and file nesting is enabled, will enable expanders
-          expander_collapsed = '',
-          expander_expanded = '',
-          expander_highlight = 'NeoTreeExpander',
-        },
-        git_status = {
-          symbols = {
-            -- Change type
-            added = '✚',
-            deleted = '✖',
-            modified = '',
-            renamed = '',
-            -- Status type
-            untracked = '',
-            ignored = '',
-            unstaged = '',
-            staged = '',
-            conflict = '',
-          },
+      git_status = {
+        symbols = {
+          -- Change type
+          added = '✚',
+          deleted = '✖',
+          modified = '',
+          renamed = '󰁕',
+          -- Status type
+          untracked = '',
+          ignored = '',
+          unstaged = '󰄱',
+          staged = '',
+          conflict = '',
         },
       },
       event_handlers = {

@@ -1,17 +1,3 @@
-if vim.env.JVIM_TEST then
-  JVim.autocmd('BufReadPre', {
-    callback = function()
-      print('BufReadPre!!!')
-    end,
-  })
-
-  vim.api.nvim_create_autocmd('BufReadPost', {
-    callback = function()
-      print('BufReadPost!!!')
-    end,
-  })
-end
-
 -- Highlight on yank
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
@@ -90,3 +76,18 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.keymap.set('n', 'q', vim.cmd.q, { buffer = e.buf, silent = true })
   end,
 })
+
+-- TEST: what
+if vim.env.JVIM_TEST then
+  JVim.autocmd('BufReadPre', {
+    callback = function()
+      print('BufReadPre!!!')
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('BufReadPost', {
+    callback = function()
+      print('BufReadPost!!!')
+    end,
+  })
+end

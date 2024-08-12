@@ -7,6 +7,10 @@ return {
     ---@module 'catppuccin'
     ---@type CatppuccinOptions
     opts = {
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
       show_end_of_buffer = true,
       transparent_background = false,
       no_italic = true,
