@@ -41,22 +41,32 @@ end
 
 ---@alias lsp.Client.filter {id?: number, bufnr?: number, name?: string, method?: string, filter?:fun(client: vim.lsp.Client):boolean}
 
----@param opts? lsp.Client.filter
-function M.get_clients(opts)
-  local ret = {} ---@type vim.lsp.Client[]
-  if vim.lsp.get_clients then
-    ret = vim.lsp.get_clients(opts)
-  else
-    ---@diagnostic disable-next-line: deprecated
-    ret = vim.lsp.get_active_clients(opts)
-    if opts and opts.method then
-      ---@param client vim.lsp.Client
-      ret = vim.tbl_filter(function(client)
-        return client.supports_method(opts.method, { bufnr = opts.bufnr })
-      end, ret)
+function M.rename_file()
+  local buf = vim.api.nvim_get_current_buf()
+  local old = vim.api.nvim_buf_get_name(buf)
+  local root = assert(vim.uv.cwd())
+  assert(old:find(root, 1, true) == 1, 'File not in project root')
+
+  local extra = old:sub(#root + 2)
+
+  vim.ui.input({
+    prompt = 'New File Name: ',
+    default = extra,
+    completion = 'file',
+  }, function(new)
+    if not new or new == '' or new == extra then
+      return
     end
-  end
-  return opts and opts.filter and vim.tbl_filter(opts.filter, ret) or ret
+    new = vim.fs.joinpath(root, new)
+    vim.fn.mkdir(vim.fs.dirname(new), 'p')
+    M.on_rename(old, new, function()
+      -- print('renaming...')
+      vim.fn.rename(old, new)
+      vim.cmd.edit(new)
+      vim.api.nvim_buf_delete(buf, { force = true })
+      vim.fn.delete(old)
+    end)
+  end)
 end
 
 ---@param from string
@@ -72,12 +82,19 @@ function M.on_rename(from, to, rename)
     },
   }
 
-  local clients = M.get_clients()
+  -- vim.print(changes)
+
+  local clients = vim.lsp.get_clients()
   for _, client in ipairs(clients) do
     if client.supports_method('workspace/willRenameFiles') then
       local resp =
         client.request_sync('workspace/willRenameFiles', changes, 1000, 0)
+      -- vim.print(resp)
+      if resp and resp.err then
+        -- print(resp.err)
+      end
       if resp and resp.result ~= nil then
+        -- vim.print(resp.result, client.offset_encoding)
         vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
       end
     end

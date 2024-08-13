@@ -26,7 +26,7 @@ return {
       dashboard.button('f', ' ' .. ' Find file', ':Telescope find_files<cr>'), -- 
       dashboard.button('n', '󱇧 ' .. ' New file', ':ene <BAR> startinsert<cr>'),
       dashboard.button('r', ' ' .. ' Recent files', ':Telescope oldfiles<cr>'),
-      dashboard.button('t', '󰈙 ' .. ' Find grep', ':Telescope live_grep<cr>'),
+      dashboard.button('w', '󰈙 ' .. ' Find grep', ':Telescope live_grep<cr>'),
       dashboard.button('g', ' ' .. ' Git panel', ':Neogit<cr>'),
       dashboard.button('s', '󰦛 ' .. ' Restore session', ':lua require("persistence").load()<cr>'),
       dashboard.button('c', ' ' .. ' Config', ':e $MYVIMRC<cr>'),

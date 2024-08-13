@@ -56,8 +56,9 @@ return {
         lua_ls = {
           settings = {
             Lua = {
+              version = 'LuaJIT',
               workspace = { checkThirdParty = false },
-              telemetry = { enable = false },
+              codeLens = { enable = true },
               hint = { enable = true },
             },
           },
@@ -162,7 +163,7 @@ return {
       require('mason-lspconfig').setup({
         ensure_installed = vim.tbl_keys(opts.servers),
         automatic_installation = {
-          exclude = { 'rust_analyzer' },
+          exclude = { 'rust_analyzer', 'zls' },
         },
       })
 

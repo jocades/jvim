@@ -105,6 +105,12 @@ return {
       },
       event_handlers = {
         {
+          event = 'file_renamed',
+          handler = function(data)
+            JVim.lsp.on_rename(data.source, data.destination)
+          end,
+        },
+        {
           event = 'neo_tree_window_after_open',
           handler = function(args)
             if args.position == 'left' or args.position == 'right' then
@@ -128,7 +134,7 @@ return {
         filtered_items = {
           always_show = { '.gitignore' },
         },
-        components = {
+        --[[ components = {
           harpoon = function(config, node, _)
             local harpoon_list = require('harpoon'):list()
             local path = node:get_id()
@@ -149,8 +155,8 @@ return {
             end
             return {}
           end,
-        },
-        renderers = {
+        }, ]]
+        --[[ renderers = {
           file = {
             { 'icon' },
             { 'name', use_git_status_colors = true },
@@ -158,7 +164,7 @@ return {
             { 'diagnostics' },
             { 'git_status', highlight = 'NeoTreeDimText' },
           },
-        },
+        }, ]]
       },
       source_selector = {
         winbar = false,

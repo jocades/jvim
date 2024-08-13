@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 -- Set wrap and spell for some filetypes
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'text', 'plaintex', 'gitcommit', 'markdown' },
+  pattern = { 'text', 'plaintext', 'gitcommit', 'markdown' },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true

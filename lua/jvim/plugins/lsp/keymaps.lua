@@ -1,13 +1,15 @@
-local lsp = vim.lsp.buf
 local telescope = require('telescope.builtin')
 
 local M = {}
+
+local lsp = vim.lsp.buf
 
 local keymaps = {
   -- Movement
   { 'gd', lsp.definition, 'Goto Definition' },
   { 'gr', telescope.lsp_references, 'Goto References' },
-  { '<leader>D', lsp.type_definition, 'Type Definition' },
+  { 'gD', lsp.declaration, 'Goto Declaration' },
+  { 'gD', lsp.type_definition, 'Type Definition' },
   { 'gI', lsp.implementation, 'Goto Implementation' },
   --stylua: ignore start
   { '<leader>dd', '<cmd>Trouble diagnostics toggle<cr>', 'Diagnostics (Trouble)' },
@@ -34,7 +36,6 @@ local keymaps = {
   { 'gK', vim.lsp.buf.signature_help, 'Signature Documentation' },
 
   -- Less used
-  { 'gD', lsp.declaration, 'Goto Declaration' },
   { '<leader>wa', lsp.add_workspace_folder, 'Workspace Add Folder' },
   { '<leader>wr', lsp.remove_workspace_folder, 'Workspace Remove Folder' },
   { '<leader>wl', lsp.list_workspace_folders, 'Workspace List Folders' },
@@ -58,7 +59,7 @@ function M.on_attach(client, buf)
 
   JVim.register(keymaps, function(opts)
     opts.buffer = buf
-    opts.desc = 'LSP: ' .. opts.desc
+    opts.desc = 'LSP ' .. opts.desc
   end)
 end
 

@@ -57,8 +57,8 @@ return {
         -- Fuzzy find
         { '<C-p>', b.find_files, 'Find files' },
         -- { '<leader>fg', b.git_files, 'Find git files' },
-        { '<leader>fg', b.live_grep, 'Find grep' },
-        { '<leader>fw', b.grep_string, 'Find current word' },
+        { '<leader>fw', b.live_grep, 'Find word (grep)' },
+        { '<leader>fc', b.grep_string, 'Find current word' },
         { '<leader>/', b.buffers, 'Find existing buffers' },
         {
           '<leader>fl',
