@@ -9,16 +9,6 @@ return {
     },
     ---@class jvim.LspOpts
     opts = {
-      diagnostics = {
-        underline = true,
-        virtual_text = {
-          spacing = 4,
-          source = 'if_many',
-          prefix = '●',
-        },
-        update_in_insert = false,
-        severity_sort = true,
-      },
       autoformat = true,
       format = { -- handled by conform.nvim
         formatting_options = nil,
@@ -148,6 +138,10 @@ return {
           cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
           single_file_support = true,
         },
+        -- Shell
+        bashls = {
+          filetype = { 'sh', 'zsh' },
+        },
       },
     },
     ---@param opts jvim.LspOpts
@@ -171,7 +165,7 @@ return {
         require('jvim.plugins.lsp.keymaps').on_attach(client, e.buf)
       end)
 
-      vim.diagnostic.config(opts.diagnostics)
+      vim.diagnostic.config(JVim.lsp.diagnostics)
     end,
   },
 

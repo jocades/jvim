@@ -1,30 +1,7 @@
 local M = {}
 
----@param name string
-function M.get_plugin(name)
-  return require('lazy.core.config').spec.plugins[name]
-end
-
----@param name string
-function M.opts(name)
-  local plugin = M.get_plugin(name)
-
-  if not plugin then
-    return {}
-  end
-
-  local Plugin = require('lazy.core.plugin')
-  return Plugin.values(plugin, 'opts', false)
-end
-
 function M.diagnostics()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-end
-
-function M.virtual_text()
-  local opts = M.opts('nvim-lspconfig')
-  opts.diagnostics.virtual_text = not opts.diagnostics.virtual_text
-  vim.diagnostic.config(opts.diagnostics)
 end
 
 function M.inlay_hints()
@@ -33,6 +10,19 @@ end
 
 function M.formatting()
   vim.g.disable_autoformat = not vim.g.disable_autoformat
+end
+
+function M.virtual_text()
+  if JVim.lsp.diagnostics.virtual_text.enabled then
+    local diagnostics = vim.deepcopy(JVim.lsp.diagnostics)
+    diagnostics.virtual_text = false
+    vim.diagnostic.config(diagnostics)
+  else
+    vim.diagnostic.config(JVim.lsp.diagnostics)
+  end
+  ---@diagnostic disable-next-line: inject-field
+  JVim.lsp.diagnostics.virtual_text.enabled =
+    not JVim.lsp.diagnostics.virtual_text.enabled
 end
 
 return M

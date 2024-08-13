@@ -39,7 +39,7 @@ function M.setup(opts)
   local function load()
     JVim.load('autocmds')
     JVim.register(JVim.load('keymaps'))
-    -- require('bquik')
+    JVim.git.setup()
   end
 
   if vim.fn.argc(-1) == 0 then

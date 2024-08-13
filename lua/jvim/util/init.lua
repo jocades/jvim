@@ -3,6 +3,7 @@ local M = {
   buf = require('jvim.util.buf'),
   lsp = require('jvim.util.lsp'),
   git = require('jvim.util.git'),
+  plugin = require('jvim.util.plugin'),
   toggle = require('jvim.util.toggle'),
 }
 
@@ -54,6 +55,7 @@ end
 ---@param event string|string[]
 ---@param opts vim.api.keyset.create_autocmd
 ---@param name? string
+---@return number # The autocmd id
 function M.autocmd(event, opts, name)
   opts.group = M.augroup(name)
   return vim.api.nvim_create_autocmd(event, opts)
@@ -86,6 +88,14 @@ function M.exe(cmd)
   local result = handle:read('*a')
   handle:close()
   return vim.trim(result)
+end
+
+function M.find_files()
+  if M.git.in_repo then
+    require('telescope.builtin').git_files()
+  else
+    require('telescope.builtin').find_files()
+  end
 end
 
 return M

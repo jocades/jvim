@@ -25,7 +25,7 @@ return {
     ['<leader>gg'] = { vim.cmd.Neogit, 'Git panel' },
     ['<leader>gc'] = { '<cmd>Neogit commit<cr>', 'Git commit' },
     ['<leader>gB'] = { JVim.git.browse, 'Git browse' },
-    ['<leader>gd'] = { vim.cmd.DiffviewOpen, 'Git diff (project)' },
+    ['<leader>gD'] = { vim.cmd.DiffviewOpen, 'Git diff (project)' },
     ['<leader>gH'] = { vim.cmd.DiffviewFileHistory, 'Git diff (history)' },
 
     -- Toggle

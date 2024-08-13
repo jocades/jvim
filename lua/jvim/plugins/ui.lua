@@ -59,7 +59,16 @@ return {
   },
 
   -- Floating statuslines (winbar alternative)
-  { 'b0o/incline.nvim', event = 'BufReadPre', config = true },
+  {
+    'b0o/incline.nvim',
+    event = 'BufReadPost',
+    opts = {
+      hide = {
+        cursorline = true,
+        only_win = true,
+      },
+    },
+  },
 
   -- Ui components for neovim
   { 'MunifTanjim/nui.nvim', lazy = true },
@@ -158,7 +167,7 @@ return {
       routes = {
         {
           view = 'split',
-          filter = { event = 'msg_show', min_height = 10 },
+          filter = { event = 'msg_show', min_height = 30 },
         },
         {
           view = 'mini',

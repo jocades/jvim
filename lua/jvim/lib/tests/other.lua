@@ -1,4 +1,10 @@
--- vim.notify('hello!')
+-- local out = JVim.exe(cmd)
+-- print(out)
+
+-- local buf = vim.api.nvim_create_buf(true, false)
+-- print(buf)
+-- vim.api.nvim_set_current_buf(buf)
+-- vim.api.nvim_buf_set_name(buf, 'diffit')
 
 -- vim.ui.input(
 --   { prompt = 'Enter value for shiftwidth: ' },
@@ -47,14 +53,14 @@ local changes = {
 }
 -- vim.print(changes)
 
-print('client', client.supports_method('workspace/didRename'))
-
-print(
-  'server',
-  not not client.server_capabilities.workspace.fileOperations.didRename
-)
-
-JVim.lsp.rename_file()
+-- print('client', client.supports_method('workspace/didRename'))
+--
+-- print(
+--   'server',
+--   not not client.server_capabilities.workspace.fileOperations.didRename
+-- )
+--
+-- JVim.lsp.rename_file()
 -- local res = client.notify(did, changes)
 
 --

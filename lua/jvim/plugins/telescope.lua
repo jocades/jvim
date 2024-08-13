@@ -45,6 +45,7 @@ return {
           sorting_strategy = 'ascending',
           scroll_strategy = 'cycle',
           color_devicons = true,
+          -- border = false,
         },
         extensions = {
           fzf = {},
@@ -54,12 +55,21 @@ return {
 
       local b = require('telescope.builtin')
       JVim.register({
-        -- Fuzzy find
-        { '<C-p>', b.find_files, 'Find files' },
-        -- { '<leader>fg', b.git_files, 'Find git files' },
+        { '<leader>ts', b.builtin, 'Telescope builtins' },
+        { '<C-p>', JVim.find_files, 'Find files' },
         { '<leader>fw', b.live_grep, 'Find word (grep)' },
         { '<leader>fc', b.grep_string, 'Find current word' },
-        { '<leader>/', b.buffers, 'Find existing buffers' },
+        { '<leader>fb', b.buffers, 'Find buffers' },
+        { '<leader>fh', b.help_tags, 'Find Help' },
+        { '<leader>fm', b.man_pages, 'Find man pages' },
+        { '<leader>fk', b.keymaps, 'Find keymaps' },
+        { '<leader>:', b.command_history, 'Command history' },
+        --stylua: ignore start
+        { '<leader>fp', function() b.find_files({ cwd = '~/dev/neovim/plugins' }) end, 'Find plugins', },
+        { '<leader>fc', function() b.find_files({ cwd = vim.fn.stdpath('config') }) end, 'Find config', },
+        { '<leader>?', b.oldfiles, 'Find recently opened files' },
+        { '<leader>.', b.current_buffer_fuzzy_find, 'Fuzzily search in current buffer', },
+        --stylua: ignore end
         {
           '<leader>fl',
           function()
@@ -69,34 +79,12 @@ return {
           end,
           'Find lazy plugins',
         },
-        {
-          '<leader>fp',
-          function()
-            b.find_files({ cwd = '~/dev/neovim/plugins' })
-          end,
-          'Find plugins',
-        },
-        {
-          '<leader>fc',
-          function()
-            b.find_files({ cwd = vim.fn.stdpath('config') })
-          end,
-          'Find config',
-        },
-        { '<leader>?', b.oldfiles, 'Find recently opened files' },
-        --stylua: ignore
-        { '<leader>.', b.current_buffer_fuzzy_find, 'Fuzzily search in current buffer', },
-        { '<leader>:', b.command_history, 'Command history' },
-        { '<leader>fm', b.man_pages, 'Find man pages' },
-        { '<leader>fk', b.keymaps, 'Find keymaps' },
+
         -- Git
         { '<leader>ch', b.git_commits, 'Git commit history' },
         { '<leader>gs', b.git_status, 'Git status' },
         { '<leader>gb', b.git_branches, 'Git branches' },
         -- { '<leader>gs', b.git_stash, 'Git stash' },
-        -- Misc
-        { '<leader>fh', b.help_tags, 'Find Help' },
-        { '<leader>ts', b.builtin, 'Open Telescope Menu' },
       })
     end,
   },

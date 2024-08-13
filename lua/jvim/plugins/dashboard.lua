@@ -23,7 +23,7 @@ return {
       dashboard.section.header.val = vim.split(logo, '\n')
     --stylua: ignore
     dashboard.section.buttons.val = {
-      dashboard.button('f', ' ' .. ' Find file', ':Telescope find_files<cr>'), -- 
+      dashboard.button('f', ' ' .. ' Find file', ':lua JVim.find_files()<cr>'), -- 
       dashboard.button('n', '󱇧 ' .. ' New file', ':ene <BAR> startinsert<cr>'),
       dashboard.button('r', ' ' .. ' Recent files', ':Telescope oldfiles<cr>'),
       dashboard.button('w', '󰈙 ' .. ' Find grep', ':Telescope live_grep<cr>'),

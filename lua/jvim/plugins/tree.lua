@@ -10,6 +10,7 @@ return {
             position = 'current',
             toggle = true,
             reveal = true,
+            width = '100%',
           })
         end,
         desc = 'Explorer',
@@ -80,7 +81,6 @@ return {
           ['O'] = {
             function(state)
               JVim.open(state.tree:get_node().path, { system = true })
-              -- vim.ui.open(state.tree:get_node().path())
             end,
             desc = 'Open with system app',
           },
@@ -91,7 +91,6 @@ return {
             end,
             desc = 'Execute file',
           },
-
           ['Y'] = {
             function(state)
               local node = state.tree:get_node()
@@ -103,27 +102,26 @@ return {
           },
         },
       },
+
       event_handlers = {
+        { -- Remove the buffer for jumplist when using full window.
+          event = 'file_open_requested',
+          handler = function(data)
+            if data.state.current_position == 'current' then
+              require('neo-tree.command').execute({ action = 'close' })
+            end
+          end,
+        },
         {
           event = 'file_renamed',
           handler = function(data)
-            JVim.lsp.on_rename(data.source, data.destination)
+            JVim.lsp.request_rename(data.source, data.destination)
           end,
         },
         {
-          event = 'neo_tree_window_after_open',
-          handler = function(args)
-            if args.position == 'left' or args.position == 'right' then
-              vim.cmd.wincmd('=')
-            end
-          end,
-        },
-        {
-          event = 'neo_tree_window_after_close',
-          handler = function(args)
-            if args.position == 'left' or args.position == 'right' then
-              vim.cmd.wincmd('=')
-            end
+          event = 'file_moved',
+          handler = function(data)
+            JVim.lsp.request_rename(data.source, data.destination)
           end,
         },
       },
@@ -132,8 +130,9 @@ return {
         bind_to_cwd = false,
         use_libuv_file_watcher = true,
         filtered_items = {
-          always_show = { '.gitignore' },
+          always_show = { '.gitignore', '.cargo' },
         },
+        window = {},
         --[[ components = {
           harpoon = function(config, node, _)
             local harpoon_list = require('harpoon'):list()
@@ -187,7 +186,7 @@ return {
           -- Status type
           untracked = '',
           ignored = '',
-          unstaged = '', --'󰄱',
+          unstaged = '󰄱', --'󰄱',
           staged = '',
           conflict = '',
         },
