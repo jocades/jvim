@@ -1,3 +1,13 @@
+local logo = [[
+          ██╗██╗   ██╗██╗███╗   ███╗           Z
+          ██║██║   ██║██║████╗ ████║       Z
+          ██║██║   ██║██║██╔████╔██║    z
+     ██   ██║╚██╗ ██╔╝██║██║╚██╔╝██║  z
+     ╚█████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+      ╚════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+     ――――――――――――――――――――――――――――――――
+]]
+
 return {
   {
     'goolord/alpha-nvim',
@@ -5,19 +15,6 @@ return {
     event = 'VimEnter',
     config = function()
       local dashboard = require('alpha.themes.dashboard')
-      -- dynamic header padding
-      --[[ local fn = vim.fn
-    local marginTopPercent = 0.3 ]]
-      -- local headerPadding = fn.max { 2, fn.floor(fn.winheight(0) * marginTopPercent) }
-
-      local logo = [[
-      ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
-      ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z    
-      ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z       
-      ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z         
-      ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║
-      ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
-      ]]
 
       logo = string.rep('\n', 4) .. logo .. '\n\n'
       dashboard.section.header.val = vim.split(logo, '\n')
@@ -77,14 +74,6 @@ return {
     enabled = false,
     lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
     opts = function()
-      local logo = [[
-     ██╗██╗   ██╗██╗███╗   ███╗          Z
-     ██║██║   ██║██║████╗ ████║      Z    
-     ██║██║   ██║██║██╔████╔██║   z       
-██   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ z         
-╚█████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
- ╚════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
-]]
       logo = string.rep('\n', 8) .. logo .. '\n\n'
       local opts = {
         hide = {

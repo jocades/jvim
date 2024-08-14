@@ -1,6 +1,25 @@
+local function lsp_server()
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    if client.attached_buffers[vim.api.nvim_get_current_buf()] then
+      return (vim.o.columns > 100 and '  ' .. client.name .. ' ') or ' '
+    end
+  end
+  return '...'
+end
+
 return {
   'nvim-lualine/lualine.nvim',
   event = 'VeryLazy',
+  init = function()
+    vim.g.lualine_laststatus = vim.o.laststatus
+    if vim.fn.argc(-1) > 0 then
+      -- set an empty statusline till lualine loads
+      vim.o.statusline = ' '
+    else
+      -- hide the statusline on the starter page
+      vim.o.laststatus = 0
+    end
+  end,
   opts = function()
     return {
       options = {
@@ -10,10 +29,17 @@ return {
         disabled_filetypes = {
           statusline = { 'dashboard', 'lazy', 'alpha' },
         },
-        section_separators = { left = '', right = '' },
         component_separators = '|',
+        section_separators = { left = '', right = '' },
+        -- section_separators = { left = '', right = '' },
+        -- section_separators = { left = '', right = '' },
+      },
+      extensions = { 'neo-tree', 'lazy', 'man' },
+      tabline = {
+        lualine_a = { 'tabs' },
       },
       sections = {
+        lualine_a = { 'mode' },
         lualine_b = { 'branch', 'diff' },
         lualine_c = {
           {
@@ -22,48 +48,54 @@ return {
             separator = '',
             padding = { left = 1, right = 0 },
           },
-          -- 'filename',
-          {
-            function()
-              local cwd = vim.fn.getcwd()
-              local path = vim.fn.expand('%:~:.')
-              if vim.fn.empty(path) == 1 then return '' end
-              if vim.fn.stridx(path, cwd) == 0 then return path end
-              return vim.fn.fnamemodify(path, ':~:.')
-            end,
-          },
-
-          --[[ {
-            function() return require('nvim-navic').get_location() end,
-            cond = function() return package.loaded['nvim-navic'] and require('nvim-navic').is_available() end,
-          }, ]]
+          { 'filename', path = 1 },
         },
-        lualine_x = { 'diagnostics' },
-        lualine_y = { 'filetype' },
+        -- stylua: ignore
+        lualine_x = {
+          {
+            function() return require("noice").api.status.command.get() end,
+            cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+          },
+          {
+            function() return require("noice").api.status.mode.get() end,
+            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+          },
+          {
+            function() return "  " .. require("dap").status() end,
+            cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+          },
+        },
+        lualine_y = { { 'diagnostics', separator = '' }, { lsp_server } },
         lualine_z = { 'location', 'progress' },
       },
     }
   end,
+  config = function(_, opts)
+    local lualine = require('lualine')
+    lualine.setup(opts)
+    lualine.hide({
+      place = { 'tabline' },
+      unhide = false,
+    })
+
+    vim.api.nvim_create_autocmd('TabNew', {
+      callback = function()
+        lualine.hide({
+          place = { 'tabline' },
+          unhide = true,
+        })
+      end,
+    })
+
+    vim.api.nvim_create_autocmd('TabClosed', {
+      callback = function()
+        if #vim.api.nvim_list_tabpages() == 1 then
+          lualine.hide({
+            place = { 'tabline' },
+            unhide = false,
+          })
+        end
+      end,
+    })
+  end,
 }
-
---[[ local function spaces()
-  local spaces = vim.api.nvim_buf_get_option(0, 'expandtab') and 'sp' or 'tb'
-  local width = vim.api.nvim_buf_get_option(0, 'shiftwidth')
-  return string.format('%s: %d', spaces, width)
-end
-
-local function lsp_server()
-  local msg = 'No Active Lsp'
-  local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-  local clients = vim.lsp.get_active_clients()
-  if next(clients) == nil then
-    return msg
-  end
-  for _, client in ipairs(clients) do
-    local filetypes = client.config.filetypes
-    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-      return client.name
-    end
-  end
-  return msg
-end ]]

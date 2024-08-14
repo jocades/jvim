@@ -6,7 +6,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Check if we need to reload the file when it changed
-JVim.autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
+vim.api.nvim_create_autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
   callback = function()
     if vim.o.buftype ~= 'nofile' then
       vim.cmd('checktime')
@@ -65,10 +65,11 @@ JVim.autocmd({ 'FileType' }, {
 -- Close some filetypes with <q>
 vim.api.nvim_create_autocmd('FileType', {
   pattern = {
-    'qf',
+    'grug-far',
     'help',
     'man',
     'notify',
+    'qf',
     'startuptime',
   },
   callback = function(e)

@@ -9,6 +9,10 @@ function M.setup(opts)
   JVim.load('options')
 
   require('lazy').setup({ import = 'jvim.plugins' }, {
+    checker = {
+      enabled = true,
+      notify = false,
+    },
     change_detection = { notify = false },
     install = {
       colorscheme = { opts.colorscheme },
