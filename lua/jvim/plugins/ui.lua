@@ -1,3 +1,5 @@
+local str = '[Neo-tree]'
+print(string.find(str, 'neo'))
 return {
   {
     'rcarriga/nvim-notify',
@@ -140,12 +142,14 @@ return {
             pattern = '^/',
             icon = ' ',
             lang = 'regex',
+            title = '',
           },
           search_up = {
             kind = 'search',
             pattern = '^%?',
             icon = ' ',
             lang = 'regex',
+            title = '',
           },
           filter = { pattern = '^:%s*!', icon = '$', lang = 'bash', title = '' },
           help = { pattern = '^:%s*he?l?p?%s+', icon = '󰋖', title = '' },
@@ -169,17 +173,40 @@ return {
           view = 'split',
           filter = { event = 'msg_show', min_height = 30 },
         },
-        {
+
+        --[[ {
           view = 'mini',
           filter = {
             event = 'msg_show',
+            kind = '',
             any = {
               { find = '^%d+ .*lines' },
               { find = '%d+L, %d+B' },
               { find = '; after #%d+' },
               { find = '; before #%d+' },
-              { find = 'already at .*change' },
-              { find = '.*: Pattern not found' },
+              { find = 'Already at ' },
+              -- { find = '.*: Pattern not found' },
+            },
+          },
+        }, ]]
+
+        {
+          view = 'mini',
+          filter = {
+            event = 'msg_show',
+            kind = '',
+          },
+        },
+
+        {
+          view = 'mini',
+          filter = {
+            event = 'msg_show',
+            kind = 'emsg',
+            any = {
+              { find = 'E37: No' },
+              { find = 'E162: No' },
+              { find = 'E486: Pa' },
             },
           },
         },
@@ -188,9 +215,8 @@ return {
           view = 'mini',
           filter = {
             event = 'notify',
-            any = {
-              { find = '[Neo-tree]' },
-            },
+            kind = 'info',
+            find = 'Neo.tree',
           },
         },
         {
@@ -198,7 +224,7 @@ return {
           filter = {
             any = {
               { event = 'msg_showmode' },
-              { event = 'msg_show', kind = 'emsg' },
+              -- { event = 'msg_show', kind = 'emsg' },
             },
           },
         },
