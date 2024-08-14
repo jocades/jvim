@@ -1,5 +1,3 @@
-local str = '[Neo-tree]'
-print(string.find(str, 'neo'))
 return {
   {
     'rcarriga/nvim-notify',
