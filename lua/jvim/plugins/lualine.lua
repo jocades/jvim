@@ -40,7 +40,7 @@ return {
       },
       sections = {
         lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff' },
+        lualine_b = { { 'branch', separator = '' }, 'diff' },
         lualine_c = {
           {
             'filetype',
@@ -75,26 +75,32 @@ return {
   config = function(_, opts)
     local lualine = require('lualine')
     lualine.setup(opts)
+
+    local open = false
     lualine.hide({
       place = { 'tabline' },
-      unhide = false,
+      unhide = open,
     })
 
     vim.api.nvim_create_autocmd('TabNew', {
       callback = function()
-        lualine.hide({
-          place = { 'tabline' },
-          unhide = true,
-        })
+        if not open then
+          open = true
+          lualine.hide({
+            place = { 'tabline' },
+            unhide = open,
+          })
+        end
       end,
     })
 
     vim.api.nvim_create_autocmd('TabClosed', {
       callback = function()
-        if #vim.api.nvim_list_tabpages() == 1 then
+        if open and #vim.api.nvim_list_tabpages() == 1 then
+          open = false
           lualine.hide({
             place = { 'tabline' },
-            unhide = false,
+            unhide = open,
           })
         end
       end,

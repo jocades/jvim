@@ -20,6 +20,12 @@ return {
     },
   },
 
+  { -- Better mark navication and mark sign in gutter
+    'chentoast/marks.nvim',
+    event = 'BufReadPost',
+    opts = {},
+  },
+
   -- Distraction free coding
   {
     'folke/zen-mode.nvim',

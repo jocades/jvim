@@ -5,6 +5,8 @@ return {
   init = function()
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
+  ---@moudle 'conform'
+  ---@type conform.setupOpts
   opts = {
     format_on_save = function(bufnr)
       if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
@@ -14,6 +16,9 @@ return {
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
+      rust = { 'rustfmt' },
+      c = { 'clang_format' },
+      sh = { 'shfmt' },
       python = function(bufnr)
         if
           require('conform').get_formatter_info('ruff_format', bufnr).available
@@ -23,17 +28,14 @@ return {
           return { 'autopep8' }
         end
       end,
-      javascript = { { 'prettierd', 'prettier' } },
-      javascriptreact = { { 'prettierd', 'prettier' } },
-      typescript = { { 'prettierd', 'prettier' } },
-      typescriptreact = { { 'prettierd', 'prettier' } },
-      json = { { 'prettierd', 'prettier' } },
-      html = { { 'prettierd', 'prettier' } },
-      lite = { { 'prettierd', 'prettier' } },
-      css = { { 'prettierd', 'prettier' } },
-      sh = { 'shfmt' },
-      c = { 'clang_format' },
-      rust = { 'rustfmt' },
+      javascript = { 'prettierd', 'prettier' },
+      javascriptreact = { 'prettierd', 'prettier' },
+      typescript = { 'prettierd', 'prettier' },
+      typescriptreact = { 'prettierd', 'prettier' },
+      json = { 'prettierd', 'prettier' },
+      html = { 'prettierd', 'prettier' },
+      lite = { 'prettierd', 'prettier' },
+      css = { 'prettierd', 'prettier' },
       go = { 'gofmt' },
     },
   },
