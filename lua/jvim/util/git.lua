@@ -32,9 +32,12 @@ function M.info(path)
   JVim.warn('No git repo found in ' .. path)
 end
 
--- open the current buffer in neovim with diff view
 function M.browse()
   local info = M.info()
+  if not info then
+    return
+  end
+
   JVim.info({
     'Remote: ' .. info.remote,
     'Branch: ' .. info.branch,
