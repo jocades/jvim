@@ -5,13 +5,13 @@ return {
     ['<leader>X'] = { vim.cmd.tabc, 'Close tab' },
     ['<leader>y'] = { '<cmd>%y+<cr>', 'Copy buffer' },
     ['<leader>v'] = { 'gg0vG$', 'Select buffer' },
-    ['<leader>so'] = { '<cmd>w | so %<cr>', 'Soruce and run lua file' },
+    ['<leader>so'] = { '<cmd>w | so %<cr>', 'Source and run lua buffer' },
 
     -- Windows
     ['<leader>z'] = { vim.cmd.close, { desc = 'Close window', nowait = true } },
-    ['<leader>ss'] = { vim.cmd.vsplit, { desc = 'Vertical split' } },
-    ['<leader>sh'] = { vim.cmd.split, { desc = 'Horizontal split' } },
-    ['<leader>re'] = { vim.cmd.ZenMode, { desc = 'Toggle Zen mode' } },
+    ['<leader>ss'] = { vim.cmd.vsplit, 'Vertical split' },
+    ['<leader>sh'] = { vim.cmd.split, 'Horizontal split' },
+    ['<leader>re'] = { vim.cmd.ZenMode, 'Toggle Zen mode' },
     ['<C-S-Up>'] = { '<cmd>resize +2<cr>' },
     ['<C-S-Down>'] = { '<cmd>resize -2<cr>' },
     ['<C-S-Left>'] = { '<cmd>vertical resize -2<cr>' },

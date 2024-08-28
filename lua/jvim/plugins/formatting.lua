@@ -1,3 +1,13 @@
+local prettier = {
+  opts = { 'prettierd', 'prettier', stop_after_first = true },
+  args = {
+    '--semi=false',
+    '--single-quote',
+    '--print-width=80',
+    '--end-of-line=lf',
+  },
+}
+
 return {
   'stevearc/conform.nvim',
   event = 'BufWritePre',
@@ -8,11 +18,11 @@ return {
   ---@moudle 'conform'
   ---@type conform.setupOpts
   opts = {
-    format_on_save = function(bufnr)
-      if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+    format_on_save = function(buf)
+      if vim.g.disable_autoformat or vim.b[buf].disable_autoformat then
         return
       end
-      return { timeout_ms = 500, lsp_fallback = true }
+      return { timeout_ms = 500, lsp_format = 'fallback' }
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
@@ -28,28 +38,28 @@ return {
           return { 'autopep8' }
         end
       end,
-      javascript = { 'prettierd', 'prettier' },
-      javascriptreact = { 'prettierd', 'prettier' },
-      typescript = { 'prettierd', 'prettier' },
-      typescriptreact = { 'prettierd', 'prettier' },
-      json = { 'prettierd', 'prettier' },
-      html = { 'prettierd', 'prettier' },
-      lite = { 'prettierd', 'prettier' },
-      css = { 'prettierd', 'prettier' },
+      javascript = prettier.opts,
+      javascriptreact = prettier.opts,
+      typescript = prettier.opts,
+      typescriptreact = prettier.opts,
+      json = prettier.opts,
+      html = prettier.opts,
+      css = prettier.opts,
       go = { 'gofmt' },
     },
   },
   config = function(_, opts)
-    require('conform').setup(opts)
+    local conform = require('conform')
 
-    local f = require('conform').formatters
+    conform.setup(opts)
+    local f = conform.formatters
+
     f.stylua = {
       prepend_args = {
         '--config-path',
-        vim.fn.stdpath('config') .. '/stylua.toml',
+        vim.fs.joinpath(vim.fn.stdpath('config')('stylua.toml')),
       },
     }
-
     f.clang_format = { prepend_args = { '-style=file' } }
     f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
     f.shfmt = { prepend_args = { '-i', '4' } }
@@ -57,14 +67,8 @@ return {
     f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
 
     if not vim.uv.fs_stat(vim.fs.joinpath(vim.uv.cwd(), '.prettierrc')) then
-      f.prettierd = {
-        prepend_args = {
-          '--semi=false',
-          '--single-quote',
-          '--print-width=80',
-          '--end-of-line=lf',
-        },
-      }
+      f.prettierd = { prepend_args = prettier.args }
+      f.prettier = { prepend_args = prettier.args }
     end
 
     -- Enable / disable autoformatting on save

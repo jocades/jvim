@@ -1,5 +1,5 @@
 return {
-  { -- File explorer
+  {
     'nvim-neo-tree/neo-tree.nvim',
     cmd = 'Neotree',
     keys = {
@@ -154,7 +154,7 @@ return {
           -- Status type
           untracked = '',
           ignored = '',
-          unstaged = '󰄱', --'󰄱',
+          unstaged = '󰄱',
           staged = '',
           conflict = '',
         },

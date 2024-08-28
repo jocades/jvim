@@ -64,12 +64,26 @@ return {
         { '<leader>fm', b.man_pages, 'Find man pages' },
         { '<leader>fk', b.keymaps, 'Find keymaps' },
         { '<leader>:', b.command_history, 'Command history' },
-        --stylua: ignore start
-        { '<leader>fp', function() b.find_files({ cwd = '~/dev/neovim/plugins' }) end, 'Find plugins', },
-        { '<leader>fc', function() b.find_files({ cwd = vim.fn.stdpath('config') }) end, 'Find config', },
         { '<leader>?', b.oldfiles, 'Find recently opened files' },
-        { '<leader>.', b.current_buffer_fuzzy_find, 'Fuzzily search in current buffer', },
-        --stylua: ignore end
+        {
+          '<leader>fp',
+          function()
+            b.find_files({ cwd = '~/dev/neovim/plugins' })
+          end,
+          'Find plugins',
+        },
+        {
+          '<leader>fc',
+          function()
+            b.find_files({ cwd = vim.fn.stdpath('config') })
+          end,
+          'Find config',
+        },
+        {
+          '<leader>.',
+          b.current_buffer_fuzzy_find,
+          'Fuzzily search in current buffer',
+        },
         {
           '<leader>fl',
           function()
