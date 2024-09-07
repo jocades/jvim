@@ -8,6 +8,16 @@ local prettier = {
   },
 }
 
+local python = {
+  opts = function(buf)
+    if require('conform').get_formatter_info('ruff_format', buf).available then
+      return { 'ruff_format' }
+    else
+      return { 'autopep8' }
+    end
+  end,
+}
+
 return {
   'stevearc/conform.nvim',
   event = 'BufWritePre',
@@ -29,15 +39,7 @@ return {
       rust = { 'rustfmt' },
       c = { 'clang_format' },
       sh = { 'shfmt' },
-      python = function(bufnr)
-        if
-          require('conform').get_formatter_info('ruff_format', bufnr).available
-        then
-          return { 'ruff_format' }
-        else
-          return { 'autopep8' }
-        end
-      end,
+      python = python.opts,
       javascript = prettier.opts,
       javascriptreact = prettier.opts,
       typescript = prettier.opts,
@@ -49,15 +51,12 @@ return {
     },
   },
   config = function(_, opts)
-    local conform = require('conform')
-
-    conform.setup(opts)
-    local f = conform.formatters
-
+    require('conform').setup(opts)
+    local f = require('conform').formatters
     f.stylua = {
       prepend_args = {
         '--config-path',
-        vim.fs.joinpath(vim.fn.stdpath('config')('stylua.toml')),
+        vim.fs.joinpath(vim.fn.stdpath('config'), 'stylua.toml'),
       },
     }
     f.clang_format = { prepend_args = { '-style=file' } }

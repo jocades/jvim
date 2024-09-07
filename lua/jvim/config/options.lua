@@ -52,6 +52,8 @@ local opts = {
   fillchars = { eob = '~' },
   showmode = false,
   colorcolumn = '80', -- Line length marker (ruler)
+  conceallevel = 2, -- Hide text
+  concealcursor = '', -- Expand hidden text when cursor in concealed text
 }
 
 -- vim.wo.foldmethod = 'expr'

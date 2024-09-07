@@ -14,9 +14,7 @@ function M.setup(opts)
       notify = false,
     },
     change_detection = { notify = false },
-    install = {
-      colorscheme = { opts.colorscheme },
-    },
+    install = { colorscheme = { opts.colorscheme } },
     dev = {
       path = opts.dev,
       patterns = {},

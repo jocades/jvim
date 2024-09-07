@@ -1,5 +1,4 @@
 local telescope = require('telescope.builtin')
--- local trouble = require('trouble')
 
 local M = {}
 
@@ -41,7 +40,6 @@ function M.on_attach(client, buf)
       { '<leader>tO', ts.actions.organizeImports, 'Organize Imports (ts)', },
       { '<leader>tM', ts.actions.addMissingImports, 'Add Missing Imports (ts)', },
       { '<leader>tU', ts.actions.removeUnused, 'Remove Unused Imports (ts)', },
-      { '<leader>tR', function() ts.renameFile() end, 'Rename File (ts)', },
     })
   end
 
