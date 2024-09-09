@@ -30,6 +30,7 @@ return {
 
   {
     'rose-pine/neovim',
+    enabled = false,
     name = 'rose-pine',
     ---@module 'rose-pine'
     ---@type Options

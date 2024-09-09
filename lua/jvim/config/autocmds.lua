@@ -57,7 +57,7 @@ JVim.autocmd({ 'FileType' }, {
   callback = function(e)
     vim.schedule(function()
       vim.bo[e.buf].syntax = vim.filetype.match({ buf = e.buf }) or ''
-      JVim.warn('Big file detected')
+      JVim.warn('Big file detected', { title = 'JVim' })
     end)
   end,
 })

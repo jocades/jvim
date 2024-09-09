@@ -99,6 +99,10 @@ return {
       { '<c-n>', function() require('luasnip').jump(1) end, mode = 's' },
       { '<c-p>', function() require('luasnip').jump(-1) end, mode = { 'i', 's' } },
     },
+    config = function(_, opts)
+      require('luasnip').setup(opts)
+      require('jvim.lib.snippets')
+    end,
   },
 
   -- Todos (loclists and hl)

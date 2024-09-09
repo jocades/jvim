@@ -3,10 +3,24 @@ return {
     'test',
     dev = true,
     opts = {},
+    config = function()
+      require('test').setup()
+    end,
   },
-  -- { dir = '~/dev/neovim/plugins/bquik' },
+
   {
     'bquik',
     dev = true,
+  },
+
+  {
+    'jocades/twf.nvim',
+    dev = true,
+    ---@module 'twf'
+    ---@type TwfOpts
+    opts = {
+      enabled = true,
+      -- highlight = {},
+    },
   },
 }
