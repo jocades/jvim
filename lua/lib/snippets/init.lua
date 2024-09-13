@@ -1,0 +1,5 @@
+require('lib.snippets.go')
+require('lib.snippets.md')
+require('lib.snippets.py')
+require('lib.snippets.rs')
+require('lib.snippets.ts')

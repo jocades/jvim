@@ -42,6 +42,10 @@ function M.setup(opts)
     JVim.load('autocmds')
     JVim.register(JVim.load('keymaps'))
     JVim.git.setup()
+
+    if vim.env.LSP_UTIL then
+      require('lib.lsp-util')
+    end
   end
 
   if vim.fn.argc(-1) == 0 then

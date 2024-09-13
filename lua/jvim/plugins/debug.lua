@@ -62,7 +62,7 @@ return {
         },
       }
 
-      local kr = require('jvim.lib.kr').KeymapRegister.new()
+      local kr = require('lib.kr').KeymapRegister.new()
 
       dap.listeners.before.event_initialized['me'] = function()
         local ext = vim.fn.expand('%:e')

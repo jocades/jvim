@@ -5,7 +5,7 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 
-local input = require('jvim.lib.snippets.helper').input
+local input = require('lib.snippets.helper').input
 
 local function set_state_name(args_, _, _)
   local state_name = args_[1][1]

@@ -101,7 +101,7 @@ return {
     },
     config = function(_, opts)
       require('luasnip').setup(opts)
-      require('jvim.lib.snippets')
+      require('lib.snippets')
     end,
   },
 

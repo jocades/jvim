@@ -1,5 +1,0 @@
-require('jvim.lib.snippets.go')
-require('jvim.lib.snippets.md')
-require('jvim.lib.snippets.py')
-require('jvim.lib.snippets.rs')
-require('jvim.lib.snippets.ts')

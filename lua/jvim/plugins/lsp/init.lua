@@ -31,73 +31,6 @@ return {
       },
       -- Servers & Settings
       servers = {
-        -- Python
-        pyright = {
-          settings = {
-            analysis = {
-              autoSearchPaths = true,
-              useLibraryCodeForTypes = true,
-              typeCheckingMode = 'basic',
-            },
-          },
-        },
-        -- ruff_lsp = {}, -- fast but missing a lof of features, like hover, etc.
-        -- Lua
-        lua_ls = {
-          settings = {
-            Lua = {
-              version = 'LuaJIT',
-              workspace = { checkThirdParty = false },
-              codeLens = { enable = true },
-              hint = { enable = true },
-            },
-          },
-        },
-        -- JSON
-        jsonls = {
-          -- lazy-load schemastore when needed
-          on_new_config = function(new_config)
-            new_config.settings.json.schemas = new_config.settings.json.schemas
-              or {}
-            vim.list_extend(
-              new_config.settings.json.schemas,
-              require('schemastore').json.schemas()
-            )
-          end,
-          settings = {
-            json = {
-              format = { enable = true },
-              validate = { enable = true },
-            },
-          },
-        },
-        -- TypeScript
-        tsserver = {
-          single_file_support = true,
-          settings = {
-            typescript = {
-              inlayHints = {
-                includeInlayEnumMemberValueHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all';
-                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayVariableTypeHints = false,
-              },
-            },
-          },
-        },
-        --- HTML
-        html = {},
-        -- CSS
-        cssls = {},
-        -- Tailwind CSS
-        tailwindcss = {},
-        -- Astro
-        astro = {},
-        -- Svelte
-        svelte = {},
         -- C
         clangd = {
           cmd = {
@@ -129,10 +62,61 @@ return {
         },
         -- Rust
         rust_analyzer = {},
-        -- TOML
-        taplo = {},
-        -- Zig
-        zls = {},
+        -- Python
+        pyright = {
+          settings = {
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              typeCheckingMode = 'basic',
+            },
+          },
+        },
+        -- Lua
+        lua_ls = {
+          settings = {
+            Lua = {
+              version = 'LuaJIT',
+              workspace = { checkThirdParty = false },
+              codeLens = { enable = true },
+              hint = { enable = true },
+            },
+          },
+        },
+        -- TypeScript
+        tsserver = {
+          single_file_support = true,
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayVariableTypeHints = false,
+              },
+            },
+          },
+        },
+        -- JSON
+        jsonls = {
+          on_new_config = function(new_config) -- lazy load schemas
+            new_config.settings.json.schemas = new_config.settings.json.schemas
+              or {}
+            vim.list_extend(
+              new_config.settings.json.schemas,
+              require('schemastore').json.schemas()
+            )
+          end,
+          settings = {
+            json = {
+              format = { enable = true },
+              validate = { enable = true },
+            },
+          },
+        },
         --- Elixir
         elixirls = {
           cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
@@ -142,6 +126,20 @@ return {
         bashls = {
           filetype = { 'sh', 'zsh' },
         },
+        --- HTML
+        html = {},
+        -- CSS
+        cssls = {},
+        -- Tailwind CSS
+        tailwindcss = {},
+        -- Astro
+        astro = {},
+        -- Svelte
+        svelte = {},
+        -- TOML
+        taplo = {},
+        -- Zig
+        zls = {},
       },
     },
     ---@param opts jvim.LspOpts
