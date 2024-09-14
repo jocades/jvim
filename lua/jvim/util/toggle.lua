@@ -25,4 +25,13 @@ function M.virtual_text()
     not JVim.lsp.diagnostics.virtual_text.enabled
 end
 
+function M.hlsearch()
+  if vim.opt.hlsearch:get() then
+    vim.cmd.nohl()
+    return ""
+  else
+    return "<CR>"
+  end
+end
+
 return M

@@ -1,16 +1,16 @@
 ---@class JVim: LazyUtil
 local M = {
-  buf = require('jvim.util.buf'),
-  lsp = require('jvim.util.lsp'),
-  git = require('jvim.util.git'),
-  plugin = require('jvim.util.plugin'),
-  toggle = require('jvim.util.toggle'),
+  buf = require("jvim.util.buf"),
+  lsp = require("jvim.util.lsp"),
+  git = require("jvim.util.git"),
+  plugin = require("jvim.util.plugin"),
+  toggle = require("jvim.util.toggle"),
 }
 
-setmetatable(M, { __index = require('lazy.util') })
+setmetatable(M, { __index = require("lazy.util") })
 
 function M.who()
-  vim.system({ 'whoami' }, nil, function(proc)
+  vim.system({ "whoami" }, nil, function(proc)
     vim.notify(proc.stdout)
   end)
 end
@@ -21,7 +21,7 @@ end
 ---@param opts? vim.keymap.set.Opts|string
 ---@param modify? fun(opts: vim.keymap.set.Opts): nil
 function M.map(mode, keys, exec, opts, modify)
-  opts = type(opts) == 'string' and { desc = opts } or opts or {}
+  opts = type(opts) == "string" and { desc = opts } or opts or {}
   ---@cast opts vim.keymap.set.Opts
   opts.silent = opts.silent ~= false
   vim.keymap.set(mode, keys, exec, modify and modify(opts) or opts)
@@ -32,7 +32,7 @@ end
 function M.register(keymaps, modify)
   if vim.islist(keymaps) then
     for _, t in ipairs(keymaps) do
-      M.map('n', t[1], t[2], t[3], modify)
+      M.map("n", t[1], t[2], t[3], modify)
     end
   else
     ---@cast keymaps jvim.Keymaps
@@ -47,9 +47,9 @@ end
 ---@param name? string
 function M.augroup(name)
   if not name then
-    return vim.api.nvim_create_augroup('__jvim', { clear = false })
+    return vim.api.nvim_create_augroup("__jvim", { clear = false })
   end
-  return vim.api.nvim_create_augroup('__jvim_' .. name, { clear = true })
+  return vim.api.nvim_create_augroup("__jvim_" .. name, { clear = true })
 end
 
 ---@param event string|string[]
@@ -63,8 +63,8 @@ end
 
 ---@param fn fun()
 function M.on_very_lazy(fn)
-  M.autocmd('User', {
-    pattern = 'VeryLazy',
+  M.autocmd("User", {
+    pattern = "VeryLazy",
     callback = function()
       fn()
     end,
@@ -73,28 +73,28 @@ end
 
 ---@param name 'autocmds'|'keymaps'|'options'
 function M.load(name)
-  local mod = 'jvim.config.' .. name
+  local mod = "jvim.config." .. name
   return M.try(function()
     return require(mod)
-  end, { msg = 'Failed loading ' .. mod })
+  end, { msg = "Failed loading " .. mod })
 end
 
 ---@param cmd string|string[]
 function M.exe(cmd)
-  if type(cmd) == 'table' then
-    cmd = table.concat(cmd, ' ')
+  if type(cmd) == "table" then
+    cmd = table.concat(cmd, " ")
   end
   local handle = assert(io.popen(cmd))
-  local result = handle:read('*a')
+  local result = handle:read("*a")
   handle:close()
   return vim.trim(result)
 end
 
 function M.find_files()
   if M.git.in_repo then
-    require('telescope.builtin').git_files()
+    require("telescope.builtin").git_files()
   else
-    require('telescope.builtin').find_files()
+    require("telescope.builtin").find_files()
   end
 end
 
