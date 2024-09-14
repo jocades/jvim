@@ -56,7 +56,8 @@ return {
       local b = require('telescope.builtin')
       JVim.register({
         { '<leader>ts', b.builtin, 'Telescope builtins' },
-        { '<C-p>', JVim.find_files, 'Find files' },
+        { '<C-p>', b.find_files, 'Find files' },
+        { '<leader>fg', b.git_files, 'Find git files' },
         { '<leader>fw', b.live_grep, 'Find word (grep)' },
         { '<leader>fc', b.grep_string, 'Find current word' },
         { '<leader>fb', b.buffers, 'Find buffers' },
@@ -65,6 +66,11 @@ return {
         { '<leader>fk', b.keymaps, 'Find keymaps' },
         { '<leader>:', b.command_history, 'Command history' },
         { '<leader>?', b.oldfiles, 'Find recently opened files' },
+        {
+          '<leader>.',
+          b.current_buffer_fuzzy_find,
+          'Fuzzily search in current buffer',
+        },
         {
           '<leader>fp',
           function()
@@ -78,11 +84,6 @@ return {
             b.find_files({ cwd = vim.fn.stdpath('config') })
           end,
           'Find config',
-        },
-        {
-          '<leader>.',
-          b.current_buffer_fuzzy_find,
-          'Fuzzily search in current buffer',
         },
         {
           '<leader>fl',

@@ -23,6 +23,7 @@ local opts = {
   inccommand = 'nosplit', -- preview incremental substitute
   laststatus = 3, -- global status line
   list = true, -- Show some invisible characters (tabs...
+  swapfile = false, -- Disable swapfile
   sessionoptions = {
     'buffers',
     'curdir',
@@ -38,6 +39,7 @@ local opts = {
   splitbelow = true, -- force all horizontal splits to go below current window
   splitright = true, -- force all vertical splits to go to the right of current window
   cursorline = true, -- highlight current line
+  smoothscroll = true, -- enable smooth scrolling (v0.10)
 
   breakindent = true, -- enable break indent
   undofile = true, -- save undo history
@@ -56,15 +58,9 @@ local opts = {
   concealcursor = '', -- Expand hidden text when cursor in concealed text
 }
 
--- vim.wo.foldmethod = 'expr'
--- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
--- vim.opt.foldtext = ''
-
 for k, v in pairs(opts) do
   vim.opt[k] = v
 end
-
-vim.opt.smoothscroll = true
 
 -- File types (maybe use dedicated module)
 vim.filetype.add({
@@ -74,5 +70,3 @@ vim.filetype.add({
     astro = 'astro',
   },
 })
-
-vim.treesitter.language.register('markdown', 'mdx')
