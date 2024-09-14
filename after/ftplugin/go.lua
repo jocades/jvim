@@ -1,5 +1,5 @@
-vim.notify("require")
-require("lib.lang.go.run-test")
+-- vim.notify("require")
+-- require("lib.go-tools.go-test")
 
 vim.keymap.set("n", "<leader>ie", function()
   local win = vim.api.nvim_get_current_win()

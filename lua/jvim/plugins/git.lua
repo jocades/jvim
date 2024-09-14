@@ -1,19 +1,19 @@
 return {
   {
-    'NeogitOrg/neogit',
-    cmd = 'Neogit',
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
     opts = {},
   },
 
   {
-    'sindrets/diffview.nvim',
-    event = 'VeryLazy',
+    "sindrets/diffview.nvim",
+    event = "VeryLazy",
     opts = {},
   },
 
   {
-    'lewis6991/gitsigns.nvim',
-    event = 'VeryLazy',
+    "lewis6991/gitsigns.nvim",
+    event = "VeryLazy",
     opts = {
       --[[ signs = {
         add = { text = '┃' },
@@ -25,19 +25,19 @@ return {
       }, ]]
 
       signs = {
-        add = { text = '▎' },
-        change = { text = '▎' },
-        delete = { text = '' },
-        topdelete = { text = '' },
-        changedelete = { text = '▎' },
-        untracked = { text = '▎' },
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
       },
       signs_staged = {
-        add = { text = '▎' },
-        change = { text = '▎' },
-        delete = { text = '' },
-        topdelete = { text = '' },
-        changedelete = { text = '▎' },
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
       },
       signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
       current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
@@ -50,34 +50,34 @@ return {
 
         JVim.register({
           {
-            ']c',
+            "]c",
             function()
               if vim.wo.diff then
-                vim.cmd.normal({ ']c', bang = true })
+                vim.cmd.normal({ "]c", bang = true })
               else
-                gs.nav_hunk('next')
+                gs.nav_hunk("next")
               end
             end,
-            'Next chunk',
+            "Next chunk",
           },
           {
-            '[c',
+            "[c",
             function()
               if vim.wo.diff then
-                vim.cmd.normal({ '[c', bang = true })
+                vim.cmd.normal({ "[c", bang = true })
               else
-                gs.nav_hunk('prev')
+                gs.nav_hunk("prev")
               end
             end,
-            'Prev chunk',
+            "Prev chunk",
           },
           { -- Diff current file in new tab
-            '<leader>gd',
+            "<leader>gd",
             function()
               vim.cmd.tabnew(vim.api.nvim_buf_get_name(0))
-              gs.diffthis('~')
+              gs.diffthis("~")
             end,
-            'diff',
+            "diff",
           },
           -- stylua: ignore start
           { '<leader>gS', gs.stage_buffer, 'stage buffer' },
@@ -86,7 +86,7 @@ return {
           { "<leader>ghB", function() gs.blame() end, "Blame Buffer" }
 ,
         }, function(opts)
-          opts.desc = 'Git ' .. opts.desc
+          opts.desc = "Git " .. opts.desc
           opts.buffer = buf
         end)
       end,
@@ -94,8 +94,8 @@ return {
   },
 
   {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
     opts = {
       panel = { enabled = false },
       suggestion = {
@@ -104,7 +104,7 @@ return {
         hide_during_completion = true,
         debounce = 75,
         keymap = {
-          accept = '<tab>',
+          accept = "<tab>",
           accept_word = false,
           accept_line = false,
         },

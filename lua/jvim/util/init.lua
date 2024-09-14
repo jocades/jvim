@@ -15,6 +15,10 @@ function M.who()
   end)
 end
 
+function M.print(v)
+  vim.print(vim.inspect(v))
+end
+
 ---@param mode string|string[]
 ---@param keys string
 ---@param exec string|fun()
