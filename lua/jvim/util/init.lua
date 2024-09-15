@@ -5,6 +5,7 @@ local M = {
   git = require("jvim.util.git"),
   plugin = require("jvim.util.plugin"),
   toggle = require("jvim.util.toggle"),
+  diagnostic = require("jvim.util.diagnostic"),
 }
 
 setmetatable(M, { __index = require("lazy.util") })
@@ -15,11 +16,11 @@ function M.who()
   end)
 end
 
-function M.print(v)
+function M.ins(v)
   vim.print(vim.inspect(v))
 end
 
----@param mode string|string[]
+---@param mode string
 ---@param keys string
 ---@param exec string|fun()
 ---@param opts? vim.keymap.set.Opts|string
@@ -31,7 +32,7 @@ function M.map(mode, keys, exec, opts, modify)
   vim.keymap.set(mode, keys, exec, modify and modify(opts) or opts)
 end
 
----@param keymaps jvim.Keymaps|[string,string|fun(),vim.keymap.set.Opts|string][]
+---@param keymaps jvim.Keymaps|[string,string|fun(),string|vim.keymap.set.Opts][]
 ---@param modify? fun(opts: vim.keymap.set.Opts): nil
 function M.register(keymaps, modify)
   if vim.islist(keymaps) then

@@ -13,16 +13,16 @@ function M.formatting()
 end
 
 function M.virtual_text()
-  if JVim.lsp.diagnostics.virtual_text.enabled then
-    local diagnostics = vim.deepcopy(JVim.lsp.diagnostics)
-    diagnostics.virtual_text = false
-    vim.diagnostic.config(diagnostics)
+  if JVim.diagnostic.opts.virtual_text.enabled then
+    local opts = vim.deepcopy(JVim.diagnostic.opts)
+    opts.virtual_text = false
+    vim.diagnostic.config(opts)
   else
-    vim.diagnostic.config(JVim.lsp.diagnostics)
+    vim.diagnostic.config(JVim.diagnostic.opts)
   end
   ---@diagnostic disable-next-line: inject-field
-  JVim.lsp.diagnostics.virtual_text.enabled =
-    not JVim.lsp.diagnostics.virtual_text.enabled
+  JVim.diagnostic.opts.virtual_text.enabled =
+    not JVim.diagnostic.opts.virtual_text.enabled
 end
 
 function M.hlsearch()

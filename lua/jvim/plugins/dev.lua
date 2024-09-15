@@ -1,20 +1,30 @@
 return {
   {
-    'test',
+    "test",
     dev = true,
     opts = {},
     config = function()
-      require('test').setup()
+      require("test").setup()
     end,
   },
 
   {
-    'bquik',
+    "bquik",
     dev = true,
   },
 
   {
-    'jocades/twf.nvim',
+    "jocades/go-tools.nvim",
+    dev = true,
+    ft = "go",
+    -- opts = {},
+    config = function()
+      require("go-tools.gotest").setup()
+    end,
+  },
+
+  {
+    "jocades/twf.nvim",
     dev = true,
     ---@module 'twf'
     ---@type TwfOpts

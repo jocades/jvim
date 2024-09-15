@@ -1,11 +1,11 @@
 return {
   {
-    'neovim/nvim-lspconfig',
-    event = 'VeryLazy',
+    "neovim/nvim-lspconfig",
+    event = "VeryLazy",
     dependencies = {
-      'williamboman/mason-lspconfig.nvim', -- lspconfig setup bridge
-      { 'b0o/SchemaStore.nvim', lazy = true, version = false }, -- json/yaml schemas
-      'jose-elias-alvarez/typescript.nvim',
+      "williamboman/mason-lspconfig.nvim", -- lspconfig setup bridge
+      { "b0o/SchemaStore.nvim", lazy = true, version = false }, -- json/yaml schemas
+      "jose-elias-alvarez/typescript.nvim",
     },
     ---@class jvim.LspOpts
     opts = {
@@ -27,18 +27,18 @@ return {
             willRename = true,
           },
         },
-        offsetEncoding = { 'utf-16' }, -- fix clang formatter warnings
+        offsetEncoding = { "utf-16" }, -- fix clang formatter warnings
       },
       -- Servers & Settings
       servers = {
         -- C
         clangd = {
           cmd = {
-            'clangd',
-            '--background-index',
-            '--clang-tidy',
-            '--completion-style=detailed',
-            '--header-insertion=iwyu',
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--completion-style=detailed",
+            "--header-insertion=iwyu",
           },
           init_options = {
             clangdFileStatus = true,
@@ -49,7 +49,7 @@ return {
         },
         -- Go
         gopls = {
-          cmd = { 'gopls', 'serve' },
+          cmd = { "gopls", "serve" },
           settings = {
             gopls = {
               analyses = {
@@ -68,7 +68,7 @@ return {
             analysis = {
               autoSearchPaths = true,
               useLibraryCodeForTypes = true,
-              typeCheckingMode = 'basic',
+              typeCheckingMode = "basic",
             },
           },
         },
@@ -76,7 +76,7 @@ return {
         lua_ls = {
           settings = {
             Lua = {
-              version = 'LuaJIT',
+              version = "LuaJIT",
               workspace = { checkThirdParty = false },
               codeLens = { enable = true },
               hint = { enable = true },
@@ -92,7 +92,7 @@ return {
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
                 includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
                 includeInlayPropertyDeclarationTypeHints = true,
                 includeInlayVariableTypeHints = false,
@@ -107,7 +107,7 @@ return {
               or {}
             vim.list_extend(
               new_config.settings.json.schemas,
-              require('schemastore').json.schemas()
+              require("schemastore").json.schemas()
             )
           end,
           settings = {
@@ -119,12 +119,12 @@ return {
         },
         --- Elixir
         elixirls = {
-          cmd = { '/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls' },
+          cmd = { "/Users/j0rdi/.local/share/nvim/mason/bin/elixir-ls" },
           single_file_support = true,
         },
         -- Shell
         bashls = {
-          filetype = { 'sh', 'zsh' },
+          filetype = { "sh", "zsh" },
         },
         --- HTML
         html = {},
@@ -144,7 +144,7 @@ return {
     },
     ---@param opts jvim.LspOpts
     config = function(_, opts)
-      local lspconfig = require('lspconfig')
+      local lspconfig = require("lspconfig")
       local capabilities = JVim.lsp.capabilities(opts)
 
       for server, config in pairs(opts.servers) do
@@ -152,38 +152,38 @@ return {
         lspconfig[server].setup(config)
       end
 
-      require('mason-lspconfig').setup({
+      require("mason-lspconfig").setup({
         ensure_installed = vim.tbl_keys(opts.servers),
         automatic_installation = {
-          exclude = { 'rust_analyzer', 'zls' },
+          exclude = { "rust_analyzer", "zls" },
         },
       })
 
       JVim.lsp.on_attach(function(client, e)
-        require('jvim.plugins.lsp.keymaps').on_attach(client, e.buf)
+        require("jvim.plugins.lsp.keymaps").on_attach(client, e.buf)
       end)
 
-      vim.diagnostic.config(JVim.lsp.diagnostics)
+      vim.diagnostic.config(JVim.diagnostic.opts)
     end,
   },
 
   -- LS + tooling manager
   {
-    'williamboman/mason.nvim',
-    cmd = 'Mason',
+    "williamboman/mason.nvim",
+    cmd = "Mason",
     opts = {
       ensure_installed = {
-        'autopep8',
-        'clang-format',
-        'clangd',
-        'shellcheck',
-        'shfmt',
-        'stylua',
+        "autopep8",
+        "clang-format",
+        "clangd",
+        "shellcheck",
+        "shfmt",
+        "stylua",
       },
     },
     config = function(_, opts)
-      require('mason').setup(opts)
-      local mr = require('mason-registry')
+      require("mason").setup(opts)
+      local mr = require("mason-registry")
       for _, tool in ipairs(opts.ensure_installed) do
         local p = mr.get_package(tool)
         if not p:is_installed() then

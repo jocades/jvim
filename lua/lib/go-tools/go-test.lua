@@ -89,17 +89,41 @@ local function parse_line(s, line)
   end
 end
 
+local active
 local out_buf
 
 ---@param buf number
 ---@param cmd string[]
 local function execute(buf, cmd)
+  active = true
   vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
 
   local state = {
     buf = buf,
     tests = {},
   }
+
+  local pkg
+  vim.api.nvim_buf_create_user_command(buf, "GoTestOut", function()
+    local func = get_test_func_at_cursor()
+    if not func then
+      JVim.info("No func at cursor", { title = "go-test" })
+      return
+    end
+
+    local key = make_key({ Package = pkg, Test = func })
+    local test = state.tests[key]
+
+    if not out_buf then
+      out_buf = vim.api.nvim_create_buf(false, true)
+      vim.cmd.split()
+      vim.api.nvim_set_current_buf(out_buf)
+      vim.api.nvim_win_set_height(0, 12)
+      vim.wo.winfixheight = true
+    end
+
+    vim.api.nvim_buf_set_lines(out_buf, 0, -1, false, test.output)
+  end, {})
 
   vim.fn.jobstart(table.concat(cmd, " "), {
     stdout_buffered = true,
@@ -123,7 +147,6 @@ local function execute(buf, cmd)
       ---@type vim.Diagnostic[]
       local diagnostics = {}
 
-      local pkg
       for _, test in pairs(state.tests) do
         if not pkg then
           pkg = test.pkg
@@ -157,25 +180,6 @@ local function execute(buf, cmd)
       -- JVim.print(diagnostics)
 
       vim.diagnostic.set(ns, buf, diagnostics)
-
-      local func = get_test_func_at_cursor()
-      if not func then
-        JVim.info("No func at cursor", { title = "go-test" })
-        return
-      end
-
-      local key = make_key({ Package = pkg, Test = func })
-      local test = state.tests[key]
-
-      if not out_buf then
-        out_buf = vim.api.nvim_create_buf(false, true)
-        vim.cmd.split()
-        vim.api.nvim_set_current_buf(out_buf)
-        vim.api.nvim_win_set_height(0, 12)
-        vim.wo.winfixheight = true
-      end
-
-      vim.api.nvim_buf_set_lines(out_buf, 0, -1, false, test.output)
     end,
   })
 end
