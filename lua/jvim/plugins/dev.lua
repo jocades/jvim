@@ -17,9 +17,13 @@ return {
     "jocades/go-tools.nvim",
     dev = true,
     ft = "go",
-    -- opts = {},
+    opts = {
+      gotest = {},
+      gotags = {},
+    },
     config = function()
-      require("go-tools.gotest").setup()
+      local go = require("go-tools")
+      go.setup()
     end,
   },
 
