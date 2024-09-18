@@ -15,15 +15,6 @@ return {
     "lewis6991/gitsigns.nvim",
     event = "VeryLazy",
     opts = {
-      --[[ signs = {
-        add = { text = '┃' },
-        change = { text = '┃' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-        untracked = { text = '┆' },
-      }, ]]
-
       signs = {
         add = { text = "▎" },
         change = { text = "▎" },
@@ -50,7 +41,7 @@ return {
 
         JVim.register({
           {
-            "]c",
+            "]h",
             function()
               if vim.wo.diff then
                 vim.cmd.normal({ "]c", bang = true })
@@ -58,10 +49,10 @@ return {
                 gs.nav_hunk("next")
               end
             end,
-            "Next chunk",
+            "Next hunk",
           },
           {
-            "[c",
+            "[h",
             function()
               if vim.wo.diff then
                 vim.cmd.normal({ "[c", bang = true })
@@ -69,7 +60,7 @@ return {
                 gs.nav_hunk("prev")
               end
             end,
-            "Prev chunk",
+            "Prev hunk",
           },
           { -- Diff current file in new tab
             "<leader>gd",
@@ -80,7 +71,7 @@ return {
             "diff",
           },
           -- stylua: ignore start
-          { '<leader>gS', gs.stage_buffer, 'stage buffer' },
+          -- { "<leader>gS", gs.stage_buffer, "stage buffer" },
           { "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline" },
           { "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line" },
           { "<leader>ghB", function() gs.blame() end, "Blame Buffer" }

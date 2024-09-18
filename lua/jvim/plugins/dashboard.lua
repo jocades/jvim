@@ -10,14 +10,14 @@ local logo = [[
 
 return {
   {
-    'goolord/alpha-nvim',
+    "goolord/alpha-nvim",
     enabled = true,
-    event = 'VimEnter',
+    event = "VimEnter",
     config = function()
-      local dashboard = require('alpha.themes.dashboard')
+      local dashboard = require("alpha.themes.dashboard")
 
-      logo = string.rep('\n', 4) .. logo .. '\n\n'
-      dashboard.section.header.val = vim.split(logo, '\n')
+      logo = string.rep("\n", 4) .. logo .. "\n\n"
+      dashboard.section.header.val = vim.split(logo, "\n")
     --stylua: ignore
     dashboard.section.buttons.val = {
       dashboard.button('f', ' ' .. ' Find file', ':lua JVim.find_files()<cr>'), -- 
@@ -31,34 +31,34 @@ return {
       dashboard.button('q', ' ' .. ' Quit', ':qa<cr>'),
     }
       for _, button in ipairs(dashboard.section.buttons.val) do
-        button.opts.hl = 'AlphaButtons'
-        button.opts.hl_shortcut = 'AlphaShortcut'
+        button.opts.hl = "AlphaButtons"
+        button.opts.hl_shortcut = "AlphaShortcut"
       end
-      dashboard.section.footer.opts.hl = 'Type'
-      dashboard.section.header.opts.hl = 'AlphaHeader'
-      dashboard.section.buttons.opts.hl = 'AlphaButtons'
+      dashboard.section.footer.opts.hl = "Type"
+      dashboard.section.header.opts.hl = "AlphaHeader"
+      dashboard.section.buttons.opts.hl = "AlphaButtons"
       dashboard.opts.layout[1].val = 8
 
       -- close Lazy and re-open when the dashboard is ready
-      if vim.o.filetype == 'lazy' then
+      if vim.o.filetype == "lazy" then
         vim.cmd.close()
-        vim.api.nvim_create_autocmd('User', {
-          pattern = 'AlphaReady',
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "AlphaReady",
           callback = function()
-            require('lazy').show()
+            require("lazy").show()
           end,
         })
       end
 
-      require('alpha').setup(dashboard.opts)
+      require("alpha").setup(dashboard.opts)
 
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'LazyVimStarted',
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LazyVimStarted",
         callback = function()
-          local stats = require('lazy').stats()
+          local stats = require("lazy").stats()
           local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
           dashboard.section.footer.val = string.format(
-            '⚡ Neovim loaded %d/%d plugins in %.2fms',
+            "⚡ Neovim loaded %d/%d plugins in %.2fms",
             stats.loaded,
             stats.count,
             ms
@@ -70,11 +70,11 @@ return {
   },
 
   {
-    'nvimdev/dashboard-nvim',
+    "nvimdev/dashboard-nvim",
     enabled = false,
     lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
     opts = function()
-      logo = string.rep('\n', 8) .. logo .. '\n\n'
+      logo = string.rep("\n", 8) .. logo .. "\n\n"
       local opts = {
         hide = {
           -- this is taken care of by lualine
@@ -82,7 +82,7 @@ return {
           statusline = false,
         },
         config = {
-          header = vim.split(logo, '\n'),
+          header = vim.split(logo, "\n"),
           --stylua: ignore
           center = {
             { key = 'f', icon = ' ', desc = ' Find file', action = ':Telescope find_files<cr>', },
@@ -96,34 +96,34 @@ return {
             { key = 'q', icon = ' ', desc = ' Quit', action = ':qa<cr>', },
           },
           footer = function()
-            local stats = require('lazy').stats()
+            local stats = require("lazy").stats()
             local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
             return {
-              '⚡ Neovim loaded '
+              "⚡ Neovim loaded "
                 .. stats.loaded
-                .. '/'
+                .. "/"
                 .. stats.count
-                .. ' plugins in '
+                .. " plugins in "
                 .. ms
-                .. 'ms',
+                .. "ms",
             }
           end,
         },
       }
 
       for _, button in ipairs(opts.config.center) do
-        button.desc = button.desc .. string.rep(' ', 43 - #button.desc)
-        button.key_format = '  %s'
+        button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
+        button.key_format = "  %s"
       end
 
       -- open dashboard after closing lazy
-      if vim.o.filetype == 'lazy' then
-        vim.api.nvim_create_autocmd('WinClosed', {
+      if vim.o.filetype == "lazy" then
+        vim.api.nvim_create_autocmd("WinClosed", {
           pattern = tostring(vim.api.nvim_get_current_win()),
           once = true,
           callback = function()
             vim.schedule(function()
-              vim.api.nvim_exec_autocmds('UIEnter', { group = 'dashboard' })
+              vim.api.nvim_exec_autocmds("UIEnter", { group = "dashboard" })
             end)
           end,
         })

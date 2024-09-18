@@ -3,6 +3,8 @@
 
 while true do
   local line = io.read()
-  if line == nil then break end
-  print('lua -> ' .. line)
+  if line == nil then
+    break
+  end
+  print("lua -> " .. line)
 end

@@ -129,6 +129,7 @@ return {
       filesystem = {
         bind_to_cwd = false,
         use_libuv_file_watcher = true,
+        hijack_netrw_behavior = "open_current",
         filtered_items = {
           always_show = { ".gitignore", ".cargo" },
         },

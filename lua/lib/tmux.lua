@@ -15,4 +15,8 @@ function M.run(cmd)
   return ("tmux send-keys %s Enter"):format(table.concat(cmd, "\\ "))
 end
 
+function M.new_window()
+  return "tmux new-win"
+end
+
 return M

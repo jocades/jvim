@@ -1,36 +1,36 @@
 return {
-  { 'nvim-lua/plenary.nvim', lazy = true },
+  { "nvim-lua/plenary.nvim", lazy = true },
 
   -- Navigate between vim and tmux panes
   {
-    'christoomey/vim-tmux-navigator',
+    "christoomey/vim-tmux-navigator",
     cmd = {
-      'TmuxNavigateLeft',
-      'TmuxNavigateDown',
-      'TmuxNavigateUp',
-      'TmuxNavigateRight',
-      'TmuxNavigatePrevious',
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
     },
     keys = {
-      { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
-      { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
-      { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
-      { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
-      { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
+      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
     },
   },
 
   { -- Better mark navication and mark sign in gutter
-    'chentoast/marks.nvim',
+    "chentoast/marks.nvim",
     enabled = false,
-    event = 'BufReadPost',
+    event = "BufReadPost",
     opts = {},
   },
 
   -- Distraction free coding
   {
-    'folke/zen-mode.nvim',
-    cmd = 'ZenMode',
+    "folke/zen-mode.nvim",
+    cmd = "ZenMode",
     opts = {
       plugins = {
         tmux = { enabled = true },
@@ -40,8 +40,8 @@ return {
 
   -- Session management
   {
-    'folke/persistence.nvim',
-    event = 'BufReadPre',
+    "folke/persistence.nvim",
+    event = "BufReadPre",
     opts = {},
     -- stylua: ignore
     keys = {
@@ -52,8 +52,8 @@ return {
   },
 
   {
-    'folke/which-key.nvim',
-    event = 'VeryLazy',
+    "folke/which-key.nvim",
+    event = "VeryLazy",
     -- cmd = 'WhichKey',
     opts = {},
   },

@@ -12,4 +12,4 @@
 ---@field i? jvim.Keymap
 ---@field v? jvim.Keymap
 
-_G.JVim = require('jvim.util')
+_G.JVim = require("jvim.util")

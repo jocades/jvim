@@ -26,18 +26,18 @@
 
 ---@type vim.lsp.Client
 local client = vim.lsp.get_clients({
-  name = 'lua_ls',
+  name = "lua_ls",
   bufnr = 0,
   -- method = 'workspace/willRenameFiles',
 })[1]
 
-local will = 'workspace/willRenameFiles'
-local did = 'workspace/didRenameFiles'
+local will = "workspace/willRenameFiles"
+local did = "workspace/didRenameFiles"
 
 -- print(client.supports_method(method))
 
 local old = vim.api.nvim_buf_get_name(0)
-local new = vim.fs.joinpath(vim.fs.dirname(old), 'other.lua')
+local new = vim.fs.joinpath(vim.fs.dirname(old), "other.lua")
 -- vim.print({
 --   old = old,
 --   new = new,

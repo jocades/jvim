@@ -170,7 +170,7 @@ return {
       routes = {
         {
           view = "split",
-          filter = { event = "msg_show", min_height = 30 },
+          filter = { event = "msg_show", min_height = 50 },
         },
 
         {

@@ -19,7 +19,7 @@ end
 function KeymapRegister:listen(pattern, new_keymaps, desc_prefix)
   self.new_keymaps = new_keymaps
 
-  self.id = vim.api.nvim_create_autocmd('BufEnter', {
+  self.id = vim.api.nvim_create_autocmd("BufEnter", {
     pattern = pattern,
     callback = function(e)
       if self.bufs[e.buf] then
@@ -27,22 +27,22 @@ function KeymapRegister:listen(pattern, new_keymaps, desc_prefix)
       end
 
       local buf = e.buf
-      local buf_keymaps = vim.api.nvim_buf_get_keymap(buf, 'n')
+      local buf_keymaps = vim.api.nvim_buf_get_keymap(buf, "n")
 
       self.bufs[buf] = { matches = {} }
 
       for _, buf_keymap in ipairs(buf_keymaps) do
         if self.new_keymaps[buf_keymap.lhs] then
           table.insert(self.bufs[buf].matches, buf_keymap)
-          vim.keymap.del('n', buf_keymap.lhs, { buffer = buf })
+          vim.keymap.del("n", buf_keymap.lhs, { buffer = buf })
         end
       end
 
       for k, v in pairs(new_keymaps) do
-        vim.keymap.set('n', k, v[1], {
+        vim.keymap.set("n", k, v[1], {
           silent = true,
           buffer = buf,
-          desc = string.format('%s%s', desc_prefix or '', v[2]),
+          desc = string.format("%s%s", desc_prefix or "", v[2]),
         })
       end
     end,
@@ -53,17 +53,17 @@ function KeymapRegister:restore()
   vim.api.nvim_del_autocmd(self.id)
 
   if not self.new_keymaps then
-    require('jvim.util.log').error('No keymaps to restore')
+    require("jvim.util.log").error("No keymaps to restore")
     return
   end
 
   for buf, keymaps in pairs(self.bufs) do
     for k, _ in pairs(self.new_keymaps) do
-      vim.keymap.del('n', k, { buffer = buf })
+      vim.keymap.del("n", k, { buffer = buf })
     end
 
     for _, keymap in pairs(keymaps.matches) do
-      vim.keymap.set('n', keymap.lhs, keymap.callback or keymap.rhs, {
+      vim.keymap.set("n", keymap.lhs, keymap.callback or keymap.rhs, {
         buffer = keymap.buffer,
         desc = keymap.desc,
         silent = keymap.silent == 1,
@@ -79,9 +79,9 @@ function KeymapRegister:restore()
 end
 
 function KeymapRegister:dbg()
-  print('== bufs ==')
+  print("== bufs ==")
   P(self.bufs)
-  print('== new keymaps ==')
+  print("== new keymaps ==")
   P(self.new_keymaps)
 end
 

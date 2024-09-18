@@ -1,14 +1,12 @@
-_G.JVim = require('jvim.util')
+_G.JVim = require("jvim.util")
 
 local M = {}
 
----@param opts? JVimOpts
+---@param opts JVimOpts
 function M.setup(opts)
-  opts = opts or {}
+  JVim.load("options")
 
-  JVim.load('options')
-
-  require('lazy').setup({ import = 'jvim.plugins' }, {
+  require("lazy").setup({ import = "jvim.plugins" }, {
     checker = {
       enabled = true,
       notify = false,
@@ -23,12 +21,12 @@ function M.setup(opts)
     performance = {
       rtp = {
         disabled_plugins = {
-          'gzip',
-          'netrwPlugin',
-          'tarPlugin',
-          'tohtml',
-          'tutor',
-          'zipPlugin',
+          "gzip",
+          "netrwPlugin",
+          "tarPlugin",
+          "tohtml",
+          "tutor",
+          "zipPlugin",
         },
       },
     },
@@ -39,12 +37,12 @@ function M.setup(opts)
   end
 
   local function load()
-    JVim.load('autocmds')
-    JVim.register(JVim.load('keymaps'))
+    JVim.load("autocmds")
+    JVim.register(JVim.load("keymaps"))
     JVim.git.setup()
 
     if vim.env.LSP_UTIL then
-      require('lib.lsp-util')
+      require("lib.lsp-util")
     end
   end
 

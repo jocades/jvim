@@ -1,27 +1,27 @@
 local prettier = {
-  opts = { 'prettierd', 'prettier', stop_after_first = true },
+  opts = { "prettierd", "prettier", stop_after_first = true },
   args = {
-    '--semi=false',
-    '--single-quote',
-    '--print-width=80',
-    '--end-of-line=lf',
+    "--semi=false",
+    "--single-quote",
+    "--print-width=80",
+    "--end-of-line=lf",
   },
 }
 
 local python = {
   opts = function(buf)
-    if require('conform').get_formatter_info('ruff_format', buf).available then
-      return { 'ruff_format' }
+    if require("conform").get_formatter_info("ruff_format", buf).available then
+      return { "ruff_format" }
     else
-      return { 'autopep8' }
+      return { "autopep8" }
     end
   end,
 }
 
 return {
-  'stevearc/conform.nvim',
-  event = 'BufWritePre',
-  cmd = 'ConformInfo',
+  "stevearc/conform.nvim",
+  event = "BufWritePre",
+  cmd = "ConformInfo",
   init = function()
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
@@ -32,13 +32,13 @@ return {
       if vim.g.disable_autoformat or vim.b[buf].disable_autoformat then
         return
       end
-      return { timeout_ms = 500, lsp_format = 'fallback' }
+      return { timeout_ms = 500, lsp_format = "fallback" }
     end,
     formatters_by_ft = {
-      lua = { 'stylua' },
-      rust = { 'rustfmt' },
-      c = { 'clang_format' },
-      sh = { 'shfmt' },
+      lua = { "stylua" },
+      rust = { "rustfmt" },
+      c = { "clang_format" },
+      sh = { "shfmt" },
       python = python.opts,
       javascript = prettier.opts,
       javascriptreact = prettier.opts,
@@ -47,31 +47,34 @@ return {
       json = prettier.opts,
       html = prettier.opts,
       css = prettier.opts,
-      go = { 'gofmt' },
+      go = { "gofmt" },
     },
   },
   config = function(_, opts)
-    require('conform').setup(opts)
-    local f = require('conform').formatters
+    require("conform").setup(opts)
+    local f = require("conform").formatters
     f.stylua = {
       prepend_args = {
-        '--config-path',
-        vim.fs.joinpath(vim.fn.stdpath('config'), 'stylua.toml'),
+        "--config-path",
+        vim.fs.joinpath(
+          vim.fn.stdpath("config") --[[@as string]],
+          "stylua.toml"
+        ),
       },
     }
-    f.clang_format = { prepend_args = { '-style=file' } }
-    f.autopep8 = { prepend_args = { '--max-line-length', '80' } }
-    f.shfmt = { prepend_args = { '-i', '4' } }
-    -- f.gofmt = { prepend_args = { '-s', '-w', '-tabwidth=4' } }
-    f.rustfmt = { prepend_args = { '--config', 'max_width=80' } }
+    f.clang_format = { prepend_args = { "-style=file" } }
+    f.autopep8 = { prepend_args = { "--max-line-length", "80" } }
+    f.shfmt = { prepend_args = { "-i", "4" } }
+    f.gofmt = { prepend_args = { "-s" } }
+    f.rustfmt = { prepend_args = { "--config", "max_width=80" } }
 
-    if not vim.uv.fs_stat(vim.fs.joinpath(vim.uv.cwd(), '.prettierrc')) then
+    if not JVim.file_exists(vim.fs.joinpath(vim.uv.cwd(), ".prettierrc")) then
       f.prettierd = { prepend_args = prettier.args }
       f.prettier = { prepend_args = prettier.args }
     end
 
     -- Enable / disable autoformatting on save
-    vim.api.nvim_create_user_command('FormatDisable', function(args)
+    vim.api.nvim_create_user_command("FormatDisable", function(args)
       if args.bang then
         -- `FromatDisable!` to disable for current buffer
         vim.b.disable_autoformat = true
@@ -79,15 +82,15 @@ return {
         vim.g.disable_autoformat = true
       end
     end, {
-      desc = 'Disable autoformatting on save',
+      desc = "Disable autoformatting on save",
       bang = true,
     })
 
-    vim.api.nvim_create_user_command('FormatEnable', function()
+    vim.api.nvim_create_user_command("FormatEnable", function()
       vim.b.disable_autoformat = false
       vim.g.disable_autoformat = false
     end, {
-      desc = 'Enable autoformatting on save',
+      desc = "Enable autoformatting on save",
     })
   end,
 }

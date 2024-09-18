@@ -1,8 +1,8 @@
 return {
-  'nvim-treesitter/nvim-treesitter',
+  "nvim-treesitter/nvim-treesitter",
   version = false, -- last release is way too old
-  build = ':TSUpdate',
-  event = 'VeryLazy',
+  build = ":TSUpdate",
+  event = "VeryLazy",
   lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
   init = function(plugin)
     -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
@@ -10,45 +10,45 @@ return {
     -- no longer trigger the **nvim-treesitter** module to be loaded in time.
     -- Luckily, the only things that those plugins need are the custom queries, which we make available
     -- during startup.
-    require('lazy.core.loader').add_to_rtp(plugin)
-    require('nvim-treesitter.query_predicates')
+    require("lazy.core.loader").add_to_rtp(plugin)
+    require("nvim-treesitter.query_predicates")
   end,
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-refactor', -- refactorings
-    'nvim-treesitter/nvim-treesitter-textobjects', -- additional text objects
-    'windwp/nvim-ts-autotag', -- auto close tags in html and jsx
+    "nvim-treesitter/nvim-treesitter-refactor", -- refactorings
+    "nvim-treesitter/nvim-treesitter-textobjects", -- additional text objects
+    "windwp/nvim-ts-autotag", -- auto close tags in html and jsx
   },
   ---@type TSConfig
   opts = {
     ensure_installed = {
-      'bash',
-      'c',
-      'css',
-      'diff',
-      'elixir',
-      'html',
-      'javascript',
-      'jsdoc',
-      'json',
-      'json5',
-      'jsonc',
-      'lua',
-      'markdown',
-      'markdown_inline',
-      'python',
-      'rust',
-      'toml',
-      'tsx',
-      'typescript',
-      'vim',
-      'vimdoc',
-      'xml',
-      'yaml',
-      'yaml',
+      "bash",
+      "c",
+      "css",
+      "diff",
+      "elixir",
+      "html",
+      "javascript",
+      "jsdoc",
+      "json",
+      "json5",
+      "jsonc",
+      "lua",
+      "markdown",
+      "markdown_inline",
+      "python",
+      "rust",
+      "toml",
+      "tsx",
+      "typescript",
+      "vim",
+      "vimdoc",
+      "xml",
+      "yaml",
+      "yaml",
     },
     auto_install = true,
     highlight = { enable = true },
-    indent = { enable = true, disable = { 'python', 'elixir' } },
+    indent = { enable = true, disable = { "python", "elixir" } },
     disable = function(_, buf)
       local max_filesize = 100 * 1024 -- 100 KB
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
@@ -59,10 +59,10 @@ return {
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = '<C-space>',
-        node_incremental = '<C-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<c-backspace>',
+        init_selection = "<C-space>",
+        node_incremental = "<C-space>",
+        scope_incremental = "<c-s>",
+        node_decremental = "<c-backspace>",
       },
     },
     textobjects = {
@@ -71,32 +71,32 @@ return {
         lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
         keymaps = {
           -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
+          ["aa"] = "@parameter.outer",
+          ["ia"] = "@parameter.inner",
+          ["af"] = "@function.outer",
+          ["if"] = "@function.inner",
+          ["ac"] = "@class.outer",
+          ["ic"] = "@class.inner",
         },
       },
       move = {
         enable = true,
         set_jumps = true, -- whether to set jumps in the jumplist
         goto_next_start = {
-          [']f'] = '@function.outer',
-          [']c'] = '@class.outer',
+          ["]f"] = "@function.outer",
+          ["]c"] = "@class.outer",
         },
         goto_next_end = {
-          [']F'] = '@function.outer',
-          [']C'] = '@class.outer',
+          ["]F"] = "@function.outer",
+          ["]C"] = "@class.outer",
         },
         goto_previous_start = {
-          ['[f'] = '@function.outer',
-          ['[c'] = '@class.outer',
+          ["[f"] = "@function.outer",
+          ["[c"] = "@class.outer",
         },
         goto_previous_end = {
-          ['[F'] = '@function.outer',
-          ['[C'] = '@class.outer',
+          ["[F"] = "@function.outer",
+          ["[C"] = "@class.outer",
         },
       },
       -- swap = {
@@ -116,8 +116,8 @@ return {
     sync_install = false,
   },
   config = function(_, opts)
-    require('nvim-treesitter.configs').setup(opts)
-    require('nvim-ts-autotag').setup()
-    vim.treesitter.language.register('markdown', 'mdx')
+    require("nvim-treesitter.configs").setup(opts)
+    require("nvim-ts-autotag").setup()
+    vim.treesitter.language.register("markdown", "mdx")
   end,
 }

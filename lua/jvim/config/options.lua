@@ -1,13 +1,13 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Set filetype to `bigfile` for files larger than 1.5 MB
 -- Only vim syntax will be enabled (with the correct filetype)
 vim.g.bigfile_size = 1024 * 1024 * 1.5 -- 1.5 MB
 
 local opts = {
-  clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
-  mouse = 'a', -- enable mouse mode
+  clipboard = "unnamedplus", -- allows neovim to access the system clipboard
+  mouse = "a", -- enable mouse mode
   incsearch = true, -- highlit while search
   hlsearch = false, -- highlight on search
   number = true, -- make line numbers default
@@ -20,19 +20,19 @@ local opts = {
   equalalways = false, -- make windows always equal height
   expandtab = true, -- Use spaces instead of tabs
   tabstop = 2, -- Number of spaces tabs count for
-  inccommand = 'nosplit', -- preview incremental substitute
+  inccommand = "nosplit", -- preview incremental substitute
   laststatus = 3, -- global status line
   list = true, -- Show some invisible characters (tabs...
   swapfile = false, -- Disable swapfile
   sessionoptions = {
-    'buffers',
-    'curdir',
-    'tabpages',
-    'winsize',
-    'help',
-    'globals',
-    'skiprtp',
-    'folds',
+    "buffers",
+    "curdir",
+    "tabpages",
+    "winsize",
+    "help",
+    "globals",
+    "skiprtp",
+    "folds",
   },
   sidescrolloff = 8, -- Columns of context
   scrolloff = 6, -- always n lines below the cursor
@@ -46,16 +46,16 @@ local opts = {
   ignorecase = true, -- case insensitive searching UNLESS /C or capital in search
   smartcase = true,
   updatetime = 250, -- decrease update time
-  signcolumn = 'yes', -- always show the sign column, otherwise it would shift the text each time
+  signcolumn = "yes", -- always show the sign column, otherwise it would shift the text each time
   termguicolors = true, -- set colorscheme
   cmdheight = 1, -- more space in the neovim command line for displaying messages
   pumheight = 10, -- pop up menu height
-  completeopt = { 'menuone', 'noselect' }, -- set completeopt to have a better completion
-  fillchars = { eob = '~' },
+  completeopt = { "menuone", "noselect" }, -- set completeopt to have a better completion
+  fillchars = { eob = "~" },
   showmode = false,
-  colorcolumn = '80', -- Line length marker (ruler)
+  colorcolumn = "80", -- Line length marker (ruler)
   conceallevel = 2, -- Hide text
-  concealcursor = '', -- Expand hidden text when cursor in concealed text
+  concealcursor = "", -- Expand hidden text when cursor in concealed text
 }
 
 for k, v in pairs(opts) do
@@ -65,8 +65,8 @@ end
 -- File types (maybe use dedicated module)
 vim.filetype.add({
   extension = {
-    es = 'es',
-    mdx = 'markdown',
-    astro = 'astro',
+    es = "es",
+    mdx = "markdown",
+    astro = "astro",
   },
 })

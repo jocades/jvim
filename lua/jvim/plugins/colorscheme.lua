@@ -1,7 +1,7 @@
 return {
   {
-    'catppuccin/nvim',
-    name = 'catppuccin',
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
     ---@module 'catppuccin'
@@ -12,16 +12,16 @@ return {
         additional_vim_regex_highlighting = false,
       },
       show_end_of_buffer = true,
-      transparent_background = false,
+      transparent_background = true,
       no_italic = true,
       integrations = {
         native_lsp = {
           enabled = true,
           underlines = {
-            errors = { 'undercurl' },
-            hints = { 'undercurl' },
-            warnings = { 'undercurl' },
-            information = { 'undercurl' },
+            errors = { "undercurl" },
+            hints = { "undercurl" },
+            warnings = { "undercurl" },
+            information = { "undercurl" },
           },
         },
       },
@@ -29,9 +29,9 @@ return {
   },
 
   {
-    'rose-pine/neovim',
+    "rose-pine/neovim",
     enabled = false,
-    name = 'rose-pine',
+    name = "rose-pine",
     ---@module 'rose-pine'
     ---@type Options
     opts = {
@@ -49,11 +49,11 @@ return {
   },
 
   {
-    'rebelot/kanagawa.nvim',
+    "rebelot/kanagawa.nvim",
     enabled = false,
     priority = 1000,
     config = function()
-      require('kanagawa').setup({
+      require("kanagawa").setup({
         -- overrides = function(color) end,
         colors = {
           theme = {
@@ -72,21 +72,21 @@ return {
   },
 
   {
-    'navarasu/onedark.nvim',
+    "navarasu/onedark.nvim",
     enabled = false,
-    name = 'onedark',
+    name = "onedark",
   },
 
   {
-    'folke/tokyonight.nvim',
+    "folke/tokyonight.nvim",
     -- priority = 1000,
     enabled = false,
     opts = {
-      style = 'night',
+      style = "night",
       on_highlights = function(hl, c)
         hl.EndOfBuffer = { fg = c.dark5 } -- I like tildes
         hl.NvimTreeEndOfBuffer = { fg = c.bg_dark }
-        local prompt = '#2d3149'
+        local prompt = "#2d3149"
         hl.TelescopeNormal = {
           bg = c.bg_dark,
           fg = c.fg_dark,

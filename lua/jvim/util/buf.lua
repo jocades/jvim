@@ -13,8 +13,8 @@ function M.remove(buf)
 
   if vim.bo.modified then
     local choice = vim.fn.confirm(
-      ('Save changes to %q?'):format(vim.fn.bufname()),
-      '&Yes\n&No\n&Cancel'
+      ("Save changes to %q?"):format(vim.fn.bufname()),
+      "&Yes\n&No\n&Cancel"
     )
     if choice == 0 or choice == 3 then -- 0 for <Esc>/<C-c> and 3 for Cancel
       return
@@ -33,14 +33,14 @@ function M.remove(buf)
         return
       end
       -- Try using alternate buffer
-      local alt = vim.fn.bufnr('#')
+      local alt = vim.fn.bufnr("#")
       if alt ~= buf and vim.fn.buflisted(alt) == 1 then
         vim.api.nvim_win_set_buf(win, alt)
         return
       end
 
       -- Try using previous buffer
-      local has_previous = pcall(vim.cmd, 'bprevious') ---@diagnostic disable-line
+      local has_previous = pcall(vim.cmd, "bprevious") ---@diagnostic disable-line
       if has_previous and buf ~= vim.api.nvim_win_get_buf(win) then
         return
       end
@@ -51,7 +51,7 @@ function M.remove(buf)
     end)
   end
   if vim.api.nvim_buf_is_valid(buf) then
-    pcall(vim.cmd, 'bdelete! ' .. buf) ---@diagnostic disable-line
+    pcall(vim.cmd, "bdelete! " .. buf) ---@diagnostic disable-line
   end
 end
 

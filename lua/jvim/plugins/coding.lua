@@ -1,51 +1,51 @@
 return {
   -- Auto pairs
   {
-    'windwp/nvim-autopairs',
-    event = 'InsertEnter',
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
     opts = {},
   },
 
   -- Better surrounding
   {
-    'kylechui/nvim-surround',
-    version = '*', -- Use for stability; omit to use `main` branch for the latest features
-    event = 'InsertEnter',
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "InsertEnter",
     opts = {},
   },
 
   -- Search and replace
   {
-    'MagicDuck/grug-far.nvim',
+    "MagicDuck/grug-far.nvim",
     opts = { headerMaxWidth = 80 },
-    cmd = 'GrugFar',
+    cmd = "GrugFar",
     keys = {
       {
-        '<leader>sr',
+        "<leader>sr",
         function()
-          local grug = require('grug-far')
-          local ext = vim.bo.buftype == '' and vim.fn.expand('%:e')
-          grug.grug_far({
+          local grug = require("grug-far")
+          local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+          grug.open({
             transient = true,
             prefills = {
-              filesFilter = ext and ext ~= '' and '*.' .. ext or nil,
+              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
             },
           })
         end,
-        mode = { 'n', 'v' },
-        desc = 'Search and Replace',
+        mode = { "n", "v" },
+        desc = "Search and Replace",
       },
     },
   },
 
   -- Better quickfix and loc lists
   {
-    'folke/trouble.nvim',
-    cmd = { 'TroubleToggle', 'Trouble' },
+    "folke/trouble.nvim",
+    cmd = { "TroubleToggle", "Trouble" },
     opts = {
       modes = {
         lsp = {
-          win = { position = 'right' },
+          win = { position = "right" },
         },
       },
     },
@@ -53,21 +53,21 @@ return {
 
   -- Comments
   {
-    'numToStr/Comment.nvim',
-    event = 'BufReadPost',
-    dependencies = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+    "numToStr/Comment.nvim",
+    event = "BufReadPost",
+    dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
     opts = function()
       return {
         pre_hook = require(
-          'ts_context_commentstring.integrations.comment_nvim'
+          "ts_context_commentstring.integrations.comment_nvim"
         ).create_pre_hook(),
         opleader = {
-          line = '<leader>cc',
-          block = '<leader>cb',
+          line = "<leader>cc",
+          block = "<leader>cb",
         },
         toggler = {
-          line = '<leader>cc',
-          block = '<leader>cb',
+          line = "<leader>cc",
+          block = "<leader>cb",
         },
       }
     end,
@@ -75,9 +75,9 @@ return {
 
   -- Snippets
   {
-    'L3MON4D3/LuaSnip',
-    event = 'InsertEnter',
-    build = 'make install_jsregexp',
+    "L3MON4D3/LuaSnip",
+    event = "InsertEnter",
+    build = "make install_jsregexp",
     --stylua: ignore
     dependencies = {
       'rafamadriz/friendly-snippets',
@@ -85,7 +85,7 @@ return {
     },
     opts = {
       history = true,
-      delete_check_events = 'TextChanged',
+      delete_check_events = "TextChanged",
     },
     --stylua: ignore
     keys = {
@@ -100,15 +100,15 @@ return {
       { '<c-p>', function() require('luasnip').jump(-1) end, mode = { 'i', 's' } },
     },
     config = function(_, opts)
-      require('luasnip').setup(opts)
-      require('lib.snippets')
+      require("luasnip").setup(opts)
+      require("lib.snippets")
     end,
   },
 
   -- Todos (loclists and hl)
   {
-    'folke/todo-comments.nvim',
-    event = 'BufReadPost',
+    "folke/todo-comments.nvim",
+    event = "BufReadPost",
     opts = {},
   -- stylua: ignore
   keys = {
@@ -123,20 +123,20 @@ return {
 
   -- Configures LuaLS for editing your Neovim config by lazily updating your workspace libraries.
   {
-    'folke/lazydev.nvim',
-    ft = 'lua', -- only load on lua files
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
     opts = {
       library = {
-        'lazy.nvim',
-        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+        "lazy.nvim",
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
       },
     },
     keys = {
       {
-        '[q',
+        "[q",
         function()
-          if require('trouble').is_open() then
-            require('trouble').prev({ skip_groups = true, jump = true }) ---@diagnostic disable-line
+          if require("trouble").is_open() then
+            require("trouble").prev({ skip_groups = true, jump = true }) ---@diagnostic disable-line
           else
             local ok, err = pcall(vim.cmd.cprev)
             if not ok then
@@ -144,13 +144,13 @@ return {
             end
           end
         end,
-        desc = 'Previous Trouble/Quickfix Item',
+        desc = "Previous Trouble/Quickfix Item",
       },
       {
-        ']q',
+        "]q",
         function()
-          if require('trouble').is_open() then
-            require('trouble').next({ skip_groups = true, jump = true }) ---@diagnostic disable-line
+          if require("trouble").is_open() then
+            require("trouble").next({ skip_groups = true, jump = true }) ---@diagnostic disable-line
           else
             local ok, err = pcall(vim.cmd.cnext)
             if not ok then
@@ -158,11 +158,11 @@ return {
             end
           end
         end,
-        desc = 'Next Trouble/Quickfix Item',
+        desc = "Next Trouble/Quickfix Item",
       },
     },
   },
 
   -- Neovim libuv types for lua. Plugin will never be loaded
-  { 'Bilal2453/luvit-meta', lazy = true },
+  { "Bilal2453/luvit-meta", lazy = true },
 }

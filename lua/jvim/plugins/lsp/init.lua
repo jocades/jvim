@@ -5,7 +5,6 @@ return {
     dependencies = {
       "williamboman/mason-lspconfig.nvim", -- lspconfig setup bridge
       { "b0o/SchemaStore.nvim", lazy = true, version = false }, -- json/yaml schemas
-      "jose-elias-alvarez/typescript.nvim",
     },
     ---@class jvim.LspOpts
     opts = {
@@ -46,6 +45,7 @@ return {
             completeUnimported = true,
             semanticHighlighting = true,
           },
+          capabilities = { offsetEncoding = { "utf-16" } }, -- fix clang formatter warnings
         },
         -- Go
         gopls = {
@@ -84,7 +84,7 @@ return {
           },
         },
         -- TypeScript
-        tsserver = {
+        ts_ls = {
           single_file_support = true,
           settings = {
             typescript = {
@@ -148,6 +148,10 @@ return {
       local capabilities = JVim.lsp.capabilities(opts)
 
       for server, config in pairs(opts.servers) do
+        -- If capabilities are added per server basis, apply them here.
+        if config.capabilities then
+          JVim.merge(capabilities, config.capabilities)
+        end
         config.capabilities = capabilities
         lspconfig[server].setup(config)
       end

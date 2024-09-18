@@ -1,4 +1,4 @@
-local ls = require('luasnip')
+local ls = require("luasnip")
 
 local s = ls.snippet
 local t = ls.text_node
@@ -8,15 +8,15 @@ local i = ls.insert_node
 local function md_code_block(lang)
   return s({
     trig = lang,
-    name = 'Markdown ' .. lang:sub(1, 1):upper() .. lang:sub(2),
+    name = "Markdown " .. lang:sub(1, 1):upper() .. lang:sub(2),
   }, {
-    t({ '```' .. lang, '' }),
+    t({ "```" .. lang, "" }),
     i(0),
-    t({ '', '```' }),
+    t({ "", "```" }),
   })
 end
 
-ls.add_snippets('markdown', {
-  md_code_block('py'),
-  md_code_block('ts'),
+ls.add_snippets("markdown", {
+  md_code_block("py"),
+  md_code_block("ts"),
 })

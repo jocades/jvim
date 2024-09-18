@@ -84,15 +84,13 @@ function M.load(name)
   end, { msg = "Failed loading " .. mod })
 end
 
+---Execute a system command (blocking).
 ---@param cmd string|string[]
 function M.exe(cmd)
-  if type(cmd) == "table" then
-    cmd = table.concat(cmd, " ")
+  if type(cmd) == "string" then
+    cmd = vim.split(cmd, " ")
   end
-  local handle = assert(io.popen(cmd))
-  local result = handle:read("*a")
-  handle:close()
-  return vim.trim(result)
+  return vim.system(cmd, { text = true }):wait()
 end
 
 function M.find_files()
@@ -100,6 +98,19 @@ function M.find_files()
     require("telescope.builtin").git_files()
   else
     require("telescope.builtin").find_files()
+  end
+end
+
+---Merge two tables recursively, modifying the first table.
+---@param t1 table
+---@param t2 table
+function M.merge(t1, t2)
+  for k, v in pairs(t2) do
+    if type(v) == "table" then
+      t1[k] = vim.tbl_deep_extend("force", t1[k] or {}, v)
+    else
+      t1[k] = v
+    end
   end
 end
 

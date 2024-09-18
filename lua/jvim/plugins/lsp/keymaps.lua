@@ -33,7 +33,8 @@ local keymaps = {
 ---@param client vim.lsp.Client
 ---@param buf integer
 function M.on_attach(client, buf)
-  if client.name == "tsserver" then
+  --[[ if client.name == "ts_ls" then
+    JVim.info({ "clietn", client.name })
     local ts = require("typescript")
     --stylua: ignore
     vim.list_extend(keymaps, {
@@ -41,7 +42,7 @@ function M.on_attach(client, buf)
       { '<leader>tM', ts.actions.addMissingImports, 'Add Missing Imports (ts)', },
       { '<leader>tU', ts.actions.removeUnused, 'Remove Unused Imports (ts)', },
     })
-  end
+  end ]]
 
   if client.name == "ruff_lsp" then
     client.server_capabilities.hoverProvider = false
