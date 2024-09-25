@@ -124,7 +124,7 @@ return {
         },
         -- Shell
         bashls = {
-          filetype = { "sh", "zsh" },
+          filetype = { "sh", "zsh", "zshrc" },
         },
         --- HTML
         html = {},
@@ -140,6 +140,16 @@ return {
         taplo = {},
         -- Zig
         zls = {},
+        -- Nix
+        nil_ls = {
+          settings = {
+            ["nil"] = {
+              formatting = {
+                command = { "nixfmt" }, -- pkgs.nixfmt-rfc-style
+              },
+            },
+          },
+        },
       },
     },
     ---@param opts jvim.LspOpts

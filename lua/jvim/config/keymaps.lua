@@ -6,6 +6,7 @@ return {
     ["<leader>y"] = { "<cmd>%y+<cr>", "Copy buffer" },
     ["<leader>v"] = { "gg0vG$", "Select buffer" },
     ["<leader>so"] = { "<cmd>w | so %<cr>", "Source and run lua buffer" },
+    ["<leader>nf"] = { JVim.buf.new, "New buffer" },
 
     -- Windows
     ["<leader>z"] = { vim.cmd.close, { desc = "Close window", nowait = true } },
@@ -19,7 +20,7 @@ return {
 
     -- Git
     ["<leader>gg"] = { vim.cmd.Neogit, "Git panel" },
-    ["<leader>gc"] = { "<cmd>Neogit commit<cr>", "Git commit" },
+    ["<leader>gc"] = { "<cmd>Telescope git_commits<cr>", "Git commit" },
     ["<leader>gB"] = { JVim.git.browse, "Git browse" },
     ["<leader>gD"] = { vim.cmd.DiffviewOpen, "Git diff (project)" },
     ["<leader>gH"] = { vim.cmd.DiffviewFileHistory, "Git diff (history)" },

@@ -20,6 +20,10 @@ function M.ins(v)
   vim.print(vim.inspect(v))
 end
 
+function M.print_title(s)
+  vim.print(("==== %s ===="):format(s))
+end
+
 ---@param mode string
 ---@param keys string
 ---@param exec string|fun()

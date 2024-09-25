@@ -55,4 +55,14 @@ function M.remove(buf)
   end
 end
 
+function M.new()
+  vim.ui.input({ prompt = "Enter file name: " }, function(input)
+    if not input or vim.trim(input) == "" then
+      return
+    end
+    local path = "%:h/" .. input
+    vim.cmd.e(path)
+  end)
+end
+
 return M
