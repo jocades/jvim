@@ -1,13 +1,15 @@
 return {
   {
-    "NeogitOrg/neogit",
-    cmd = "Neogit",
+    "sindrets/diffview.nvim",
+    event = "VeryLazy",
     opts = {},
   },
 
   {
-    "sindrets/diffview.nvim",
-    event = "VeryLazy",
+    "NeogitOrg/neogit",
+    -- Just use lazygit for now...
+    enabled = false,
+    cmd = "Neogit",
     opts = {},
   },
 
@@ -70,12 +72,22 @@ return {
             end,
             "diff",
           },
-          -- stylua: ignore start
           -- { "<leader>gS", gs.stage_buffer, "stage buffer" },
           { "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline" },
-          { "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line" },
-          { "<leader>ghB", function() gs.blame() end, "Blame Buffer" }
-,
+          {
+            "<leader>ghb",
+            function()
+              gs.blame_line({ full = true })
+            end,
+            "Blame Line",
+          },
+          {
+            "<leader>ghB",
+            function()
+              gs.blame()
+            end,
+            "Blame Buffer",
+          },
         }, function(opts)
           opts.desc = "Git " .. opts.desc
           opts.buffer = buf
@@ -86,6 +98,8 @@ return {
 
   {
     "zbirenbaum/copilot.lua",
+    -- Let me chill for now.
+    -- enabled = false,
     cmd = "Copilot",
     opts = {
       panel = { enabled = false },

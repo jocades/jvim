@@ -20,7 +20,7 @@ return {
       dashboard.section.header.val = vim.split(logo, "\n")
     --stylua: ignore
     dashboard.section.buttons.val = {
-      dashboard.button('f', ' ' .. ' Find file', ':lua JVim.find_files()<cr>'), -- 
+      dashboard.button('f', ' ' .. ' Find file', ':lua JVim.find_files()<cr>'),
       dashboard.button('n', '󱇧 ' .. ' New file', ':ene <BAR> startinsert<cr>'),
       dashboard.button('r', ' ' .. ' Recent files', ':Telescope oldfiles<cr>'),
       dashboard.button('w', '󰈙 ' .. ' Find grep', ':Telescope live_grep<cr>'),
@@ -66,70 +66,6 @@ return {
           pcall(vim.cmd.AlphaRedraw)
         end,
       })
-    end,
-  },
-
-  {
-    "nvimdev/dashboard-nvim",
-    enabled = false,
-    lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
-    opts = function()
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
-      local opts = {
-        hide = {
-          -- this is taken care of by lualine
-          -- enabling this messes up the actual laststatus setting after loading a file
-          statusline = false,
-        },
-        config = {
-          header = vim.split(logo, "\n"),
-          --stylua: ignore
-          center = {
-            { key = 'f', icon = ' ', desc = ' Find file', action = ':Telescope find_files<cr>', },
-            { key = 'n', icon = '󱇧 ', desc = ' New file', action = ':ene <BAR> startinsert<cr>', },
-            { key = 'r', icon = '󰈙 ', desc = ' Recent files', action = ':Telescope oldfiles<cr>', },
-            { key = 'w', icon = '󰈭 ', desc = ' Find word', action = ':Telescope live_grep<cr>', },
-            { key = 's', icon = '󰦛 ', desc = ' Restore Session', action = ':lua require("persistence").load()<cr>', },
-            { key = 'c', icon = ' ', desc = ' Config', action = ':e $MYVIMRC<cr>', },
-            { key = 'l', icon = '󰒲 ', desc = ' Lazy', action = ':Lazy<cr>', },
-            { key = 'h', icon = '? ', desc = ' Find help', action = ':Telescope help_tags<cr>', },
-            { key = 'q', icon = ' ', desc = ' Quit', action = ':qa<cr>', },
-          },
-          footer = function()
-            local stats = require("lazy").stats()
-            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-            return {
-              "⚡ Neovim loaded "
-                .. stats.loaded
-                .. "/"
-                .. stats.count
-                .. " plugins in "
-                .. ms
-                .. "ms",
-            }
-          end,
-        },
-      }
-
-      for _, button in ipairs(opts.config.center) do
-        button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
-        button.key_format = "  %s"
-      end
-
-      -- open dashboard after closing lazy
-      if vim.o.filetype == "lazy" then
-        vim.api.nvim_create_autocmd("WinClosed", {
-          pattern = tostring(vim.api.nvim_get_current_win()),
-          once = true,
-          callback = function()
-            vim.schedule(function()
-              vim.api.nvim_exec_autocmds("UIEnter", { group = "dashboard" })
-            end)
-          end,
-        })
-      end
-
-      return opts
     end,
   },
 }
