@@ -21,7 +21,7 @@ local keymaps = {
   { "K", vim.lsp.buf.hover, "Hover Documentation" },
   { "<leader>k", vim.diagnostic.open_float, "Open diag float" },
   { "<leader>rn", vim.lsp.buf.rename, "Rename" },
-  { "<leader>ca", vim.lsp.buf.code_action, "Code Action" },
+  { "<leader>ca", require("actions-preview").code_actions, "Code Action" },
   { "<leader>ds", telescope.lsp_document_symbols, "Document Symbols" },
   {
     "<leader>ws",
@@ -33,17 +33,6 @@ local keymaps = {
 ---@param client vim.lsp.Client
 ---@param buf integer
 function M.on_attach(client, buf)
-  --[[ if client.name == "ts_ls" then
-    JVim.info({ "clietn", client.name })
-    local ts = require("typescript")
-    --stylua: ignore
-    vim.list_extend(keymaps, {
-      { '<leader>tO', ts.actions.organizeImports, 'Organize Imports (ts)', },
-      { '<leader>tM', ts.actions.addMissingImports, 'Add Missing Imports (ts)', },
-      { '<leader>tU', ts.actions.removeUnused, 'Remove Unused Imports (ts)', },
-    })
-  end ]]
-
   if client.name == "ruff_lsp" then
     client.server_capabilities.hoverProvider = false
   end

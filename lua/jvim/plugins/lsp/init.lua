@@ -206,4 +206,9 @@ return {
       end
     end,
   },
+
+  {
+    "aznhe21/actions-preview.nvim",
+    opts = {},
+  },
 }

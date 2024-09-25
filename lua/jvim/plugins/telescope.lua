@@ -2,7 +2,7 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     version = false,
-    cmd = "Telescope",
+    -- cmd = "Telescope",
     dependencies = {
       { -- Telescope fzf native
         "nvim-telescope/telescope-fzf-native.nvim",
@@ -79,13 +79,6 @@ return {
           "Find plugins",
         },
         {
-          "<leader>fc",
-          function()
-            b.find_files({ cwd = vim.fn.stdpath("config") })
-          end,
-          "Find config",
-        },
-        {
           "<leader>fl",
           function()
             b.find_files({ ---@diagnostic disable-next-line: param-type-mismatch
@@ -96,7 +89,7 @@ return {
         },
 
         -- Git
-        { "<leader>ch", b.git_commits, "Git commit history" },
+        -- { "<leader>ch", b.git_commits, "Git commit history" },
         { "<leader>gs", b.git_status, "Git status" },
         { "<leader>gb", b.git_branches, "Git branches" },
         -- { '<leader>gs', b.git_stash, 'Git stash' },
