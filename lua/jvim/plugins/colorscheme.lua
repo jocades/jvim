@@ -12,7 +12,7 @@ return {
         additional_vim_regex_highlighting = false,
       },
       show_end_of_buffer = true,
-      transparent_background = true,
+      transparent_background = false,
       no_italic = true,
       integrations = {
         native_lsp = {
@@ -24,26 +24,6 @@ return {
             information = { "undercurl" },
           },
         },
-      },
-    },
-  },
-
-  {
-    "rose-pine/neovim",
-    enabled = false,
-    name = "rose-pine",
-    ---@module 'rose-pine'
-    ---@type Options
-    opts = {
-      enable = {
-        terminal = true,
-        legacy_highlights = false, -- Improve compatibility for previous versions of Neovim
-        migrations = false, -- Handle deprecated options automatically
-      },
-      styles = {
-        bold = true,
-        italic = false,
-        transparency = false,
       },
     },
   },
@@ -66,8 +46,6 @@ return {
           },
         },
       })
-
-      -- vim.cmd([[colorscheme kanagawa]])
     end,
   },
 
@@ -116,9 +94,5 @@ return {
         }
       end,
     },
-    -- config = function(_, opts)
-    --   require('tokyonight').setup(opts)
-    --   vim.cmd([[colorscheme tokyonight-night]])
-    -- end,
   },
 }

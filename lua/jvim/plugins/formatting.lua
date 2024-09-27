@@ -66,7 +66,7 @@ return {
     f.autopep8 = { prepend_args = { "--max-line-length", "80" } }
     f.shfmt = { prepend_args = { "-i", "4" } }
     f.gofmt = { prepend_args = { "-s" } }
-    f.rustfmt = { prepend_args = { "--config", "max_width=80" } }
+    f.rustfmt = { prepend_args = { "--config", "max_width=100" } }
 
     if not JVim.file_exists(vim.fs.joinpath(vim.uv.cwd(), ".prettierrc")) then
       f.prettierd = { prepend_args = prettier.args }

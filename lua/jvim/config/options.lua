@@ -69,4 +69,7 @@ vim.filetype.add({
     mdx = "markdown",
     astro = "astro",
   },
+  filename = {
+    [".envrc"] = "sh",
+  },
 })

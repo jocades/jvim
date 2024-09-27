@@ -3,6 +3,20 @@ return {
     "neovim/nvim-lspconfig",
     event = "VeryLazy",
     dependencies = {
+      {
+        "williamboman/mason.nvim",
+        cmd = "Mason",
+        opts = {
+          ensure_installed = {
+            "autopep8",
+            "clang-format",
+            "clangd",
+            "shellcheck",
+            "shfmt",
+            "stylua",
+          },
+        },
+      },
       "williamboman/mason-lspconfig.nvim", -- lspconfig setup bridge
       { "b0o/SchemaStore.nvim", lazy = true, version = false }, -- json/yaml schemas
     },
@@ -154,6 +168,22 @@ return {
     },
     ---@param opts jvim.LspOpts
     config = function(_, opts)
+      require("mason").setup()
+      require("mason-lspconfig").setup({
+        -- ensure_installed = vim.tbl_keys(opts.servers),
+        automatic_installation = {
+          exclude = {
+            "astro",
+            "cssls",
+            "gopls",
+            "nil_ls",
+            "rust_analyzer",
+            "svelte",
+            "zls",
+          },
+        },
+      })
+
       local lspconfig = require("lspconfig")
       local capabilities = JVim.lsp.capabilities(opts)
 
@@ -166,13 +196,6 @@ return {
         lspconfig[server].setup(config)
       end
 
-      require("mason-lspconfig").setup({
-        ensure_installed = vim.tbl_keys(opts.servers),
-        automatic_installation = {
-          exclude = { "rust_analyzer", "zls" },
-        },
-      })
-
       JVim.lsp.on_attach(function(client, e)
         require("jvim.plugins.lsp.keymaps").on_attach(client, e.buf)
       end)
@@ -182,20 +205,20 @@ return {
   },
 
   -- LS + tooling manager
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    opts = {
-      ensure_installed = {
-        "autopep8",
-        "clang-format",
-        "clangd",
-        "shellcheck",
-        "shfmt",
-        "stylua",
-      },
-    },
-    config = function(_, opts)
+  -- {
+  --   "williamboman/mason.nvim",
+  --   cmd = "Mason",
+  --   opts = {
+  --     ensure_installed = {
+  --       "autopep8",
+  --       "clang-format",
+  --       "clangd",
+  --       "shellcheck",
+  --       "shfmt",
+  --       "stylua",
+  --     },
+  --   },
+  --[[ config = function(_, opts)
       require("mason").setup(opts)
       local mr = require("mason-registry")
       for _, tool in ipairs(opts.ensure_installed) do
@@ -204,8 +227,8 @@ return {
           p:install()
         end
       end
-    end,
-  },
+    end, ]]
+  -- },
 
   {
     "aznhe21/actions-preview.nvim",

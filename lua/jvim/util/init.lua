@@ -16,12 +16,13 @@ function M.who()
   end)
 end
 
-function M.ins(v)
+---@param v unknown
+---@param title? string
+function M.ins(v, title)
+  if title then
+    vim.print(("==== %s ===="):format(title))
+  end
   vim.print(vim.inspect(v))
-end
-
-function M.print_title(s)
-  vim.print(("==== %s ===="):format(s))
 end
 
 ---@param mode string
