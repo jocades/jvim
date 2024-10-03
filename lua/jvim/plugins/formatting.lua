@@ -8,16 +8,6 @@ local prettier = {
   },
 }
 
-local python = {
-  opts = function(buf)
-    if require("conform").get_formatter_info("ruff_format", buf).available then
-      return { "ruff_format" }
-    else
-      return { "autopep8" }
-    end
-  end,
-}
-
 return {
   "stevearc/conform.nvim",
   event = "BufWritePre",
@@ -39,7 +29,7 @@ return {
       rust = { "rustfmt" },
       c = { "clang_format" },
       sh = { "shfmt" },
-      python = python.opts,
+      python = { "ruff_format" },
       javascript = prettier.opts,
       javascriptreact = prettier.opts,
       typescript = prettier.opts,

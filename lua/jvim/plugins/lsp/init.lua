@@ -40,7 +40,6 @@ return {
             willRename = true,
           },
         },
-        offsetEncoding = { "utf-16" }, -- fix clang formatter warnings
       },
       -- Servers & Settings
       servers = {

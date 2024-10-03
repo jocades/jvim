@@ -1,6 +1,7 @@
 return {
   {
     "test",
+    enabled = false,
     dev = true,
     opts = {},
     config = function()
@@ -10,11 +11,13 @@ return {
 
   {
     "bquik",
+    enabled = false,
     dev = true,
   },
 
   {
     "jocades/go-tools.nvim",
+    -- enabled = false,
     dev = true,
     ft = "go",
     ---@module "go-tools"
@@ -32,6 +35,7 @@ return {
 
   {
     "jocades/twf.nvim",
+    enabled = false,
     dev = true,
     ---@module 'twf'
     ---@type TwfOpts
