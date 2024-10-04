@@ -33,8 +33,8 @@ return {
     ["<leader>tf"] = { JVim.toggle.formatting, "Toggle formatting" },
 
     -- Messages
-    ["<leader>nn"] = { vim.cmd.Noice, "Noice history" },
-    ["<leader>nl"] = { "<cmd>Noice last<cr>", "Noice last" },
+    ["<leader>ma"] = { "<cmd>Noice all<cr>", "Noice all" },
+    ["<leader>ml"] = { "<cmd>Noice last<cr>", "Noice last" },
 
     -- Centralization
     ["<C-d>"] = { "<C-d>zz" },
