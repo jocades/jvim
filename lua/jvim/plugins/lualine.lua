@@ -32,7 +32,7 @@ return {
         component_separators = "|",
         section_separators = { left = "", right = "" },
       },
-      extensions = { "lazy", "man" },
+      extensions = { "lazy", "man", "neo-tree" },
       tabline = {
         lualine_a = { "tabs" },
       },

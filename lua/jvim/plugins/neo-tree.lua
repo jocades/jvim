@@ -15,13 +15,13 @@ return {
         end,
         desc = "Explorer",
       },
-      --[[ {
-        '<C-n>',
+      {
+        "<C-n>",
         function()
-          require('neo-tree.command').execute({ toggle = true })
+          require("neo-tree.command").execute({ toggle = true })
         end,
-        desc = 'Explorer panel',
-      }, ]]
+        desc = "Explorer panel",
+      },
       {
         "<leader>ge",
         function()

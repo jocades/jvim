@@ -38,6 +38,7 @@ return {
       html = prettier.opts,
       css = prettier.opts,
       go = { "gofmt" },
+      asm = { "asmfmt" },
     },
   },
   config = function(_, opts)
