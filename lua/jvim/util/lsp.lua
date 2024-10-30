@@ -9,14 +9,6 @@ function M.capabilities(opts)
   )
 end
 
-function M.diagnostic_goto(next, severity)
-  local go_to = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-  severity = severity and vim.diagnostic.severity[severity] or nil
-  return function()
-    go_to({ severity = severity })
-  end
-end
-
 ---@class LspAttachEvent
 ---@field buf number Buffer id
 ---@field data { client_id: number }

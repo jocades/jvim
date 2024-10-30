@@ -67,7 +67,7 @@ return {
         { "<leader>:", b.command_history, "Command history" },
         { "<leader>?", b.oldfiles, "Find recently opened files" },
         {
-          "<leader>.",
+          "<leader>fs",
           b.current_buffer_fuzzy_find,
           "Fuzzily search in current buffer",
         },

@@ -9,13 +9,17 @@ local keymaps = {
   { "gD", vim.lsp.buf.declaration, "Goto Declaration" },
   { "gtd", vim.lsp.buf.type_definition, "Type Definition" },
   { "gI", vim.lsp.buf.implementation, "Goto Implementation" },
-  { "<leader>di", "<cmd>Trouble diagnostics toggle<cr>", "Diagnostics" },
   { "]d", vim.diagnostic.goto_next, "Goto Next Diagnostic" },
   { "[d", vim.diagnostic.goto_prev, "Goto Previous Diagnostic" },
-  { "]e", JVim.lsp.diagnostic_goto(true, "ERROR"), "Goto Next Error" },
-  { "[e", JVim.lsp.diagnostic_goto(false, "ERROR"), "Goto Previous Error" },
-  { "]w", JVim.lsp.diagnostic_goto(true, "WARNING"), "Goto Next Warning" },
-  { "[w", JVim.lsp.diagnostic_goto(false, "WARNING"), "Goto Previous Warning" },
+  { "]e", JVim.diagnostic.go_to(true, "ERROR"), "Goto Next Error" },
+  { "[e", JVim.diagnostic.go_to(false, "ERROR"), "Goto Previous Error" },
+  { "]w", JVim.diagnostic.go_to(true, "WARN"), "Goto Next Warning" },
+  { "[w", JVim.diagnostic.go_to(false, "WARN"), "Goto Previous Warning" },
+
+  -- Diagnostics
+  { "<leader>di", JVim.diagnostic.open(), "Diagnostics" },
+  { "<leader>de", JVim.diagnostic.open("ERROR"), "Diagnostics (error)" },
+  { "<leader>dc", JVim.diagnostic.open_buf(), "Diagnostics (current buf)" },
 
   -- Actions
   { "K", vim.lsp.buf.hover, "Hover Documentation" },

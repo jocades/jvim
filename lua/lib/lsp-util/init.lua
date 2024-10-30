@@ -32,4 +32,4 @@ if util == "edulsp" then
   return
 end
 
-pcall(require, "lib.lsp-util." .. util)
+pcall(require, "lib.lsp-util." .. vim.env.LSP_UTIL)
