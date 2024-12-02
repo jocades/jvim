@@ -5,8 +5,9 @@ return {
     ["<leader>X"] = { vim.cmd.tabc, "Close tab" },
     ["<leader>y"] = { "<cmd>%y+<cr>", "Copy buffer" },
     ["<leader>v"] = { "gg0vG$", "Select buffer" },
-    ["<leader>so"] = { "<cmd>w | so %<cr>", "Source and run lua buffer" },
+    ["<leader>so"] = { "<cmd>w | so %<cr>", "Save and source buffer" },
     ["<leader>nf"] = { JVim.buf.new, "New buffer" },
+    ["<leader>bd"] = { JVim.buf.close_all, "Close all buffers" },
 
     -- Windows
     ["<leader>z"] = { vim.cmd.close, { desc = "Close window", nowait = true } },

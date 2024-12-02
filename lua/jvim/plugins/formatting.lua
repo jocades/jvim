@@ -2,8 +2,7 @@ local prettier = {
   opts = { "prettierd", "prettier", stop_after_first = true },
   args = {
     "--semi=false",
-    "--single-quote",
-    "--print-width=80",
+    "--print-width=100",
     "--end-of-line=lf",
   },
 }

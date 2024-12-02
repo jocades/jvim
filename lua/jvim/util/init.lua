@@ -16,13 +16,15 @@ function M.who()
   end)
 end
 
----@param v unknown
+---@generic T
+---@param v T
 ---@param title? string
 function M.ins(v, title)
   if title then
     vim.print(("==== %s ===="):format(title))
   end
   vim.print(vim.inspect(v))
+  return v
 end
 
 ---@param mode string
