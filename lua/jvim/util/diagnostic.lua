@@ -19,7 +19,6 @@ function M.open(severity)
     require("trouble").open({
       mode = "diagnostics",
       filter = { severity = vim.diagnostic.severity[severity] },
-      -- filter = { severity}
     })
   end
 end

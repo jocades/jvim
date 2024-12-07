@@ -53,7 +53,6 @@ return {
       },
     }
     f.clang_format = { prepend_args = { "-style=file" } }
-    f.autopep8 = { prepend_args = { "--max-line-length", "80" } }
     f.shfmt = { prepend_args = { "-i", "4" } }
     f.gofmt = { prepend_args = { "-s" } }
     f.rustfmt = { prepend_args = { "--config", "max_width=100" } }

@@ -23,15 +23,9 @@ local keymaps = {
 
   -- Actions
   { "K", vim.lsp.buf.hover, "Hover Documentation" },
-  { "<leader>k", vim.diagnostic.open_float, "Open diag float" },
-  { "<leader>rn", vim.lsp.buf.rename, "Rename" },
+  { "<leader>k", vim.diagnostic.open_float, "Open diagnostic float" },
   { "<leader>ca", require("actions-preview").code_actions, "Code Action" },
-  { "<leader>ds", telescope.lsp_document_symbols, "Document Symbols" },
-  {
-    "<leader>ws",
-    telescope.lsp_dynamic_workspace_symbols,
-    "Workspace Symbols",
-  },
+  { "<leader>rn", vim.lsp.buf.rename, "Rename" },
 }
 
 ---@param client vim.lsp.Client
