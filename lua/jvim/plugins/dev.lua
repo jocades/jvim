@@ -10,6 +10,12 @@ return {
   },
 
   {
+    "aoc",
+    dir = "~/dev/comp/libaoc",
+    opts = {},
+  },
+
+  {
     "bquik",
     enabled = false,
     dev = true,
