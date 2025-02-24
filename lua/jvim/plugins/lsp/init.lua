@@ -50,6 +50,7 @@ return {
             "--clang-tidy",
             "--completion-style=detailed",
             "--header-insertion=iwyu",
+            "--experimental-modules-support",
           },
           init_options = {
             clangdFileStatus = true,
@@ -152,6 +153,8 @@ return {
         taplo = {},
         -- Zig
         zls = {},
+        -- Odin
+        ols = {},
         -- Nix
         nil_ls = {
           settings = {
