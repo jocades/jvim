@@ -1,7 +1,7 @@
 return {
   "hrsh7th/nvim-cmp",
   version = false,
-  event = "InsertEnter",
+  event = { "InsertEnter", "CmdlineEnter" },
   keys = {
     -- See opts.combo from nvim-cmp-lsp-rs below
     {
@@ -81,19 +81,21 @@ return {
         },
       },
 
-      mapping = cmp.mapping.preset.insert({
-        ["<C-n>"] = cmp.config.disable,
-        ["<C-p>"] = cmp.config.disable,
-        ["<C-k>"] = cmp.mapping.select_prev_item(),
+      mapping = {
         ["<C-j>"] = cmp.mapping.select_next_item(),
+        ["<C-k>"] = cmp.mapping.select_prev_item(),
         ["<C-d>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-i>"] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = true,
-        }),
-      }),
+        ["<C-u>"] = cmp.mapping(
+          cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          }),
+          { "i", "c" }
+        ),
+      },
+
       sources = { -- order matters
         { name = "nvim_lsp" },
         { name = "buffer", keyword_length = 4 },
