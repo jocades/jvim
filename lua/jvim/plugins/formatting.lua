@@ -38,6 +38,7 @@ return {
       css = prettier.opts,
       go = { "gofmt" },
       asm = { "asmfmt" },
+      ocaml = { "ocamlformat" },
     },
   },
   config = function(_, opts)

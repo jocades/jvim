@@ -155,6 +155,8 @@ return {
         zls = {},
         -- Odin
         ols = {},
+        -- OCaml
+        ocamllsp = {},
         -- Nix
         nil_ls = {
           settings = {

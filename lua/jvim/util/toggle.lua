@@ -13,27 +13,27 @@ function M.formatting()
 end
 
 function M.virtual_text()
-  -- if JVim.diagnostic.opts.virtual_text.enabled then
-  --   local opts = vim.deepcopy(JVim.diagnostic.opts)
-  --   opts.virtual_text = false
-  --   vim.diagnostic.config(opts)
-  -- else
-  --   vim.diagnostic.config(JVim.diagnostic.opts)
-  -- end
-  -- ---@diagnostic disable-next-line: inject-field
-  -- JVim.diagnostic.opts.virtual_text.enabled =
-  --   not JVim.diagnostic.opts.virtual_text.enabled
-
-  if JVim.diagnostic.opts.virtual_lines.enabled then
+  if JVim.diagnostic.opts.virtual_text.enabled then
     local opts = vim.deepcopy(JVim.diagnostic.opts)
-    opts.virtual_lines = false
+    opts.virtual_text = false
     vim.diagnostic.config(opts)
   else
     vim.diagnostic.config(JVim.diagnostic.opts)
   end
   ---@diagnostic disable-next-line: inject-field
-  JVim.diagnostic.opts.virtual_lines.enabled =
-    not JVim.diagnostic.opts.virtual_lines.enabled
+  JVim.diagnostic.opts.virtual_text.enabled =
+    not JVim.diagnostic.opts.virtual_text.enabled
+
+  -- if JVim.diagnostic.opts.virtual_lines.enabled then
+  --   local opts = vim.deepcopy(JVim.diagnostic.opts)
+  --   opts.virtual_lines = false
+  --   vim.diagnostic.config(opts)
+  -- else
+  --   vim.diagnostic.config(JVim.diagnostic.opts)
+  -- end
+  -- ---@diagnostic disable-next-line: inject-field
+  -- JVim.diagnostic.opts.virtual_lines.enabled =
+  --   not JVim.diagnostic.opts.virtual_lines.enabled
 end
 
 function M.hlsearch()
