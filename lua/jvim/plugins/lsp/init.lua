@@ -167,6 +167,8 @@ return {
             },
           },
         },
+        -- Erlang
+        elp = {},
       },
     },
     ---@param opts jvim.LspOpts

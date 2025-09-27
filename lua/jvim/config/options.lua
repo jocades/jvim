@@ -66,6 +66,8 @@ end
 vim.filetype.add({
   extension = {
     es = "es",
+    lox = "lox",
+    pa = "paco",
     mdx = "markdown",
     astro = "astro",
   },

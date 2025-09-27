@@ -28,6 +28,21 @@ return {
     },
   },
 
+  --[[ {
+    "folke/paint.nvim",
+    ---@module 'paint'
+    ---@type PaintOptions
+    opts = {
+      highlights = {
+        {
+          filter = { filetype = "lox" },
+          pattern = "fun",
+          hl = "Constant",
+        },
+      },
+    },
+  }, ]]
+
   {
     "rebelot/kanagawa.nvim",
     enabled = false,

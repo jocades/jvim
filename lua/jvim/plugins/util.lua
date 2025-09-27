@@ -22,7 +22,7 @@ return {
 
   { -- Better mark navication and mark sign in gutter
     "chentoast/marks.nvim",
-    enabled = false,
+    enabled = true,
     event = "BufReadPost",
     opts = {},
   },
@@ -54,7 +54,6 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    -- cmd = 'WhichKey',
     opts = {},
   },
 }
