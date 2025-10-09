@@ -1,5 +1,5 @@
 " keywords
-syntax keyword pacoKeyword var fun class for while return if else and or do then end loop in break continue
+syntax keyword pacoKeyword var fun class for while return if else and or do then end loop in break continue fn let
 
 " numbers
 syntax match pacoNumber "\v\d+"
