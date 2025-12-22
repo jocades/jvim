@@ -14,6 +14,13 @@ return {
       show_end_of_buffer = true,
       transparent_background = false,
       no_italic = true,
+      color_overrides = {
+        --[[ mocha = {
+          base = "#000000",
+          mantle = "#000000",
+          crust = "#000000",
+        }, ]]
+      },
       integrations = {
         native_lsp = {
           enabled = true,
@@ -27,21 +34,6 @@ return {
       },
     },
   },
-
-  --[[ {
-    "folke/paint.nvim",
-    ---@module 'paint'
-    ---@type PaintOptions
-    opts = {
-      highlights = {
-        {
-          filter = { filetype = "lox" },
-          pattern = "fun",
-          hl = "Constant",
-        },
-      },
-    },
-  }, ]]
 
   {
     "rebelot/kanagawa.nvim",

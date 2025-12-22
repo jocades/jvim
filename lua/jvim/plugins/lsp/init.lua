@@ -206,6 +206,8 @@ return {
       end)
 
       vim.diagnostic.config(JVim.diagnostic.opts)
+
+      vim.lsp.set_log_level(vim.log.levels.OFF)
     end,
   },
 
